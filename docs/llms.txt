@@ -1,0 +1,135 @@
+# Extensible Longevity Model (ELM)
+# https://silmonbiggs.github.io/extensible-longevity-model/
+#
+# This file provides an LLM-readable summary of the interactive slide deck.
+# For complete slide-by-slide content, fetch llms-full.txt from the same URL.
+
+## What This Is
+
+A mechanistic ODE model of aging interventions, calibrated to the NIA
+Interventions Testing Program (ITP) data. The model captures 8 interconnected
+aging subsystems (heteroplasmy, NAD+ metabolism, DNA damage, AMPK/mTORC1
+signaling, autophagy, senescence, SASP, methylation) and predicts combination
+effects  --  including interactions that single-compound testing cannot reveal.
+
+## Key Results
+
+- Calibration: 12 ITP targets, +/-0.08% mean error, 10 effective DOF
+- Out-of-sample validation: Rapa+Acarb predicted +33.0%, observed +34% (not fit)
+- Testable prediction: Rapa+NMN superadditive (+31.8% M / +36.0% F)
+- Serial reliability framework explains why single interventions yield +10-26%
+- Taguchi L18 killifish screen: 8 compounds, $200K, 8 months, 1,000 fish
+  (vs. ~$1.5M / 3+ years for a single ITP mouse study)
+
+## Compounds Modeled (ITP-validated)
+
+- Rapamycin (mTORC1 inhibitor): +23% M, +26% F
+- Acarbose (alpha-glucosidase inhibitor): +22% M, +5% F
+- 17alpha-Estradiol (non-feminizing estrogen): +19% M, 0% F
+- Canagliflozin (SGLT2 inhibitor): +14% M, +9% F
+- Aspirin (COX inhibitor): +8% M, 0% F
+- Glycine (amino acid supplement): +6% M, +4% F
+
+## Novel Compounds Predicted
+
+- NMN (NAD+ precursor)
+- CD38 inhibitor (NAD+ preservation)
+- Urolithin A (mitophagy enhancer)
+- D+Q senolytic (dasatinib + quercetin)
+
+## Slide Deck Structure
+
+Total slides: 61
+
+### Overview
+  [0] Six drugs extend mouse lifespan
+  [1] Why single drugs hit a ceiling
+  [2] The same logic inside cells
+  [3] How to test 8 interventions at once
+  [4] Does It Work?
+  [5] A Testable Prediction
+
+### Architecture
+  [0] The Thesis
+  [1] Heteroplasmy Dynamics
+  [2a] NAD+ Supply
+  [2b] NAD+ Consumption
+  [3] PARP1 / Repair Fails
+  [4] The Signaling Hub
+  [5] The Amplifier
+  [6] The Clock
+  [7] The Aging System
+
+### Interventions
+  [8.1] Rapamycin
+  [8.2] Acarbose
+  [8.3] Canagliflozin
+  [8.4] 17\u03B1-Estradiol
+  [8.5] Glycine
+  [8.6] Aspirin
+
+### Calibration
+  [9] Calibration
+  [10] Prediction
+  [11] Why Males?
+  [11b] The Saturation Curve
+  [12] The Exception
+  [13.1] 17\u03B1-Estradiol
+  [13.2] Aspirin
+  [13.3] Four Sex Mechanisms
+  [14] The Full Picture
+
+### Combinations
+  [15] Combination Predictions
+  [16] Risk-Benefit Analysis
+  [17] Adding Targets
+  [18] Limitations
+
+### Validation
+  [A1] Identifiability Analysis
+  [A2] Gauge Symmetry
+  [A3] Leave-One-Out Vulnerability
+
+### Stress Tests
+  [A4] SASP: The Phantom Node
+  [A5] Rapa + NMN Prediction
+  [A5b] Rapa + NMN Superadditivity Robustness
+  [A6] BioAge Weight Sensitivity
+  [A6b] Weight Sensitivity: H & Sen
+  [A7] Feedback Loops
+  [A8] Hallmark Importance
+  [A9] Pathway Sensitivity
+
+### Interactions & Network
+  [A10] Pairwise Synergy
+  [A11] Conditional Synergy
+  [A12] Network Structure (1/4): Adjacency
+  [A13] Network Structure (2/4): Node Degree
+  [A14] Network Structure (3/4): Bottlenecks
+  [A15] Network Structure (4/4): Path Distances
+  [A16] Model Specification
+
+### The Prediction
+  [A17] The Combination Prediction
+  [A18] Telomere Rivers
+  [A19] Rivers as Ceiling Calibrator
+
+### What's Next
+  [A20] What the Model Misses
+  [A21] NAD-Obligate Tissues
+  [A22] The Metabolic Gate Hypothesis
+  [A23] Known vs. Unknown
+  [A24] Taguchi Combination Testing
+  [A25] Roadmap: Experiment, Then Extend
+
+## Source Code
+
+GitHub: https://github.com/silmonbiggs/extensible-longevity-model
+Model package: elm/ (Python, ODE engine)
+Slide deck source: docs/index.html
+Figure generation: scripts/generate_figures.py
+
+## For Complete Content
+
+Fetch: https://silmonbiggs.github.io/extensible-longevity-model/llms-full.txt
+This contains the full text of every slide including narratives and equations.

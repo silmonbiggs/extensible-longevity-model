@@ -1,0 +1,454 @@
+#!/usr/bin/env python3
+"""
+Extract all slide content from the interactive HTML deck and generate
+llms.txt (brief) and llms-full.txt (complete) for LLM accessibility.
+
+Usage:
+    python scripts/generate_llms_txt.py
+"""
+
+import re
+import os
+import textwrap
+from pathlib import Path
+from html import unescape
+
+DOCS_DIR = Path(os.path.dirname(__file__)) / '..' / 'docs'
+HTML_FILE = DOCS_DIR / 'index.html'
+
+
+def _safe_chr(m):
+    """Convert a \\uXXXX escape to a character, replacing surrogates with ?."""
+    cp = int(m.group(1), 16)
+    if 0xD800 <= cp <= 0xDFFF:
+        return ''  # skip surrogates (emoji halves)
+    return chr(cp)
+
+
+def ascii_normalize(text):
+    """Replace Unicode punctuation and symbols with ASCII equivalents."""
+    replacements = {
+        '\u2014': ' -- ',   # em dash
+        '\u2013': '-',      # en dash
+        '\u2019': "'",      # right single quote
+        '\u2018': "'",      # left single quote
+        '\u201c': '"',      # left double quote
+        '\u201d': '"',      # right double quote
+        '\u2192': '->',     # rightwards arrow
+        '\u2190': '<-',     # leftwards arrow
+        '\u2265': '>=',     # greater than or equal
+        '\u2264': '<=',     # less than or equal
+        '\u2248': '~',      # approximately equal
+        '\u00d7': 'x',      # multiplication sign
+        '\u00b1': '+/-',    # plus-minus
+        '\u0394': 'Delta',  # Greek capital delta
+        '\u03b1': 'alpha',  # Greek alpha
+        '\u03b2': 'beta',   # Greek beta
+        '\u03ba': 'kappa',  # Greek kappa
+        '\u03c3': 'sigma',  # Greek sigma
+        '\u03b3': 'gamma',  # Greek gamma
+        '\u2208': 'in',     # element of
+        '\u2212': '-',      # minus sign
+        '\u2260': '!=',     # not equal
+        '\u221e': 'inf',    # infinity
+        '\u00b2': '^2',     # superscript 2
+        '\u00b3': '^3',     # superscript 3
+        '\u2076': '^6',     # superscript 6
+        '\u2019': "'",      # apostrophe
+        '\u2026': '...',    # ellipsis
+        '\u2714': '[done]', # check mark
+        '\u2713': '[done]', # check mark variant
+        '\ufe0f': '',       # variation selector
+        '\u00b7': '*',      # middle dot
+        '\u00b9': '^1',     # superscript 1
+        '\u00bd': '1/2',    # one half
+        '\u2077': '^7',     # superscript 7
+        '\u2080': '_0',     # subscript 0
+        '\u2082': '_2',     # subscript 2
+        '\u2191': '^',      # up arrow
+        '\u2193': 'v',      # down arrow
+        '\u2205': '{}',     # empty set
+        '\u25cf': '*',      # black circle
+        '\u26a0': '[!]',    # warning
+        '\u26a1': '[!]',    # lightning bolt
+        '\u2705': '[done]', # green check
+        '\u2753': '[?]',    # question mark
+        '\U0001f527': '[wrench]',  # wrench emoji
+        '\U0001f9ea': '[lab]',     # test tube emoji
+    }
+    for uni, ascii_eq in replacements.items():
+        text = text.replace(uni, ascii_eq)
+    return text
+
+
+def strip_html(text):
+    """Remove HTML tags, decode entities, clean up whitespace, ASCII-normalize."""
+    # Decode surrogate pairs (emoji) first: \uD83E\uDDEA -> single codepoint
+    def decode_surrogate_pair(m):
+        hi = int(m.group(1), 16)
+        lo = int(m.group(2), 16)
+        cp = 0x10000 + (hi - 0xD800) * 0x400 + (lo - 0xDC00)
+        return chr(cp)
+    text = re.sub(r'\\u([dD][89abAB][0-9a-fA-F]{2})\\u([dD][c-fC-F][0-9a-fA-F]{2})',
+                  decode_surrogate_pair, text)
+    # Decode remaining unicode escapes like \u2014, \u2192, etc.
+    text = re.sub(r'\\u([0-9a-fA-F]{4})', _safe_chr, text)
+    # Remove HTML tags
+    text = re.sub(r'<[^>]+>', ' ', text)
+    # Decode HTML entities
+    text = unescape(text)
+    # ASCII-normalize Unicode punctuation
+    text = ascii_normalize(text)
+    # Collapse whitespace
+    text = re.sub(r'\s+', ' ', text).strip()
+    return text
+
+
+def extract_field(stage_text, field):
+    """Extract a JS string field from a stage object."""
+    # Match field:'...' or field:"..." with string concatenation
+    pattern = rf"{field}\s*:\s*'((?:[^'\\]|\\.)*)'"
+    match = re.search(pattern, stage_text)
+    if match:
+        return match.group(1)
+
+    # Try to match concatenated strings: field:'...' + '...' + '...'
+    # First find where the field starts
+    start_pattern = rf"{field}\s*:\s*'"
+    start_match = re.search(start_pattern, stage_text)
+    if not start_match:
+        return None
+
+    # Collect all concatenated string fragments
+    pos = start_match.end()
+    fragments = []
+    remaining = stage_text[start_match.start():]
+
+    # Extract all '...' fragments connected by +
+    frag_pattern = r"'((?:[^'\\]|\\.)*)'"
+    for m in re.finditer(frag_pattern, remaining):
+        fragments.append(m.group(1))
+        # Check if there's a + after this fragment (continuing concatenation)
+        after = remaining[m.end():m.end() + 20].strip()
+        if not after.startswith('+'):
+            break
+
+    return ''.join(fragments) if fragments else None
+
+
+def extract_stages(html_content):
+    """Extract stage objects from the STAGES array in the HTML."""
+    # Find the STAGES array
+    stages_match = re.search(r'const STAGES\s*=\s*\[', html_content)
+    if not stages_match:
+        return []
+
+    # Find each stage object by looking for { // comment or { title:
+    # Split on stage boundaries
+    stages_section = html_content[stages_match.end():]
+    # Find the closing ];
+    bracket_depth = 1
+    end_pos = 0
+    for i, ch in enumerate(stages_section):
+        if ch == '[':
+            bracket_depth += 1
+        elif ch == ']':
+            bracket_depth -= 1
+            if bracket_depth == 0:
+                end_pos = i
+                break
+    stages_section = stages_section[:end_pos]
+
+    # Split into individual stage blocks
+    # Each stage starts with { and we need to find matching }
+    stages = []
+    i = 0
+    while i < len(stages_section):
+        if stages_section[i] == '{':
+            depth = 1
+            j = i + 1
+            while j < len(stages_section) and depth > 0:
+                if stages_section[j] == '{':
+                    depth += 1
+                elif stages_section[j] == '}':
+                    depth -= 1
+                j += 1
+            stages.append(stages_section[i:j])
+            i = j
+        else:
+            i += 1
+
+    return stages
+
+
+def parse_stage(stage_text):
+    """Parse a stage object into a dict of fields."""
+    result = {}
+
+    # Title
+    m = re.search(r"title\s*:\s*'([^']*)'", stage_text)
+    result['title'] = m.group(1) if m else 'Untitled'
+
+    # Sub identifier
+    m = re.search(r"sub\s*:\s*'([^']*)'", stage_text)
+    result['sub'] = m.group(1) if m else ''
+
+    # mainGraph
+    m = re.search(r"mainGraph\s*:\s*'([^']*)'", stage_text)
+    result['mainGraph'] = m.group(1) if m else None
+
+    # graph (single or array)
+    m = re.search(r"graph\s*:\s*\[([^\]]*)\]", stage_text)
+    if m:
+        result['graph'] = re.findall(r"'([^']*)'", m.group(1))
+    else:
+        m = re.search(r"graph\s*:\s*'([^']*)'", stage_text)
+        result['graph'] = [m.group(1)] if m else []
+
+    # mainHtml - extract all concatenated strings
+    result['mainHtml'] = extract_concat_strings(stage_text, 'mainHtml')
+
+    # narrative - extract all concatenated strings
+    result['narrative'] = extract_concat_strings(stage_text, 'narrative')
+
+    # equation
+    result['equation'] = extract_concat_strings(stage_text, 'equation')
+
+    return result
+
+
+def extract_concat_strings(text, field):
+    """Extract a field that may be composed of concatenated JS strings."""
+    # Find the field assignment
+    pattern = rf"{field}\s*:\s*"
+    match = re.search(pattern, text)
+    if not match:
+        return ''
+
+    pos = match.end()
+    remaining = text[pos:]
+
+    # Check for null
+    if remaining.strip().startswith('null'):
+        return ''
+
+    # Collect all string fragments
+    fragments = []
+    i = 0
+    while i < len(remaining):
+        # Skip whitespace
+        while i < len(remaining) and remaining[i] in ' \t\n\r':
+            i += 1
+        if i >= len(remaining):
+            break
+
+        if remaining[i] == "'":
+            # Find the end of this string (handling escapes)
+            j = i + 1
+            while j < len(remaining):
+                if remaining[j] == '\\':
+                    j += 2
+                    continue
+                if remaining[j] == "'":
+                    break
+                j += 1
+            fragments.append(remaining[i+1:j])
+            i = j + 1
+            # Skip whitespace and check for +
+            while i < len(remaining) and remaining[i] in ' \t\n\r':
+                i += 1
+            if i < len(remaining) and remaining[i] == '+':
+                i += 1
+                continue
+            else:
+                break
+        else:
+            break
+
+    return ''.join(fragments)
+
+
+def format_slide(idx, stage, verbose=True):
+    """Format a single slide for text output."""
+    lines = []
+    label = stage['sub'] if stage['sub'] else f'Intro {idx}'
+    lines.append(f"{'='*70}")
+    lines.append(f"SLIDE {idx}: {stage['title']} [{label}]")
+    lines.append(f"{'='*70}")
+
+    if stage.get('mainGraph'):
+        lines.append(f"\n[Figure: {stage['mainGraph']}]")
+
+    if stage.get('mainHtml'):
+        cleaned = strip_html(stage['mainHtml'])
+        if cleaned:
+            lines.append('')
+            lines.append(textwrap.fill(cleaned, width=80))
+
+    if verbose and stage.get('narrative'):
+        cleaned = strip_html(stage['narrative'])
+        if cleaned:
+            lines.append(f"\n--- Narrative ---")
+            lines.append(textwrap.fill(cleaned, width=80))
+
+    if verbose and stage.get('equation'):
+        eq = stage['equation']
+        # Keep LaTeX mostly intact but strip HTML wrappers
+        eq = re.sub(r'<[^>]+>', ' ', eq)
+        eq = re.sub(r'\\u([0-9a-fA-F]{4})', lambda m: chr(int(m.group(1), 16)), eq)
+        eq = ascii_normalize(eq)
+        eq = re.sub(r'\s+', ' ', eq).strip()
+        if eq:
+            lines.append(f"\n--- Equation ---\n{eq}")
+
+    if verbose and stage.get('graph'):
+        figs = [g for g in stage['graph'] if g]
+        if figs:
+            lines.append(f"\n[Additional figures: {', '.join(figs)}]")
+
+    lines.append('')
+    return '\n'.join(lines)
+
+
+def generate_brief(stages):
+    """Generate llms.txt — brief summary."""
+    lines = []
+    lines.append("# Extensible Longevity Model (ELM)")
+    lines.append("# https://silmonbiggs.github.io/extensible-longevity-model/")
+    lines.append("#")
+    lines.append("# This file provides an LLM-readable summary of the interactive slide deck.")
+    lines.append("# For complete slide-by-slide content, fetch llms-full.txt from the same URL.")
+    lines.append("")
+    lines.append("## What This Is")
+    lines.append("")
+    lines.append("A mechanistic ODE model of aging interventions, calibrated to the NIA")
+    lines.append("Interventions Testing Program (ITP) data. The model captures 8 interconnected")
+    lines.append("aging subsystems (heteroplasmy, NAD+ metabolism, DNA damage, AMPK/mTORC1")
+    lines.append("signaling, autophagy, senescence, SASP, methylation) and predicts combination")
+    lines.append("effects — including interactions that single-compound testing cannot reveal.")
+    lines.append("")
+    lines.append("## Key Results")
+    lines.append("")
+    lines.append("- Calibration: 12 ITP targets, ±0.08% mean error, 10 effective DOF")
+    lines.append("- Out-of-sample validation: Rapa+Acarb predicted +33.0%, observed +34% (not fit)")
+    lines.append("- Testable prediction: Rapa+NMN superadditive (+31.8% M / +36.0% F)")
+    lines.append("- Serial reliability framework explains why single interventions yield +10-26%")
+    lines.append("- Taguchi L18 killifish screen: 8 compounds, $200K, 8 months, 1,000 fish")
+    lines.append("  (vs. ~$1.5M / 3+ years for a single ITP mouse study)")
+    lines.append("")
+    lines.append("## Compounds Modeled (ITP-validated)")
+    lines.append("")
+    lines.append("- Rapamycin (mTORC1 inhibitor): +23% M, +26% F")
+    lines.append("- Acarbose (α-glucosidase inhibitor): +22% M, +5% F")
+    lines.append("- 17α-Estradiol (non-feminizing estrogen): +19% M, 0% F")
+    lines.append("- Canagliflozin (SGLT2 inhibitor): +14% M, +9% F")
+    lines.append("- Aspirin (COX inhibitor): +8% M, 0% F")
+    lines.append("- Glycine (amino acid supplement): +6% M, +4% F")
+    lines.append("")
+    lines.append("## Novel Compounds Predicted")
+    lines.append("")
+    lines.append("- NMN (NAD+ precursor)")
+    lines.append("- CD38 inhibitor (NAD+ preservation)")
+    lines.append("- Urolithin A (mitophagy enhancer)")
+    lines.append("- D+Q senolytic (dasatinib + quercetin)")
+    lines.append("")
+    lines.append("## Slide Deck Structure")
+    lines.append("")
+    lines.append(f"Total slides: {len(stages)}")
+    lines.append("")
+
+    # Group slides by the 10-section navigation structure
+    SECTIONS = [
+        ('Overview',                 0,  6),
+        ('Architecture',             6, 15),
+        ('Interventions',           15, 21),
+        ('Calibration',             21, 30),
+        ('Combinations',            30, 34),
+        ('Validation',              34, 37),
+        ('Stress Tests',            37, 45),
+        ('Interactions & Network',  45, 52),
+        ('The Prediction',          52, 55),
+        ("What's Next",             55, len(stages)),
+    ]
+
+    for section_name, start, end in SECTIONS:
+        entries = []
+        for i in range(start, min(end, len(stages))):
+            s = stages[i]
+            sub = s['sub']
+            title = s['title']
+            entries.append(f"  [{sub or f'{i}'}] {title}")
+        if entries:
+            lines.append(f"### {section_name}")
+            lines.extend(entries)
+            lines.append("")
+
+    lines.append("## Source Code")
+    lines.append("")
+    lines.append("GitHub: https://github.com/silmonbiggs/extensible-longevity-model")
+    lines.append("Model package: elm/ (Python, ODE engine)")
+    lines.append("Slide deck source: docs/index.html")
+    lines.append("Figure generation: scripts/generate_figures.py")
+    lines.append("")
+    lines.append("## For Complete Content")
+    lines.append("")
+    lines.append("Fetch: https://silmonbiggs.github.io/extensible-longevity-model/llms-full.txt")
+    lines.append("This contains the full text of every slide including narratives and equations.")
+    lines.append("")
+
+    return '\n'.join(lines)
+
+
+def generate_full(stages):
+    """Generate llms-full.txt — complete slide-by-slide content."""
+    lines = []
+    lines.append("# Extensible Longevity Model (ELM) -- Complete Slide Content")
+    lines.append("# https://silmonbiggs.github.io/extensible-longevity-model/")
+    lines.append("#")
+    lines.append("# This file contains the full text content of every slide in the")
+    lines.append("# interactive presentation, extracted for LLM accessibility.")
+    lines.append("# The interactive version includes Cytoscape network diagrams,")
+    lines.append("# clickable nodes, and dynamically rendered figures.")
+    lines.append("#")
+    lines.append(f"# Total slides: {len(stages)}")
+    lines.append(f"# Generated from: docs/index.html")
+    lines.append("")
+
+    for i, stage in enumerate(stages):
+        lines.append(format_slide(i, stage, verbose=True))
+
+    # Append supplementary analyses
+    clock_pca_path = Path(os.path.dirname(__file__)) / 'clock_pca' / 'clock_methylation_fraction.txt'
+    if clock_pca_path.exists():
+        lines.append("=" * 70)
+        lines.append("SUPPLEMENTARY ANALYSIS: METHYLATION FRACTION OF BIOLOGICAL AGE")
+        lines.append("(Referenced by Slide A6: BioAge Weight Sensitivity)")
+        lines.append("=" * 70)
+        lines.append("")
+        lines.append(ascii_normalize(clock_pca_path.read_text(encoding='utf-8')))
+
+    return '\n'.join(lines)
+
+
+def main():
+    html = HTML_FILE.read_text(encoding='utf-8')
+    raw_stages = extract_stages(html)
+    print(f"Extracted {len(raw_stages)} stages from HTML")
+
+    stages = [parse_stage(s) for s in raw_stages]
+
+    # Write brief (ASCII-normalized)
+    brief = ascii_normalize(generate_brief(stages))
+    brief_path = DOCS_DIR / 'llms.txt'
+    brief_path.write_text(brief, encoding='utf-8')
+    print(f"Written: {brief_path} ({len(brief)} bytes)")
+
+    # Write full
+    full = generate_full(stages)
+    full_path = DOCS_DIR / 'llms-full.txt'
+    full_path.write_text(full, encoding='utf-8')
+    print(f"Written: {full_path} ({len(full)} bytes)")
+
+
+if __name__ == '__main__':
+    main()

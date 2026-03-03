@@ -1,0 +1,1700 @@
+# Extensible Longevity Model (ELM) -- Complete Slide Content
+# https://silmonbiggs.github.io/extensible-longevity-model/
+#
+# This file contains the full text content of every slide in the
+# interactive presentation, extracted for LLM accessibility.
+# The interactive version includes Cytoscape network diagrams,
+# clickable nodes, and dynamically rendered figures.
+#
+# Total slides: 61
+# Generated from: docs/index.html
+
+======================================================================
+SLIDE 0: Six drugs extend mouse lifespan [Intro 0]
+======================================================================
+
+Six drugs extend mouse lifespan. Which should we combine? About six drugs, given
+individually to mice, make them live 5-26% longer. These results come from the
+NIA Interventions Testing Program (ITP) -- a three-site, blinded lifespan study
+using genetically heterogeneous (UM-HET3) mice, independently replicated at each
+site. Compound What it does Male Female Rapamycin Slows cell growth signaling
++23% +26% Acarbose Blocks sugar absorption +22% +5% 17alpha-Estradiol Activates
+energy-sensing pathway +19% 0% Canagliflozin Blocks sugar reabsorption in kidney
++14% +9% Aspirin Reduces inflammation +8% 0% Glycine Amino acid antioxidant +6%
++4% Notice: four of six drugs barely work -- or don't work at all -- in females.
+Each was tested individually. Nobody knows what happens when you combine them.
+Use -> arrow key or Next button to continue
+
+--- Narrative ---
+The ITP The Interventions Testing Program (ITP) is the gold standard for rodent
+longevity research. Three independent labs test each compound simultaneously in
+genetically diverse mice, so results aren't artifacts of one lab or one mouse
+strain. These six compounds work through different biological pathways -- which
+matters, because it means they're not all doing the same thing. The question is
+whether combining drugs that work through different pathways could produce
+larger effects than any single drug achieves alone.
+
+======================================================================
+SLIDE 1: Why single drugs hit a ceiling [Intro 1]
+======================================================================
+
+[Figure: stage_A26_serial_reliability.png]
+
+--- Narrative ---
+Competing failure modes If aging had one dominant cause, a single drug targeting
+that cause would show a huge effect. The fact that the best drugs only manage
++10-26% is the data speaking: aging has multiple independent failure modes, and
+fixing one leaves the others untouched. The figure shows this with three failure
+modes at different timescales. The organism dies from whichever strikes first.
+Fix a later mode (B) while A remains -> almost no gain. The thin crescent
+between the two curves is the entire signal. This is what single-drug testing
+measures. Fix the earliest mode (A) -> moderate gain, but now B becomes the new
+bottleneck. Fix A + B together -> mode C is finally revealed. It was always
+there -- invisible behind the earlier walls. Three consequences Masking: Later
+failure modes are invisible until you remove the earlier ones. Diminishing
+returns: Fixing 1 of N modes gives at most ~1/N of the total possible extension.
+You need combinations: Only by addressing multiple failure modes simultaneously
+can you see what's behind the first wall. Figure uses Gaussian failure-time
+distributions for clarity. Real failure modes follow different distributions,
+but the masking principle is identical.
+
+======================================================================
+SLIDE 2: The same logic inside cells [Intro 2]
+======================================================================
+
+The same competing-failures logic applies inside cells The previous slide used
+organ-level examples (cancer, cardiovascular disease) to build intuition. The
+same principle operates at the molecular level -- and that's where interventions
+actually act. Aging involves at least four molecular deterioration processes,
+each on its own timescale: Process What goes wrong Mitochondrial damage Mutant
+mitochondrial DNA accumulates, impairing energy production DNA damage Oxidative
+hits outpace repair; the repair machinery itself runs on NAD+, which is
+declining Epigenetic drift The chemical marks that tell cells what to be
+gradually scramble Senescent cell burden Damaged cells stop dividing but don't
+die; they secrete inflammatory signals that damage neighbors Each of these can
+become the binding constraint once the others are addressed -- just like the
+organ-level failure modes on the previous slide. A drug that targets one process
+leaves the others untouched. A model puts numbers to these systems. It maps all
+four processes and the feedback loops between them, calibrated to the ITP drug
+data, and predicts which combinations address the most failure modes -- and
+which leave critical bottlenecks exposed.
+
+--- Narrative ---
+Why these four? These aren't arbitrary categories. Each corresponds to a
+measurable biological variable that changes with age and responds to at least
+one ITP compound. A model tracks how they interact -- for example, mitochondrial
+damage depletes NAD+, which weakens DNA repair, which accelerates epigenetic
+drift. A drug that boosts one subsystem can indirectly help the others. But this
+also means the failure modes aren't fully independent. Rapamycin alone achieves
++23% precisely because it partially addresses multiple processes through a
+central signaling hub. The model accounts for this coupling. Two questions
+follow: (1) Can we test combinations efficiently? (2) Does the model actually
+predict correctly? The next two slides address each.
+
+======================================================================
+SLIDE 3: How to test 8 interventions at once [Intro 3]
+======================================================================
+
+There is a principled way to test 8 interventions in one experiment The ITP has
+built an extraordinary single-compound foundation. But as the previous slides
+showed, later failure modes are masked until the earlier ones are addressed. To
+see what's underneath, you have to move what's on top -- and that requires
+interventions acting on multiple failure modes simultaneously. A multi-
+intervention experiment doesn't just measure interactions; it exposes partially
+masked failure modes to measurement, and may reveal modes of aging not yet
+detected. An orthogonal array arranges just 18 carefully chosen groups so that
+each intervention's effect is cleanly separable from every other's. One
+experiment yields: Main effect of each intervention Dose-response (two dose
+levels per intervention) Dominant interactions -- which combinations show
+synergy or redundancy The test organism: turquoise killifish -- a vertebrate
+that lives only 4-6 months. The fastest vertebrate aging model available. $200K
+total cost 8 mo timeline 1,000 killifish Main effects, dose-response curves, and
+a screen for dominant interactions across 8 interventions -- from a single
+experiment, at a fraction of the cost and time of testing one compound through
+the ITP. The role of a mechanistic model: An orthogonal array tells you how to
+test combinations efficiently. A model tells you which combinations matter most
+-- focusing experimental resources on the highest-value questions. Full
+orthogonal array and compound selection rationale in Slide A24.
+
+--- Narrative ---
+Model + Experiment Model and experiment are complementary: A model predicts
+which pathways interact and where the bottlenecks are -- guiding experimental
+priorities Experiments generate real combination data that validates or
+invalidates a model's coupling assumptions Model predictions focus the screen;
+screen results recalibrate the model Next: how well can a model do with existing
+literature and data?
+
+======================================================================
+SLIDE 4: Does It Work? [Intro 4]
+======================================================================
+
+We can't test every combination experimentally. So we built a model -- and it
+correctly predicts a combination it has never seen. Calibrated to 6 individual
+compounds. Then tested on a combination -- without refitting. Out-of-sample
+validation: Rapamycin + Acarbose Model predicted +33.0% male lifespan extension.
+ITP observed +34% . Error: 1.0 percentage point. Not fit -- predicted. 12
+calibration targets +/-0.08 pp mean abs. error (predicted vs observed lifespan
+extension) 10 effective parameters The model has fewer effective degrees of
+freedom (10) than data points (12). It is constrained enough to make genuine
+predictions, not just fit curves.
+
+--- Narrative ---
+Why This Matters A model that fits individual drugs but fails on combinations is
+just curve-fitting. A model that predicts combinations is capturing real
+biology. The rapamycin + acarbose prediction was never used during calibration.
+Both compounds converge on the AMPK->autophagy pathway, producing Hill-function
+saturation. The model correctly predicts sub-additive combination: 34%, not the
+naive sum of 45%. Identifiability analysis (SVD of the Jacobian) confirms 10
+observable degrees of freedom with condition number kappa = 14.6 -- well-
+separated, not overfitting.
+
+[Additional figures: stage_08_mixing_bars.png]
+
+======================================================================
+SLIDE 5: A Testable Prediction [Intro 5]
+======================================================================
+
+The model makes a testable prediction: Rapamycin + NMN should be superadditive
+These two compounds together do more than the sum of their parts. Scenario Male
+Female Rapamycin alone +23.0% +26.2% NMN alone +3.4% +3.4% Simple sum +26.4%
++29.6% Model prediction +31.8% +36.0% Why superadditive? NMN's NAD+ boost (3.4%
+alone) compounds over the extra lifespan that rapamycin provides. The longer the
+animal lives, the more cumulative benefit from sustained NAD+ support. The
+superadditive component (+5-6%) is structural, not a fitting artifact. Caveat:
+The additive floor (+26% M / +30% F) is the defensible prediction. The full
+prediction assumes compound effects persist into late life at mid-life
+magnitude. Both compounds modeled from 9-month start. How does a model predict
+this? The next slides build it, one subsystem at a time.
+
+--- Narrative ---
+Why This Combination? Rapamycin and NMN target independent subsystems :
+Rapamycin: mTORC1 inhibition + AMPK activation -> autophagy, methylation
+restraint NMN: NAD+ precursor -> supports SIRT1, PARP1 repair, mitochondrial
+function Mechanistic independence means less pathway saturation when combined.
+This is the opposite of rapamycin + acarbose, which both converge on AMPK and
+produce sub-additive results. This prediction is robust to BioAge weight
+variation: less than 0.5% shift across the plausible w meth range [0.25, 0.40].
+
+======================================================================
+SLIDE 6: The Thesis [0]
+======================================================================
+
+--- Narrative ---
+The Thesis The model has four subsystems. We start with the one that turns out
+to be the biggest bottleneck: mitochondrial heteroplasmy. Mitochondrial DNA
+mutations accumulate with age as heteroplasmy (H) increases. H impairs oxidative
+phosphorylation (OXPHOS), reducing NAD+ regeneration, and generates reactive
+oxygen species (ROS) that cause oxidative DNA damage. The model posits that H
+accounts for 25% of biological age (w H =0.25), but its real impact is larger --
+it drives the downstream cascade through the other subsystems introduced in the
+next six stages. Normalized age: t = 1.0 corresponds to median control lifespan
+(~30 months for UM-HET3 males). All dynamics are expressed in this normalized
+time. Degrees of freedom: 196 numbers define the model, but SVD analysis (Slide
+A1) shows the ITP data only constrains 10 independent directions in parameter
+space. The rest are set by published biology or don't affect predictions. This
+is a 10-parameter model wearing a 196-parameter coat.
+
+--- Equation ---
+$$\\text{BioAge} = w_H \\frac{H}{N_H} + \\text{(other terms introduced in Stages 1-6)}$$ $$\\begin{aligned} w_H &= 0.25 &\\quad \\%\\; &\\text{heteroplasmy weight} \\\\ N_H &= 0.18 &\\quad \\%\\; &\\text{heteroplasmy norm (derived from control)} \\end{aligned}$$The full equation with all four components is shown in Stage 7.
+
+[Additional figures: stage_00_thesis.png]
+
+======================================================================
+SLIDE 7: Heteroplasmy Dynamics [1]
+======================================================================
+
+--- Narrative ---
+Heteroplasmy Dynamics Mitochondrial DNA mutations accumulate through random
+genetic drift (Kowald-Kirkwood model). Shorter mutant molecules replicate
+faster, giving them a transcription advantage . These fast-replicating mutants
+fail to encode proteins that are metabolically necessary, making their
+mitochondria less efficient at energy conversion. Counteracting this:
+FOXO3-dependent mitophagy (forkhead box O3 -- a transcription factor that
+targets damaged mitochondria for recycling) selectively removes damaged
+mitochondria. But as NAD+ falls -> SIRT1 drops -> FOXO3 weakens -> selection
+against mutants fails -> H accelerates. This balance of accumulating and
+eliminating damaged mitochondria plays out in the Heteroplasmy block (H). It is
+a positive-feedback loop that progressively erodes the cell's ability to convert
+fuel into energy. Rising heteroplasmy is progressive energy failure -- the prime
+mover of aging in this model.
+
+--- Equation ---
+$$\\frac{dH}{dt} = \\left[\\frac{H(1-H)}{N_{\\text{eff}}} + \\mu \\cdot H(1-H) - s \\cdot H\\right] \\times \\tau$$$$s = s_0 + s_{\\text{foxo3}} \\cdot \\text{FOXO3}$$ $$\\begin{aligned} N_{\\text{eff}} &= 100 &\\quad \\%\\; &\\text{effective mtDNA population} \\\\ \\mu &= 0.20 &\\quad \\%\\; &\\text{transcription advantage} \\\\ s_0 &= 0.001 &\\quad \\%\\; &\\text{baseline selection} \\\\ s_{\\text{foxo3}} &= 0.10 &\\quad \\%\\; &\\text{FOXO3 selection boost} \\\\ \\tau &= 12.0 &\\quad \\%\\; &\\text{time scale} \\end{aligned}$$
+
+[Additional figures: stage_01_heteroplasmy.png]
+
+======================================================================
+SLIDE 8: NAD+ Supply [2a]
+======================================================================
+
+--- Narrative ---
+NAD+ Supply NAD+ is the cell's energy currency for signaling and repair. Its
+supply depends on NAMPT (nicotinamide phosphoribosyltransferase), the rate-
+limiting synthesis enzyme, which declines with age. Heteroplasmy compounds the
+problem: impaired OXPHOS reduces NAD+ regeneration from NADH, draining the pool
+from both sides.
+
+--- Equation ---
+$$\\frac{d[\\text{NAD}]}{dt} = \\underbrace{k_{\\text{nampt}}\\,e^{-k_{\\text{age}}\\,t}(1 + k_{\\text{ampk}} \\cdot \\text{AMPK})}_{\\text{supply}} - \\;(\\text{consumption terms in next stage})$$ $$\\begin{aligned} k_{\\text{nampt}} &= 0.55 &\\quad \\%\\; &\\text{NAMPT synthesis rate} \\\\ k_{\\text{age}} &= 0.431 &\\quad \\%\\; &\\text{age-related decline (exponential)} \\\\ k_{\\text{ampk}} &= 0.50 &\\quad \\%\\; &\\text{AMPK boost to synthesis} \\end{aligned}$$
+
+[Additional figures: stage_01_nad_decline.png]
+
+======================================================================
+SLIDE 9: NAD+ Consumption [2b]
+======================================================================
+
+--- Narrative ---
+NAD+ Consumption As NAD+ supply drops, demand rises. CD38 , an ectoenzyme that
+consumes NAD+, increases with age and inflammation. Meanwhile, SIRT1 -- a
+NAD+-dependent deacetylase critical for gene silencing, stress response, and
+mitophagy -- loses activity as its cofactor disappears. The result: a widening
+gap between NAD+ supply and demand that accelerates with age.
+
+--- Equation ---
+$$\\text{Consumption} = k_{\\text{basal}} + \\text{CD38} + k_{\\text{parp}} \\cdot \\text{Damage} + k_{\\text{sirt}} \\cdot \\text{SIRT1}$$$$\\text{SIRT1} = \\frac{\\text{NAD}^{n_s}}{K_{s}^{n_s} + \\text{NAD}^{n_s}}$$ $$\\begin{aligned} k_{\\text{basal}} &= 0.40 &\\quad \\%\\; &\\text{basal consumption} \\\\ k_{\\text{parp}} &= 0.70 &\\quad \\%\\; &\\text{PARP1 consumption} \\\\ k_{\\text{sirt}} &= 0.10 &\\quad \\%\\; &\\text{SIRT1 consumption} \\end{aligned}$$
+
+======================================================================
+SLIDE 10: PARP1 / Repair Fails [3]
+======================================================================
+
+--- Narrative ---
+PARP1 / Repair Fails Heteroplasmy generates ROS , which inflict oxidative DNA
+damage. DNA repair itself depends on NAD+: base-excision repair scales as
+(NAD/NAD_0) 0.7 , so as NAD+ falls, repair capacity drops and damage
+accumulates. Accumulated damage consumes NAD+ via PARP1 (poly(ADP-ribose)
+polymerase 1; k parp = 0.70, the largest NAD+ consumption coefficient). PARP1 is
+both the primary NAD+ consumer and the enzyme that initiates repair -- the same
+molecule creates the vicious cycle. The red inhibitory link from DNA_Damage to
+the sum node below NAD closes this loop: NAD v -> PARP1/Repair v -> Damage ^ ->
+PARP1 activation ^ -> NAD vv. The model assigns DNA damage a 25% weight in
+BioAge.
+
+--- Equation ---
+$$\\frac{d[\\text{Damage}]}{dt} = k_{\\text{ros}} \\cdot \\text{ROS} \\cdot (1 - k_{\\text{aox}} \\cdot \\text{aox}) - k_{\\text{ber}} \\left(\\frac{\\text{NAD}}{\\text{NAD}_0}\\right)^{n_{\\text{ber}}} \\!\\cdot\\, \\text{Damage}$$ $$\\begin{aligned} k_{\\text{ros}} &= 0.60 &\\quad \\%\\; &\\text{ROS damage rate} \\\\ k_{\\text{ber}} &= 0.35 &\\quad \\%\\; &\\text{base excision repair} \\\\ k_{\\text{aox}} &= 0.55 &\\quad \\%\\; &\\text{antioxidant efficacy} \\\\ n_{\\text{ber}} &= 0.7 &\\quad \\%\\; &\\text{NAD-repair exponent} \\\\ \\text{ROS} &= 1 + 0.5\\,H &\\quad \\%\\; &\\text{from heteroplasmy} \\end{aligned}$$
+
+[Additional figures: stage_02_dna_damage.png]
+
+======================================================================
+SLIDE 11: The Signaling Hub [4]
+======================================================================
+
+--- Narrative ---
+The Signaling Hub AMP-activated protein kinase (AMPK), the cell's energy sensor,
+phosphorylates TSC2 (tuberous sclerosis complex 2), which inhibits Rheb and
+shuts down mTORC1 (mechanistic target of rapamycin complex 1). mTORC1 inhibition
+boosts autophagy (cellular self-recycling). Drug inhibition (rapamycin) and TSC2
+inhibition are mechanistically independent and stack multiplicatively .
+
+--- Equation ---
+$$\\text{TSC2} = b_0 + b_{\\max} \\cdot \\frac{\\text{AMPK}^n}{K_m^n + \\text{AMPK}^n}$$$$\\text{mTORC1} = \\left(1 - \\alpha \\cdot \\frac{\\text{TSC2}^{n_2}}{K_{m2}^{n_2} + \\text{TSC2}^{n_2}}\\right)(1 - d_{\\text{drug}})$$$$\\text{Autophagy} = \\frac{V_{\\max} \\cdot u}{K_a + u}, \\quad u = w_1\\!\\cdot\\!\\text{AMPK} + w_2\\!\\cdot\\!\\text{FOXO3} + w_3\\!\\cdot\\!\\text{gut} + \\Delta_{\\text{UPR}} + \\Delta_{\\text{mTOR}}$$ $$\\begin{aligned} b_0 &= 0.30 &\\quad \\%\\; &\\text{TSC2 basal} \\\\ b_{\\max} &= 0.70 &\\quad \\%\\; &\\text{TSC2 max AMPK response} \\\\ K_m &= 0.35 &\\quad \\%\\; &\\text{TSC2 Hill half-max} \\\\ n &= 1.5 &\\quad \\%\\; &\\text{TSC2 Hill coefficient} \\\\ \\alpha &= 0.65 &\\quad \\%\\; &\\text{max inhibition of mTORC1} \\\\ K_{m2} &= 0.50 &\\quad \\%\\; &\\text{mTORC1 Hill half-max} \\\\ n_2 &= 1.2 &\\quad \\%\\; &\\text{mTORC1 Hill coefficient} \\\\ K_a &= 0.35 &\\quad \\%\\; &\\text{autophagy half-max} \\end{aligned}$$
+
+[Additional figures: stage_03_autophagy.png]
+
+======================================================================
+SLIDE 12: The Amplifier [5]
+======================================================================
+
+--- Narrative ---
+The Amplifier Damaged cells become senescent and secrete a senescence-associated
+secretory phenotype (SASP). This creates a vicious cycle: SASP upregulates CD38,
+adds oxidative damage, and drives paracrine senescence. The model assigns
+senescent cells a 15% weight in BioAge. Caveat: No ITP compound is a senolytic,
+so senescence/SASP parameters are literature-estimated, not calibrated to
+lifespan data. The SASP feedback loop is structurally correct but quantitatively
+unconstrained -- see Slide A4 for a full analysis of what this means for
+predictions.
+
+--- Equation ---
+$$\\frac{d[\\text{Sen}]}{dt} = k_{\\text{dmg}}(\\text{Damage} - D_{\\text{thresh}})^{+} + k_{\\text{sasp}} \\cdot \\text{SASP} \\;\\ldots$$$$\\ldots\\; - \\;(k_{\\text{nat}} + k_{\\text{auto}} \\cdot \\text{Autophagy}) \\cdot \\text{Sen}$$ $$\\begin{aligned} k_{\\text{dmg}} &= 0.40 &\\quad \\%\\; &\\text{damage-driven entry} \\\\ D_{\\text{thresh}} &= 0.30 &\\quad \\%\\; &\\text{damage threshold} \\\\ k_{\\text{sasp}} &= 0.20 &\\quad \\%\\; &\\text{SASP paracrine entry} \\\\ k_{\\text{nat}} &= 0.02 &\\quad \\%\\; &\\text{natural clearance} \\\\ k_{\\text{auto}} &= 0.70 &\\quad \\%\\; &\\text{autophagy clearance} \\end{aligned}$$
+
+[Additional figures: stage_04_senescence.png]
+
+======================================================================
+SLIDE 13: The Clock [6]
+======================================================================
+
+--- Narrative ---
+The Clock DNA methylation drifts with age -- the basis of epigenetic clocks.
+Three writers drive accumulation: EZH2 (histone methyltransferase): damage-
+dependent -- more DNA damage -> more aberrant methylation DNMT (DNA
+methyltransferase): age-dependent baseline drift SASP : inflammation accelerates
+epigenetic drift One eraser: TET enzymes demethylate proportionally to current
+methylation level. SIRT1 and AMPK restrain drift by inhibiting EZH2. As NAD+
+falls -> SIRT1 drops -> EZH2 rises -> methylation accelerates. The model assigns
+methylation a BioAge weight of 30% , tied with DNA damage as the joint-largest
+component.
+
+--- Equation ---
+$$\\frac{d\\,\\text{Meth}}{dt} = \\underbrace{k_{\\text{ezh2}} \\!\\cdot\\! \\text{EZH2} \\!\\cdot\\! (0.1 + \\text{Dmg})}_{\\text{damage-dependent}} + \\underbrace{k_{\\text{dnmt}}}_{\\text{baseline}} + \\underbrace{k_{\\text{sasp}} \\!\\cdot\\! \\text{SASP}}_{\\text{inflammation}} - \\underbrace{k_{\\text{tet}} \\!\\cdot\\! \\text{Meth}}_{\\text{erasure}}$$$$\\text{EZH2} = \\text{clamp}\\!\\left(1 - 0.5 \\cdot \\text{SIRT1} - k_{\\text{ampk}} \\cdot \\text{AMPK},\\; 0.1,\\; 1.0\\right)$$ $$\\begin{aligned} k_{\\text{ezh2}} &= 1.85 &\\quad \\%\\; &\\text{EZH2 methylation rate} \\\\ k_{\\text{dnmt}} &= 0.28 &\\quad \\%\\; &\\text{DNMT baseline drift} \\\\ k_{\\text{sasp}} &= 0.42 &\\quad \\%\\; &\\text{SASP-driven drift} \\\\ k_{\\text{tet}} &= 0.02 &\\quad \\%\\; &\\text{TET demethylation} \\\\ k_{\\text{ampk}} &= 0.70 &\\quad \\%\\; &\\text{AMPK inhibition of EZH2} \\\\ \\text{Meth}_0 &= 0.25 &\\quad \\%\\; &\\text{youthful methylation} \\end{aligned}$$
+
+[Additional figures: stage_05_intermediates.png]
+
+======================================================================
+SLIDE 14: The Aging System [7]
+======================================================================
+
+--- Narrative ---
+The Aging System The six subsystems from Stages 1-6 feed into a single composite
+measure of biological age: BioAge = 0.30*Meth + 0.30*Damage + 0.25*H +
+0.15*SenCells Each component is normalized so that BioAge = 1.0 at the control
+animal's natural death. An animal dies when BioAge reaches this threshold. The
+weights are model assumptions , constrained by calibration data. Methylation and
+damage are weighted equally at 0.30, reflecting their coupled importance through
+the AMPK and PARP/NAD pathways. Senescence carries the lowest weight because no
+senolytic ITP data yet constrains it. The next six stages introduce compounds
+that intervene on these subsystems. The first two -- rapamycin and acarbose --
+target the mTORC1/AMPK signaling hub. The next three reduce oxidative damage
+through different upstream paths. The last targets inflammation directly. Then
+we calibrate.
+
+--- Equation ---
+$$\\text{BioAge} = w_m \\frac{\\text{Meth}}{N_m} + w_d \\frac{\\text{Damage}}{N_d} + w_H \\frac{H}{N_H} + w_s \\frac{\\text{SenCells}}{N_s}$$ $$\\begin{aligned} w_m &= 0.30 &\\quad \\%\\; &\\text{methylation weight} \\\\ w_d &= 0.30 &\\quad \\%\\; &\\text{damage weight} \\\\ w_H &= 0.25 &\\quad \\%\\; &\\text{heteroplasmy weight} \\\\ w_s &= 0.15 &\\quad \\%\\; &\\text{senescence weight} \\\\ N_m &= 1.09 &\\quad \\%\\; &\\text{methylation at t=1.0 in control} \\\\ N_d &= 0.67 &\\quad \\%\\; &\\text{damage at t=1.0 in control} \\\\ N_H &= 0.18 &\\quad \\%\\; &\\text{heteroplasmy at t=1.0 in control} \\\\ N_s &= 0.22 &\\quad \\%\\; &\\text{senescence at t=1.0 in control} \\end{aligned}$$
+
+======================================================================
+SLIDE 15: Rapamycin [8.1]
+======================================================================
+
+--- Narrative ---
+8.1 Rapamycin The 'grow now' signal silencer -- turning down mTORC1 tells cells
+to clean house instead of building new stuff. The only compound that directly
+inhibits mTORC1 (via FK506-binding protein 12, FKBP12). Also activates AMPK
+indirectly. Two independent pathways stack multiplicatively : drug inhibition on
+mTORC1 plus AMPK->TSC2 inhibition. NIA Interventions Testing Program (ITP) male:
++23% lifespan extension.
+
+--- Equation ---
+$$\\text{mTORC1} = (1 - I_{\\text{TSC2}})(1 - d_{\\text{drug}})$$$$\\text{AMPK}_{\\text{treated}} = \\text{AMPK}_{\\text{ctrl}} + \\text{ampk}_{\\text{direct}}$$ $$\\begin{aligned} d_{\\text{drug}} &= 0.84 &\\quad \\%\\; &\\text{mTORC1 direct inhibition (FKBP12)} \\\\ \\text{ampk}_{\\text{direct}} &= 0.56 &\\quad \\%\\; &\\text{AMPK boost} \\to I_{\\text{TSC2}} \\text{ (Stage 4)} \\end{aligned}$$
+
+[Additional figures: stage_06_rapa_states.png, stage_06_rapa_bar.png]
+
+======================================================================
+SLIDE 16: Acarbose [8.2]
+======================================================================
+
+--- Narrative ---
+8.2 Acarbose The starvation mimic -- slowing sugar absorption makes cells think
+food is scarce, triggering maintenance programs. alpha-glucosidase inhibitor.
+Delays carbohydrate absorption, activating AMPK via energy stress. Also
+modulates gut microbiome composition. Gut microbiome changes reduce CD38
+(protecting NAD+), inhibit DNMT (DNA methyltransferase) activity, and reduce
+senescent cell accumulation. ITP male: +22% lifespan extension.
+
+--- Equation ---
+$$\\text{AMPK}_{\\text{eff}} = f(\\text{ampk}_{\\text{direct}} + \\text{other inputs})$$$$\\text{Target}_i \\times \\max\\!\\left(c_i,\\; 1 - \\text{gut} \\cdot k_{\\text{gut},i}\\right) \\quad i \\in \\{\\text{CD38},\\, \\text{DNMT},\\, \\text{SenCells}\\}$$ $$\\begin{aligned} \\text{ampk}_{\\text{direct}} &= 0.44 &\\quad \\%\\; &\\text{AMPK activation} \\\\ \\text{gut} &= 0.32 &\\quad \\%\\; &\\text{gut microbiome effect} \\\\ k_{\\text{gut,cd38}} &= 0.75 &\\quad \\%\\; &\\text{CD38 reduction (protects NAD+)} \\\\ k_{\\text{gut,dnmt}} &= 0.45 &\\quad \\%\\; &\\text{DNMT inhibition (slows methylation)} \\\\ k_{\\text{gut,sen}} &= 0.40 &\\quad \\%\\; &\\text{senescence entry reduction} \\end{aligned}$$
+
+[Additional figures: stage_06_acarb_states.png, stage_06_acarb_bar.png]
+
+======================================================================
+SLIDE 17: Canagliflozin [8.3]
+======================================================================
+
+--- Narrative ---
+8.3 Canagliflozin The glucose dumper -- excreting sugar in urine reduces the
+fuel that generates damaging oxygen radicals. SGLT2 (sodium-glucose
+cotransporter 2) inhibitor. Creates caloric deficit via glucose excretion,
+activating AMPK mildly. Primary effect is antioxidant (reduced mitochondrial
+ROS). ITP male: +14% lifespan extension.
+
+--- Equation ---
+$$\\text{ROS}_{\\text{eff}} = \\text{ROS} \\cdot (1 - k_{\\text{aox}} \\cdot \\text{aox})$$ $$\\begin{aligned} \\text{ampk}_{\\text{direct}} &= 0.15 &\\quad \\%\\; &\\text{AMPK activation} \\\\ \\text{aox} &= 0.88 &\\quad \\%\\; &\\text{antioxidant strength} \\end{aligned}$$
+
+[Additional figures: stage_06_cana_states.png, stage_06_cana_bar.png]
+
+======================================================================
+SLIDE 18: 17\u03B1-Estradiol [8.4]
+======================================================================
+
+--- Narrative ---
+8.4 17alpha-Estradiol The male-only energy sensor -- a non-feminizing estrogen
+that boosts AMPK, but requires testosterone to work. Non-feminizing estrogen.
+Activates AMPK and provides antioxidant protection. Requires testosterone
+substrate (5alpha-reductase pathway) -- male-only efficacy. PMID 27312235 --
+14.4 ppm in diet. ITP male: +19%, female: 0%
+
+--- Equation ---
+$$\\text{ROS}_{\\text{eff}} = \\text{ROS} \\cdot (1 - k_{\\text{aox}} \\cdot \\text{aox})$$ $$\\begin{aligned} \\text{ampk}_{\\text{direct}} &= 0.42 &\\quad \\%\\; &\\text{AMPK activation} \\\\ \\text{aox} &= 0.46 &\\quad \\%\\; &\\text{antioxidant strength} \\end{aligned}$$Requires testosterone (male-only)
+
+[Additional figures: stage_06_17ae2_states.png, stage_06_17ae2_bar.png]
+
+======================================================================
+SLIDE 19: Glycine [8.5]
+======================================================================
+
+--- Narrative ---
+8.5 Glycine The simplest shield -- an amino acid that soaks up reactive oxygen
+species before they damage DNA. Amino acid supplement. Primarily antioxidant
+with very mild AMPK activation. Smallest effect among the six compounds. ITP
+male: +6%, female: +4%
+
+--- Equation ---
+$$\\text{ROS}_{\\text{eff}} = \\text{ROS} \\cdot (1 - k_{\\text{aox}} \\cdot \\text{aox})$$ $$\\begin{aligned} \\text{aox} &= 0.54 &\\quad \\%\\; &\\text{antioxidant strength} \\\\ \\text{ampk}_{\\text{direct}} &= 0.04 &\\quad \\%\\; &\\text{AMPK activation} \\end{aligned}$$
+
+[Additional figures: stage_06_glycine_states.png, stage_06_glycine_bar.png]
+
+======================================================================
+SLIDE 20: Aspirin [8.6]
+======================================================================
+
+--- Narrative ---
+8.6 Aspirin The inflammation brake -- quieting the alarm that senescent cells
+broadcast to their neighbors. Cyclooxygenase (COX) inhibitor with antioxidant
+and anti-inflammatory effects. Modest AMPK activation. Male-only at this dose --
+sex mechanism explained in Stage 13. ITP male: +8%, female: 0% All six compounds
+now visible. Next: calibration results.
+
+--- Equation ---
+$$\\text{ROS}_{\\text{eff}} = \\text{ROS} \\cdot (1 - k_{\\text{aox}} \\cdot \\text{aox})$$$$\\text{SASP}_{\\text{eff}} = \\text{SASP} \\cdot (1 - k_{\\text{ai}})$$ $$\\begin{aligned} \\text{aox} &= 0.20 &\\quad \\%\\; &\\text{antioxidant strength} \\\\ \\text{ampk}_{\\text{direct}} &= 0.12 &\\quad \\%\\; &\\text{AMPK activation} \\\\ k_{\\text{ai}} &= 0.09 &\\quad \\%\\; &\\text{anti-inflammatory} \\end{aligned}$$
+
+[Additional figures: stage_06_aspirin_states.png, stage_06_aspirin_bar.png]
+
+======================================================================
+SLIDE 21: Calibration [9]
+======================================================================
+
+--- Narrative ---
+Male Calibration Model calibrated to male ITP data: Compound ITP Model Rapamycin
++23% +23.0% Acarbose +22% +22.0% Canagliflozin +14% +13.8% 17alphaE2 +19% +19.0%
+Aspirin +8% +7.8% Glycine +6% +6.0% BioAge -> death: t death = time when
+BioAge(t) = 1.0. Logistic sigmoid (sigma = 0.12) models cohort variability.
+Overfit? 10 effective DOF for 12 data points (Slide A1). The real test: an out-
+of-sample combination prediction.
+
+--- Equation ---
+$$S(t) = \\frac{1}{1 + \\exp\\!\\left(\\frac{t - t_{\\text{death}}}{\\sigma}\\right)}$$ $$\\begin{aligned} \\sigma &= 0.12 &\\quad \\%\\; &\\text{transition sharpness} \\end{aligned}$$
+
+[Additional figures: stage_07_male_calibration.png, stage_08_survival_curves.png]
+
+======================================================================
+SLIDE 22: Prediction [10]
+======================================================================
+
+--- Narrative ---
+Rapamycin + Acarbose Independent validation. Model was NOT fit to combination
+data. Both converge on AMPK->Autophagy. Hill saturation -> sub-additive
+combination. Model: 33%. Naive sum: 45%. ITP observed: 34%. Both compounds
+modeled from 9-month start, matching ITP combo protocol (Strong 2022). Not fit
+-- predicted.
+
+--- Equation ---
+$$\\text{Autophagy} = \\frac{V_{\\max} \\cdot x}{K_m + x}$$$$f(a+b) $$\\begin{aligned} K_m &= 0.35 &\\quad \\%\\; &\\text{autophagy half-max} \\\\ x &= \\textstyle\\sum_i w_i \\cdot \\text{input}_i &\\quad \\%\\; &\\text{weighted pathway sum} \\end{aligned}$$
+
+[Additional figures: stage_08_mixing_bars.png]
+
+======================================================================
+SLIDE 23: Why Males? [11]
+======================================================================
+
+--- Narrative ---
+AMPK Sex Difference Female AMPK baseline is 1.4x male (estrogen -> LKB1, liver
+kinase B1; PMID 21876548 ). Higher baseline -> closer to saturation ->
+diminishing returns. The literature-derived parameter predicts ITP sex ratios
+for acarbose, canagliflozin, glycine. Not fit to sex data -- predicted from
+literature.
+
+--- Equation ---
+$$\\text{scaling}_F = \\frac{1}{1 + k \\cdot (\\text{baseline}_F - 1)}$$ $$\\begin{aligned} k &= 11 &\\quad \\%\\; &\\text{saturation steepness (acarbose)} \\\\ \\text{baseline}_F &= 1.4 &\\quad \\%\\; &\\text{female AMPK (rel. to male)} \\end{aligned}$$
+
+[Additional figures: stage_09_ampk_mf_bars.png]
+
+======================================================================
+SLIDE 24: The Saturation Curve [11b]
+======================================================================
+
+--- Narrative ---
+The Saturation Curve Female mice start with 1.4x higher AMPK activity (estrogen
+-> LKB1). On the saturation curve, that means females are already past the steep
+part. Adding more AMPK activation produces diminishing returns -- the same drug
+dose moves females less than males.
+
+[Additional figures: stage_09_ampk_saturation.png]
+
+======================================================================
+SLIDE 25: The Exception [12]
+======================================================================
+
+--- Narrative ---
+Rapamycin Pharmacokinetics (PK) Rapamycin breaks the AMPK pattern: F (+26%) > M
+(+23%). Higher female AMPK baseline alone cannot explain greater female survival
+-- it actually favors males. Something else must more than offset this. The
+answer is absorption: females have 3.48x higher blood levels (cytochrome P450
+3A, CYP3A; PMID 24341993 ). Greater mTORC1 inhibition overcomes the AMPK
+saturation disadvantage. Demonstrates model extensibility .
+
+--- Equation ---
+$$\\text{effective}_F = \\text{dose} \\times r_{\\text{pk}}$$$$\\text{mTORC1}_F = f(\\text{effective}_F)$$ $$\\begin{aligned} r_{\\text{pk}} &= 3.48 &\\quad \\%\\; &\\text{female/male blood level ratio} \\end{aligned}$$
+
+[Additional figures: stage_10_rapa_dose_response.png, stage_10_mf_updated.png]
+
+======================================================================
+SLIDE 26: 17\u03B1-Estradiol [13.1]
+======================================================================
+
+--- Narrative ---
+17alpha-Estradiol +19% male, 0% female. Why? 17alphaE2 activates AMPK and
+provides antioxidant protection. But it requires testosterone as a substrate --
+it works through 5alpha-reductase, which converts testosterone to
+dihydrotestosterone (DHT). Without testosterone (females, castrated males),
+there is zero effect . Castrated males lose all benefit ( Garratt 2018, PMID
+29806096 ).
+
+--- Equation ---
+$$\\text{effect}_F = 0 \\quad (\\text{no testosterone substrate})$$ $$\\begin{aligned} \\text{ampk}_{\\text{direct}} &= 0.42 &\\quad \\%\\; &\\text{male only} \\\\ \\text{aox} &= 0.46 &\\quad \\%\\; &\\text{male only} \\end{aligned}$$
+
+[Additional figures: stage_11a_testosterone.png, stage_11a_mf_cumulative.png]
+
+======================================================================
+SLIDE 27: Aspirin [13.2]
+======================================================================
+
+--- Narrative ---
+Aspirin +8% male, 0% female. Why? Aspirin is redundant with or interferes with
+estrogen's natural cardioprotective pathway . Estrogen activates
+COX-2->prostacyclin (PGI_2) for atheroprotection in females; aspirin's COX
+inhibition suppresses this. Evidence: deleting the PGI_2 receptor removes
+estrogen's protective effect. In postmenopausal women on hormone replacement
+therapy (HRT), concurrent non-steroidal anti-inflammatory (NSAID) use reversed
+cardioprotection (OR 0.66->1.50). ( Egan 2004, Science ; Grosser 2006, PLOS Med
+)
+
+--- Equation ---
+$$\\text{effect}_F = 0 \\quad (\\text{COX inhibition blocks estrogen} \\to \\text{COX-2} \\to \\text{PGI}_2 \\text{ pathway})$$ $$\\begin{aligned} \\text{aox} &= 0.20 &\\quad \\%\\; &\\text{male only} \\\\ \\text{ampk}_{\\text{direct}} &= 0.12 &\\quad \\%\\; &\\text{male only} \\\\ k_{\\text{ai}} &= 0.09 &\\quad \\%\\; &\\text{male only} \\end{aligned}$$
+
+[Additional figures: stage_11b_estrogen_intf.png, stage_11b_mf_cumulative.png]
+
+======================================================================
+SLIDE 28: Four Sex Mechanisms [13.3]
+======================================================================
+
+--- Narrative ---
+Four Sex Mechanisms Every compound's sex difference is now explained by one of
+four mechanisms: * AMPK saturation limited (acarbose, cana, glycine) * PK
+difference dominant (rapamycin) * Testosterone-dependent (17alphaE2) * Estrogen
+interference (aspirin) Three are predicted from literature parameters , not fit
+to sex data. One (PK) uses measured blood levels.
+
+[Additional figures: stage_11_mf_complete.png]
+
+======================================================================
+SLIDE 29: The Full Picture [14]
+======================================================================
+
+--- Narrative ---
+The Full Picture BioAge = 0.30*Meth + 0.30*Damage + 0.25*H + 0.15*SenCells The
+model tracks 17 variables across 7 ODEs and 9 algebraic intermediates, governed
+by 196 parameters. Of these, 28 are calibrated to ITP lifespan data (13 compound
+intervention values, 4 BioAge weights, 5 sex-mechanism parameters, and 6 dose-
+response Hill fits). The remainder break down as follows: Source Count Examples
+* Literature 26 PARP1/SIRT1 NAD+ ratio, mtDNA N eff , rapa PK * Estimated 78
+Coupling strengths + 6 dose-response estimates * Structural 39 Hill
+coefficients, bounds, normalization, sigmoid * Inactive 25 Cancer module, human
+translation scaling Six compounds tested individually, 4 sex mechanisms, and 1
+out-of-sample combination prediction (rapa + acarbose: 33% predicted, 34%
+observed). Click any node or compound for parameter details and references.
+
+--- Equation ---
+$$\\text{BioAge} = w_m \\frac{\\text{Meth}}{N_m} + w_d \\frac{\\text{Damage}}{N_d} + w_H \\frac{H}{N_H} + w_s \\frac{\\text{SenCells}}{N_s}$$ $$\\begin{aligned} w_m &= 0.30 &\\quad \\%\\; &\\text{methylation weight} \\\\ w_d &= 0.30 &\\quad \\%\\; &\\text{damage weight} \\\\ w_H &= 0.25 &\\quad \\%\\; &\\text{heteroplasmy weight} \\\\ w_s &= 0.15 &\\quad \\%\\; &\\text{senescence weight} \\\\ N_m &= 1.09 &\\quad \\%\\; &\\text{methylation norm} \\\\ N_d &= 0.67 &\\quad \\%\\; &\\text{damage norm} \\\\ N_H &= 0.18 &\\quad \\%\\; &\\text{heteroplasmy norm} \\\\ N_s &= 0.22 &\\quad \\%\\; &\\text{senescence norm} \\end{aligned}$$
+
+======================================================================
+SLIDE 30: Combination Predictions [15]
+======================================================================
+
+[Figure: stage_14_dose_matrix.png]
+
+--- Narrative ---
+Combination Predictions The heatmap shows all pairwise combinations of 6 ITP
+compounds at 4 dose levels (0, 0.5x, 1x, 2x) -- a 24x24 dose-response matrix
+with per-compound Hill dose-response curves . Lower-left triangle = Male ,
+upper-right = Female . Each compound has a normalized Hill function f(d) = d n
+(K n +1)/(K n +d n ) fitted to ITP multi-dose data where available. At 2x dose,
+effective pathway activation ranges from f(2)=1.02 (acarbose -- fully saturated)
+to f(2)=1.50 (glycine -- still climbing). The greedy subtraction charts use
+progressive removal : start with all 6 compounds, remove the one contributing
+least, repeat. With dose-response curves, doubling dose adds almost nothing :
+All 6 at 2x (49.9% M) barely exceeds all 6 at 1x (49.8% M). Glycine is the only
+compound with meaningful 2x headroom (f(2)=1.50). Rapa and acarbose are
+essentially saturated at 1x.
+
+[Additional figures: stage_14_greedy_male.png, stage_14_greedy_female.png, stage_14_greedy_male_2x.png, stage_14_greedy_female_2x.png]
+
+======================================================================
+SLIDE 31: Risk-Benefit Analysis [16]
+======================================================================
+
+[Figure: stage_15_optimal_cocktails.png]
+
+--- Narrative ---
+Risk-Benefit Optimization There's no free lunch -- higher doses and more
+compounds carry side-effect risk . The question: what's the best combination at
+each risk budget? The risk profile (right) assigns literature-grounded scores
+(0-10) per compound per dose: Rapamycin 2x (risk 6.5): immunosuppression,
+metabolic effects Acarbose 2x (risk 4.0): GI distress -- but dose-response curve
+shows zero additional benefit Glycine 2x (risk 1.0): essentially harmless -- and
+the only compound with meaningful 2x headroom (f(2)=1.50) The optimal
+combinations (left) enumerate all 729 combinations (6 compounds x {0, 1x, 2x})
+with per-compound Hill dose-response curves. Key finding: Dose-response curves
+dramatically compress the 2x predictions. Acarbose and rapamycin are saturated
+at 1x (f(2)~1.02 and 1.09 respectively). Doubling all 6 compounds adds <1
+percentage point over 1x dosing. The optimal male strategy at low risk (<=5) is
+Acarb + Aspirin + 2xGlycine (34%); at risk <=12, adding rapa + 2x17alphaE2
+reaches 50%. Females: Rapamycin dominates due to the 3.48x PK advantage. Best
+low-risk (Rapa + 2xGlycine, 32%) scales to 39% at high risk budgets. Risk scores
+are semi-quantitative. Dose-response curves fitted to ITP multi-dose data (rapa,
+acarbose, 17alphaE2) or estimated from pharmacology (cana, aspirin, glycine).
+
+[Additional figures: stage_15_risk_profile.png]
+
+======================================================================
+SLIDE 32: Adding Targets [17]
+======================================================================
+
+[Figure: stage_16_whatif.png]
+
+--- Narrative ---
+The Heteroplasmy Bottleneck The ITP unisex cocktail (Rapa+Acarb+Cana+Gly at 1x
+dose) extends male lifespan by 53%, but the BioAge decomposition (left) reveals
+what limits further gains: at the treated animal's death, heteroplasmy dominates
+BioAge -- nearly untouched by any ITP compound. The stacked bars show each
+component's fractional contribution to BioAge at death: Control -- balanced
+contributions matching the assigned weights (30/30/25/15). ITP base
+(Rapa+Acarb+Cana+Glycine at 1x dose) -- the best 4-element unisex combination
+(+53% M, +45% F, avg 49%). Methylation, damage, and senescence are substantially
+reduced, but heteroplasmy is barely affected , rising to dominate BioAge at
+death. + Novel targets -- adding a mitophagy enhancer (targeting H directly)
+plus NAD + interventions and senolytics breaks through the heteroplasmy
+bottleneck. This follows from series reliability : when a system fails upon any
+component reaching its threshold, treating all components except one leaves that
+untreated component as the binding constraint. The four ITP compounds act
+primarily through overlapping AMPK/mTORC1 pathways, reducing methylation drift,
+DNA damage accumulation, and senescent cell burden -- but none significantly
+slows mitochondrial heteroplasmy. Adding Targets The bar chart (right) shows
+predicted extensions when interventions targeting currently unaddressed pathways
+are layered on the ITP-4 unisex base (+53% M): Mitophagy enhancer (Urolithin A):
++36% marginal over base -- the single largest predicted gain, consistent with H
+as the primary bottleneck NMN (NAD + precursor): +20% marginal -- directly
+supplements the NAD + pool depleted by rising H CD38 inhibitor : +12% marginal
+-- reduces age-dependent NAD + consumption driven by SASP Senolytic (D+Q): +10%
+marginal -- pulsed clearance of senescent cells (biweekly, Baker 2016) Novel
+compound parameters are literature-estimated, not calibrated to lifespan data.
+These predictions indicate which mechanisms contribute most to further
+extension, not precise magnitudes. Circularity note: No ITP compound directly
+targets heteroplasmy, so the H dynamics and its BioAge weight (w H =0.25) are
+constrained by model structure and literature, not by the lifespan data. The
+"biggest bottleneck" conclusion follows substantially from this weight
+assignment. The BioAge weights (30/30/25/15) are moderately constrained priors
+-- w meth is allowable over [0.25, 0.40] -- not tight posteriors. The
+qualitative conclusion (heteroplasmy is underaddressed) is robust across this
+range, but the quantitative dominance depends on the specific weights chosen.
+
+[Additional figures: stage_16_bioage_composition.png]
+
+======================================================================
+SLIDE 33: Limitations [18]
+======================================================================
+
+--- Narrative ---
+What This Model Cannot Do Every model is a simplification. Before interpreting
+predictions, understand the boundaries: Hard limitations No toxicity prediction.
+The model tracks aging biology, not pharmacology. It cannot predict side
+effects, organ toxicity, maximum tolerated dose, or drug-drug interactions
+mediated by CYP metabolism, protein binding, or off-target effects. A compound
+that extends model lifespan by 50% might kill the animal through hepatotoxicity.
+No human translation. All parameters are calibrated to UM-HET3 mice (30-month
+lifespan, specific genetic background). Translating to humans requires
+additional assumptions about pathway conservation, dose scaling, and species-
+specific biology that this model does not make. No pharmacokinetics beyond dose-
+response. The model applies interventions as continuous pathway perturbations
+from a start time. It does not model absorption, distribution, metabolism,
+elimination, tissue-specific concentrations, or pulsed dosing pharmacokinetics
+(except for senolytics, which use a simplified pulse model). Structural
+constraints 10 effective degrees of freedom (Slide A1). The ITP data constrains
+10 directions in parameter space. The model cannot resolve finer distinctions --
+e.g., it cannot distinguish between two compounds that activate the same 10
+directions with similar magnitudes, even if their biology differs in ways the
+model doesn't capture. SASP/senescence parameters are unconstrained (Slide A4,
+Stage 5 caveat). No ITP compound is a senolytic. The senescence feedback loop is
+structurally included but its parameters are literature-estimated, not
+calibrated to lifespan outcomes. Predictions involving senolytics carry wider
+uncertainty than ITP-validated compounds. Novel compound predictions are
+directional, not quantitative. NMN, CD38 inhibitors, mitophagy enhancers, and
+senolytics use literature-estimated pathway injections without dose-response
+calibration. The model reliably predicts which mechanisms matter most (Stage 17)
+but the absolute magnitudes are uncertain. What the model can do Predict
+combination outcomes for ITP compounds (validated: rapa+acarbose within 1% of
+observed). Rank intervention targets by predicted leverage (Slide A9-A10).
+Identify which novel targets to test first and which pairs to prioritize (Slide
+A10-A11). Explain sex differences through four mechanistic routes (Stage 13.3).
+
+======================================================================
+SLIDE 34: Identifiability Analysis [A1]
+======================================================================
+
+[Figure: stage_A1_svd_spectrum.png]
+
+--- Narrative ---
+How Many Parameters Does the Data See? The ELM has ~150 parameters but only 12
+calibration targets (6 compounds x 2 sexes). A Jacobian-SVD analysis reveals
+that exactly 10 linear combinations of parameters are constrained by the ITP
+data. The remaining ~140 directions have zero sensitivity -- the data cannot
+distinguish changes along them. Two condition numbers, two questions: kappa =
+14.6 (full space): The 10 observable DOF are well-separated. Best-constrained
+direction is only 14.6x more observable than the worst. Are the 10 DOF well-
+defined? Yes. kappa = 210 (observable subspace): Among the 18 individual
+parameters with nonzero sensitivity, the strongest (heteroplasmy
+transcription_advantage, sigma=251) is 210x more observable than the weakest
+(Km_nad_sirt1, sigma=1.2). Can we pin down individual values? Moderately. The
+model has fewer effective DOF (10) than data points (12), leaving room for
+genuine prediction rather than curve-fitting. Two exact null directions exist:
+k_nmn_synthesis and k_sirt_consumption form a gauge pair (their ratio is
+constrained but individual values are not).
+
+--- Equation ---
+$$J = U \\Sigma V^T \\quad \\text{where } J_{ij} = \\frac{\\partial (\\text{extension}_i)}{\\partial \\theta_j}$$$$\\text{rank}(J) = 10, \\quad \\kappa_{\\text{full}} = \\frac{\\sigma_1}{\\sigma_{10}} = 14.6, \\quad \\kappa_{\\text{obs}} = 210$$ $$\\sigma_1 = 251.4$$ &mdash; heteroplasmy dynamics $$\\sigma_2 = 68.3$$ &mdash; mTOR signaling chain $$\\sigma_3 = 31.0$$ &mdash; AMPK &rarr; methylation $$\\sigma_{10} = 1.2$$ &mdash; sirtuin sensitivity
+
+======================================================================
+SLIDE 35: Gauge Symmetry [A2]
+======================================================================
+
+[Figure: gauge_drift_ratios.png]
+
+--- Narrative ---
+Is the Model Just Fitting a Rate? A gauge symmetry would mean the background
+aging rate can be freely rescaled while adjusting intervention effects to
+compensate -- producing identical predictions. The ELM has a partial gauge
+symmetry. Increasing transcription_advantage by 10% shifts all 12 predictions,
+but the shift-to-baseline ratios vary by compound (0.151 to 0.207, a 37% spread
+). If the model were merely fitting a single rate, these ratios would be
+identical. The spread comes from nonlinear saturation : AMPK Michaelis-Menten
+kinetics buffer acarbose against gauge drift, while linear pathways (glycine
+antioxidant) track the drift closely. This confirms genuine mechanistic content
+beyond simple rate rescaling.
+
+--- Equation ---
+$$\\text{Drift ratio} = \\frac{\\Delta\\text{ext}_i / \\text{ext}_i}{\\Delta\\text{ext}_{\\text{ctrl}} / \\text{ext}_{\\text{ctrl}}}$$ Canagliflozin M: 0.151 (most buffered) Acarbose M: 0.207 (least buffered) Spread: 37% (partial, not full)
+
+======================================================================
+SLIDE 36: Leave-One-Out Vulnerability [A3]
+======================================================================
+
+[Figure: loo_jacobian_residuals.png]
+
+--- Narrative ---
+What If We Didn't Have This Compound? For each ITP compound, we project its
+Jacobian sensitivity onto the row space of the remaining 5 compounds. The
+fraction captured measures how well the other compounds constrain the held-out
+prediction. All compounds are 79-99% captured. The model's pathway architecture
+constrains predictions even for held-out compounds. Key findings: Glycine is
+most vulnerable (79.2%): its uniquely antioxidant-heavy profile is not shared by
+other compounds. Est. Leave-One-Out (LOO) error: 3-5%. 17alphaE2 is most implied
+(99.9%): its male effect uses pathways shared with other compounds; its female
+zero is categorical. Female predictions drive vulnerability for compounds with
+sex mechanisms (rapa, acarbose, canagliflozin) -- sex parameters provide unique
+sensitivity directions that vanish when the compound is removed. Estimated LOO
+errors are bounded within ~5% for all compounds -- consistent with a 10-DOF
+model fit to 12 targets.
+
+--- Equation ---
+$$\\text{Captured}(i) = \\frac{\\|\\text{proj}_{\\text{row}(J_{-i})} J_i\\|}{\\|J_i\\|}$$ Glycine: 79.2% &mdash; most vulnerable 17&alpha;E2: 99.9% &mdash; most implied Rapamycin: 95.4% &mdash; best-conditioned Leave-One-Out error bounded within ~5%
+
+======================================================================
+SLIDE 37: SASP: The Phantom Node [A4]
+======================================================================
+
+--- Narrative ---
+SASP: Fully Wired, Nearly Silent The SASP module computes 5 downstream effects
+at every timestep: CD38 upregulation, paracrine senescence, ROS production,
+immune suppression, and methylation drift acceleration. Four of these are
+consumed by downstream state updates. The fifth (cd38_upregulation) is computed
+but never consumed -- the SASP->CD38 pathway is mediated by the receiver-side
+parameter k_cd38_sasp instead. But none of it matters quantitatively: perturbing
+all sender couplings by 10x shifts predictions by at most 0.10% . SASP levels
+are small in the ITP operating regime because these compounds attack upstream
+damage, keeping senescent cell counts low. The SASP module is correctly
+unconstrained. The ITP panel contains no senolytics. A senolytic compound would
+change SASP's operating range and make these couplings observable. Until then,
+SASP is a phantom node: structurally necessary for the feedback loop,
+quantitatively silent. w_sasp = 0.0 in BioAge -- SASP has zero direct weight.
+Its influence is entirely indirect, through CD38->NAD+, ROS->damage, and
+paracrine->senescence. Forward infrastructure: These SASP and senescence modules
+remain ready to calibrate once senolytic trial data (e.g., dasatinib+quercetin
+ITP results) and CD38 inhibitor measurements become available. The structural
+coupling is in place; only the parameter values are unconstrained.
+
+======================================================================
+SLIDE 38: Rapa + NMN Prediction [A5]
+======================================================================
+
+--- Narrative ---
+Rapa + NMN: A Testable Prediction Rapamycin (mTORC1 inhibition + AMPK) and NMN
+(NAD+ precursor) target independent subsystems. The model predicts their
+combination produces superadditive lifespan extension: Scenario Male Female
+Rapamycin alone 23.0% 26.2% NMN alone 3.4% 3.4% Additive floor 26.4% 29.6% Model
+prediction 31.8% 36.0% The +5-6% superadditive component arises from model
+structure: NMN's NAD+ boost (3.4% alone) compounds over the extra lifespan that
+rapamycin provides. The longer the animal lives, the more cumulative benefit NMN
+delivers. Whether this persists in practice depends on late-life dynamics -- see
+caveat below. Both compounds modeled from 9-month start (plausible ITP
+protocol). [!] Late-life extrapolation caveat: The model assumes constant
+intervention efficacy throughout life. In reality, autophagy capacity declines,
+NAD+ production falls further, and senescent cell burden grows in late life. The
+superadditive component relies on compound effects persisting at mid-life
+magnitude into late life. The additive floor (26% M / 30% F) is the defensible
+prediction. The full prediction (32% M / 36% F) is a structural upper bound
+conditioned on late-life extrapolation.
+
+--- Equation ---
+$$\\text{ext}_{\\text{combo}} = \\frac{t_{\\text{death,combo}} - t_{\\text{death,ctrl}}}{t_{\\text{death,ctrl}}}$$$$\\text{ext}_{\\text{combo}} > \\text{ext}_{\\text{rapa}} + \\text{ext}_{\\text{NMN}}$$ Male: 31.8% (additive floor 26.4%) Female: 36.0% (additive floor 29.6%) Superadditivity: +5.4% (M), +6.4% (F) Both compounds from 9-month start (plausible ITP protocol)
+
+======================================================================
+SLIDE 39: Rapa + NMN Superadditivity Robustness [A5b]
+======================================================================
+
+[Figure: stage_A5_sensitivity.png]
+
+--- Narrative ---
+Rapa + NMN Superadditivity Robustness Every parameter perturbed +/-20%. The
+total Rapa+NMN prediction shifts by at most +/-1.5 pp. The superadditive
+component (+5.5 pp baseline) survives all perturbations -- it never drops below
+zero. Most sensitive parameter: k_nmn_synthesis (NMN->NAD efficiency, +/-1.5
+pp). Second: Km_nad_sirt1 (NAD affinity for SIRT1, +/-1.3 pp). BioAge weights
+shift the total prediction but barely affect the superadditive component.
+
+======================================================================
+SLIDE 40: BioAge Weight Sensitivity [A6]
+======================================================================
+
+[Figure: w_meth_sweep.png]
+
+--- Narrative ---
+How Much Does Methylation Weigh? The BioAge composite weights each subsystem:
+methylation (w meth =0.30), damage (0.30), heteroplasmy (0.25), senescence
+(0.15). How sensitive are predictions to this weighting? A sweep across w meth
+in [0.15, 0.55] reveals a sharp constraint: Below 0.20: Acarbose predictions
+collapse (error >3%) Above 0.50: Rapa+acarbose validation degrades [0.25, 0.40]:
+All calibration targets within 1%, validation holds Current: w meth = 0.30, mean
+error 0.08% The rapa+NMN combination prediction is robust across this range:
+<0.5% shift between w meth =0.25 and 0.40. The purple band: external constraint
+from aging clocks How much should methylation weigh in a biological age
+composite? We mapped the components of three published clocks -- GrimAge2 ( Lu
+2022 ), PhenoAge ( Levine 2018 ), and DunedinPACE ( Belsky 2022 ) -- to ELM-
+equivalent aging categories, and computed the epigenetic fraction of each
+clock's mortality-predictive variance. The range is 5-30% : GrimAge's
+adrenomedullin surrogate (enriched in Polycomb targets) contributes ~11% as
+strict epigenetic drift, rising to ~15% when damage-coupled remodeling is
+included. PhenoAge's RDW-dominated variance reaches ~30% under the broad
+estimate. Pure drift clocks ( Horvath 2013 , Hannum 2013 ) capture ~40% of
+composite-clock mortality signal ( Hillary 2020 ), but this is an upper bound
+since drift clocks also partly read out non-epigenetic biology. The ELM's w meth
+=0.30 sits at the top of this external range -- which is what the calibration
+data demands. The model's methylation weight is pushed high because the ELM's
+methylation ODE integrates damage-accelerated drift (via EZH2) and SASP-
+accelerated drift, not just stochastic CpG noise. Analysis:
+scripts/clock_pca/clock_methylation_fraction.py
+
+--- Equation ---
+$$\\text{BioAge} = w_m \\cdot \\frac{\\text{Meth}}{N_m} + w_d \\cdot \\frac{\\text{Damage}}{N_d} + w_H \\cdot \\frac{H}{N_H} + w_s \\cdot \\frac{\\text{SenCells}}{N_s}$$ w meth constrained to [0.25, 0.40] by calibration data Current: 0.30 (mean error 0.08%) Rapa+NMN prediction robust to weight variation (&lt;0.5%)
+
+======================================================================
+SLIDE 41: Weight Sensitivity: H & Sen [A6b]
+======================================================================
+
+[Figure: stage_A6b_weight_sensitivity.png]
+
+--- Narrative ---
+How Robust Is the Bottleneck? The "heteroplasmy is the biggest bottleneck"
+conclusion (Slide 17) depends on w H =0.25. But no ITP compound targets
+heteroplasmy directly, so this weight is constrained by model structure and
+literature, not by the lifespan data. How much does the weight assignment
+matter? w hetero sweep (top row) Calibration constrains w H to [0.20, 0.30] --
+outside this range, max ITP target error exceeds +/-1%. At w H =0.20 (lowest
+acceptable): H still accounts for 46% of BioAge at death in treated animals, and
+mitophagy marginal addition is +114% -- still the dominant novel target by a
+wide margin. At w H =0.30 (highest acceptable): H accounts for 57%, mitophagy
+marginal is +160%. The qualitative conclusion -- heteroplasmy is the primary
+untreated bottleneck, and mitophagy is the most valuable novel target -- is
+robust across the entire calibration-acceptable range . w sen sweep (bottom row)
+Calibration constrains w sen to [0.10, 0.20] . Within this range, the H
+bottleneck (51-53%) and mitophagy marginal (135-140%) barely move. Senescence
+weight has minimal impact on the key conclusions. Remaining weights are
+redistributed proportionally when a single weight is varied. The Rapa+Acarb
+validation prediction tracks the calibration: it passes (+/-1pp of observed 34%)
+only within the same weight ranges that pass individual calibration.
+
+======================================================================
+SLIDE 42: Feedback Loops [A7]
+======================================================================
+
+--- Narrative ---
+Feedback Loops The aging network contains three positive feedback (vicious
+cycle) loops that amplify damage beyond what any single hallmark would predict.
+The diagram highlights them in two colors. PARP->NAD Vicious Cycle (+3.0%) DNA
+damage consumes NAD + via PARP1 activation, reducing repair capacity, causing
+more damage. This self-amplifying cycle (red edges) is 15x more impactful than
+either SASP loop. SASP Feedback Loops (+0.1-0.2%) Two SASP-mediated loops
+(orange edges): CD38-mediated: SASP -> CD38 -> NADv -> PARP1/Repairv -> Damage^
+-> Senescence^ Paracrine: SASP -> DNA damage -> Senescence -> more SASP SASP
+loops are less impactful because SASP carries zero direct weight in BioAge (w
+SASP =0); their damage is indirect, mediated through CD38 and paracrine
+senescence. Key insight: Positive feedback means damage accelerates -- the
+system gets worse faster the worse it already is. This explains why aging
+accelerates in late life.
+
+--- Equation ---
+Three positive feedback loops:$$\\begin{aligned}\\color{#e74c3c}{\\text{Loop 3:}} \\quad & \\text{Damage} \\xrightarrow{k_{\\text{parp}}} \\text{NAD}\\!\\downarrow \\;\\to\\; \\text{PARP1/Repair}\\!\\downarrow \\;\\to\\; \\text{Damage} \\\\[4pt]\\color{#e67e22}{\\text{Loop 2:}} \\quad & \\text{SASP} \\xrightarrow{k_{\\text{cd38}}} \\text{NAD}\\!\\downarrow \\;\\to\\; \\text{PARP1/Repair}\\!\\downarrow \\;\\to\\; \\text{Damage}\\!\\uparrow \\\\[4pt]\\color{#e67e22}{\\text{Loop 1:}} \\quad & \\text{Sen} \\xrightarrow{k_{\\text{sasp}}} \\text{SASP} \\xrightarrow{k_{\\text{par}}} \\text{Sen}\\end{aligned}$$Loop-breaking lifespan gains (untreated control):$$\\begin{aligned}\\text{PARP-NAD} &: +3.0\\% \\\\\\text{SASP-NAD-Damage} &: +0.2\\% \\\\\\text{SASP Paracrine} &: +0.1\\%\\end{aligned}$$
+
+[Additional figures: stage_17_loop_breaking.png]
+
+======================================================================
+SLIDE 43: Hallmark Importance [A8]
+======================================================================
+
+--- Narrative ---
+Hallmark Importance "What if this hallmark never deteriorated?" For each state
+variable, we zero its driving forces (= perfect prevention) and measure the
+lifespan extension. DNA Damage: +68% -- far exceeds its 25% BioAge weight. Why?
+Because damage feeds back through the PARP1/Repair->NAD vicious cycle from Slide
+A7 AND triggers senescence (another 15% of BioAge). Preventing damage has
+cascading protective effects. Methylation: +36% -- proportional to its 30%
+weight. Methylation is an autonomous clock with limited feedback coupling.
+Heteroplasmy: +15% -- close to its 25% weight. H drives NAD + depletion via
+OXPHOS failure, but the indirect effects are modest in isolation. Senescent
+Cells: +14% -- close to its 15% weight, limited amplification. Key insight: DNA
+Damage's +68% vs its 25% weight is the fingerprint of feedback amplification .
+The PARP1/Repair->NAD vicious cycle (Slide A7) explains why: preventing damage
+also preserves NAD + , which maintains PARP1/Repair capacity, which prevents
+more damage -- a virtuous cycle.
+
+--- Equation ---
+$$S_i = \\frac{\\Delta\\%\\;\\text{lifespan}}{\\Delta\\, p_i}\\bigg|_{p_i=0.1}$$Node clamping results:$$\\begin{aligned}\\text{DNA Damage} &: +68\\% \\quad (w_d = 0.25) \\\\\\text{Methylation} &: +36\\% \\quad (w_m = 0.30) \\\\\\text{Heteroplasmy} &: +15\\% \\quad (w_H = 0.25) \\\\\\text{SenCells} &: +14\\% \\quad (w_s = 0.15)\\end{aligned}$$
+
+[Additional figures: stage_17_node_clamping.png]
+
+======================================================================
+SLIDE 44: Pathway Sensitivity [A9]
+======================================================================
+
+--- Narrative ---
+Intervention Point Sensitivity For each intervention point, we apply a standard
+dose (0.1) and measure the marginal lifespan gained per unit dose. The tornado
+chart ranks the actionable targets: AMPK activation (62) is the top-ranked
+intervention point -- consistent with AMPK's position as the master energy
+sensor driving TSC2, autophagy, senescence reduction, and EZH2 inhibition
+simultaneously. This is the hub through which most ITP compounds operate.
+Senolytic (D+Q) (60) is nearly as effective. The model uses a pulsed clearance
+mechanism: biweekly dosing (Baker et al. 2016, PMID 26840489 ), with ~30%
+senescent cell clearance per pulse (Zhu et al. 2015, PMID 25754370 ). Repeated
+cycles compound, cumulatively clearing the majority of senescent cells over the
+treatment window. Gut microbiome (22) acts through CD38 inhibition, methylation
+reduction, and senescence reduction -- three independent downstream effects.
+Mitophagy (13) ranks highest among novel targets, reinforcing the Stage 17
+finding that heteroplasmy is a key bottleneck. Strategic implication: The
+greatest leverage is at DNA damage (node clamping +68%) and AMPK activation
+(sensitivity 62). The PARP->NAD vicious cycle (Slide A7) suggests that NAD +
+interventions (NMN, CD38 inhibitors) gain additional value by breaking this
+feedback loop, beyond their direct NAD + replenishment. Senolytic benefit is
+frequency-dependent; more aggressive dosing protocols would increase its
+ranking.
+
+--- Equation ---
+$$S_i = \\frac{\\Delta\\%\\;\\text{lifespan}}{\\Delta\\, p_i}\\bigg|_{p_i=0.1}$$Top intervention point sensitivities:$$\\begin{aligned}\\text{AMPK activation} &: 62 \\\\\\text{Senolytic (D+Q)} &: 60 \\\\\\text{Gut microbiome} &: 22 \\\\\\text{Mitophagy} &: 13 \\\\\\text{mTORC1 inhibition} &: 7\\end{aligned}$$
+
+[Additional figures: stage_17_pathway_sensitivity.png]
+
+======================================================================
+SLIDE 45: Pairwise Synergy [A10]
+======================================================================
+
+[Figure: stage_A10_synergy_full.png]
+
+--- Narrative ---
+Full Pairwise Synergy Matrix Single-point sensitivity (A9) ranks interventions
+in isolation. But in a nonlinear system with feedback loops, the value of
+intervention A depends on whether B is also active. This 10x10 matrix
+systematically maps all 45 compound pairs as super-additive (red) or sub-
+additive (blue). Reading the matrix: The diagonal shows each compound's solo
+lifespan extension. Off-diagonal cells show synergy in percentage points -- how
+much the pair exceeds (or falls short of) the sum of its parts. Key findings
+Rapa + Acarbose: -6.0 pp (M) -- subadditive. Both compounds converge on AMPK,
+which saturates via Michaelis-Menten kinetics. The marginal value of more AMPK
+activation diminishes once TSC2 is near-maximally activated. Rapa + NMN: +7.0 pp
+-- superadditive. mTORC1 inhibition (rapamycin) and NAD + replenishment (NMN)
+attack independent rate-limiting steps. Rapamycin boosts autophagy while NMN
+restores SIRT1-mediated DNA repair -- no shared bottleneck. Mitophagy +
+everything: strongly superadditive -- +22 pp with Rapa (M), +17 pp with Acarb,
++15 pp with 17alphaE2. Heteroplasmy is a root-cause driver (Stage A8 node
+clamping: +15%) that no ITP compound directly addresses. Adding mitophagy is
+always pathway-independent from ITP mechanisms. 17alphaE2 is broadly subadditive
+with ITP compounds (M) -- -5.5 with Rapa, -7.5 with Acarb. Its SIRT1-mediated
+mechanism partially overlaps with NAD->SIRT1 benefits already provided by AMPK-
+activating drugs. Sex differences: Female panel shows much weaker ITPxITP
+interactions (most near zero) because sex modifiers already attenuate several
+ITP compounds in females, leaving less signal to interact. Dashed lines separate
+the 6 ITP-validated compounds (top-left block) from the 4 novel targets (bottom-
+right). Cross-block cells show ITPxnovel synergies -- the most actionable
+predictions for experimental design.
+
+--- Equation ---
+$$\\Delta_{ij} = \\text{ext}(i{+}j) - \\text{ext}(i) - \\text{ext}(j)$$Since ext({}) = 0, this is a proper interaction term.$$\\Delta > 0 \\;\\Rightarrow\\; \\text{super-additive (pathway-independent)}$$$$\\Delta < 0 \\;\\Rightarrow\\; \\text{sub-additive (shared bottleneck)}$$All 45 pairs x 2 sexes = 90 pairwise simulations + 10 singles x 2 sexes.
+
+======================================================================
+SLIDE 46: Conditional Synergy [A11]
+======================================================================
+
+[Figure: stage_A10_synergy_conditional.png]
+
+--- Narrative ---
+Conditional Synergy: Novel Pairs on ITP Base The full matrix (A10) tests pairs
+in isolation. But the real question for translational design is: given that the
+ITP base cocktail (Rapa + Acarb + Cana + Glycine) is already active, which novel
+target pairs add more than the sum of their individual additions? Diagonal =
+marginal contribution of each novel target when added solo to the ITP base. Off-
+diagonal = conditional synergy between novel target pairs, controlling for the
+base. Key findings Mitophagy dominates -- +137.5% marginal addition (M), +101.5%
+(F) on top of ITP base. This reflects the model's prediction that heteroplasmy
+is the primary unaddressed bottleneck in the ITP cocktail. With AMPK/mTORC1
+already saturated by the base, reducing mitochondrial mutant load unlocks a new
+axis of benefit. Mitophagy + Senolytic: +29 pp conditional synergy (M) -- the
+top novel pair. Mechanistically independent: mitophagy reduces heteroplasmy ->
+less ROS -> less damage, while senolytics directly clear senescent cells.
+Together they break both the upstream (mito damage) and downstream (senescence
+accumulation) arms of the vicious cycle. NMN + CD38i: -10.5 pp (M) --
+subadditive. Both target NAD + homeostasis (NMN boosts synthesis, CD38i reduces
+consumption). On top of the ITP base which already activates AMPK->NAMPT,
+further NAD + boosting saturates SIRT1 activation. Mitophagy + NMN: +33 pp (M),
++12.5 pp (F) -- strongly synergistic. Mitophagy reduces heteroplasmy, improving
+OXPHOS efficiency and reducing NAD + consumption from ROS-induced damage. NMN
+simultaneously boosts the now-more-efficient NAD + synthesis pathway. Each makes
+the other more effective. Implication for experimental design: Prioritize
+Mitophagy (urolithin A) + Senolytic (D+Q) as the first novel pair to test on top
+of the ITP cocktail. The conditional synergy is large, mechanistically
+interpretable, and both compounds are available for mouse studies. SASP
+dependency warning: The senolytic predictions (diagonal and off-diagonal) depend
+on SASP coupling parameters that are literature-estimated, not calibrated to
+lifespan data (see A4). The Mitophagy+Senolytic synergy (+29 pp) is the most
+SASP-dependent result in this matrix. The Mitophagy+NMN synergy (+33 pp) is more
+robust as it operates through the NAD+/heteroplasmy axis.
+
+--- Equation ---
+$$\\Delta_{ij|B} = \\text{ext}(B{+}i{+}j) - \\text{ext}(B{+}i) - \\text{ext}(B{+}j) + \\text{ext}(B)$$where $B$ = ITP base (Rapa + Acarb + Cana + Gly). This is the second-order interaction term conditioned on a nonzero baseline -- it isolates the novelxnovel interaction from the already-captured basexnovel effects.
+
+======================================================================
+SLIDE 47: Network Structure (1/4): Adjacency [A12]
+======================================================================
+
+[Figure: stage_A10_adjacency.png]
+
+--- Narrative ---
+Weighted Adjacency Matrix The synergy matrices (A10-A11) show which pairs
+interact. To explain why , we express the ODE coupling structure as a weighted
+directed graph. Each cell A[i,j] is the coupling strength of node j's influence
+on node i, extracted directly from the differential equations in model.py.
+Reading the matrix Green cells = activating (e.g. NAD -> SIRT1: +0.9). More of
+the column variable increases the row variable. Blue cells = inhibiting (e.g.
+TSC2 -> mTORC1: -0.9). More of the column variable decreases the row variable.
+Empty cells = no direct coupling. Influence can still propagate indirectly
+through intermediaries. Key structures visible SASP vicious cycle: SenCells ->
+SASP (+0.8), then SASP feeds back to NAD (-0.6), DNA damage (+0.4), SenCells
+(+0.5), and Methylation (+0.4). This is the aging amplifier -- once triggered,
+it accelerates multiple damage axes simultaneously. AMPK signaling cascade: AMPK
+-> TSC2 (+0.8) -> mTORC1 (-0.9) fans out to Autophagy, DNA damage, and
+Senescence. This chain explains why AMPK activation has the highest sensitivity
+(A9). NAD->SIRT1->FOXO3 axis: A linear cascade (+0.9, +0.7) that branches into
+autophagy, DNA repair, methylation, and heteroplasmy selection. NAD + depletion
+propagates broadly. BioAge row: Only 4 direct inputs (Meth 0.30, DNA_Dmg 0.30,
+Hetero 0.25, SenCells 0.15) -- the composite death clock.
+
+--- Equation ---
+$$A_{ij} = \\text{ODE coupling strength of } j \\text{ on } i$$Green: $A_{ij} > 0$ (activating) &emsp; Blue: $A_{ij} 15 state variables x 15 = 225 cells, of which 31 are nonzero -- the network is sparse (14% density), meaning most node pairs interact only indirectly.
+
+======================================================================
+SLIDE 48: Network Structure (2/4): Node Degree [A13]
+======================================================================
+
+[Figure: stage_A10_degree.png]
+
+--- Narrative ---
+Node Degree: Influence Received vs Broadcast For each node, in-degree (red) sums
+the absolute coupling weights it receives from other nodes. Out-degree (blue)
+sums the weights it sends. This reveals which nodes are hubs (high out-degree)
+vs integrators (high in-degree). Hub nodes (high out-degree) AMPK (out: ~2.3) --
+Broadcasts to TSC2, NAD, Methylation, and SenCells simultaneously. This is why
+AMPK activation ranks #1 in A9 sensitivity: perturbing it moves four downstream
+variables at once. SASP (out: ~2.4) -- The inflammatory secretome fans out to
+NAD (CD38), DNA damage (ROS), SenCells (paracrine), Methylation (drift), and
+Immune (suppression). SASP is the primary aging amplifier. SIRT1 (out: ~1.9) --
+Distributes NAD + status to FOXO3, DNA repair, methylation, and senescence. This
+makes NAD + interventions (NMN, CD38i) broadly effective. Integrator nodes (high
+in-degree) SenCells (in: ~2.4) -- Receives inputs from 7 nodes (mTORC1, SIRT1,
+DNA damage, SASP, Autophagy, AMPK, DNA_Dmg). This convergence makes senescent
+cell count a reliable biomarker -- it integrates the state of the whole system.
+DNA_Dmg (in: ~1.6) -- Accumulates damage from ROS, SASP, and heteroplasmy,
+tempered by SIRT1-mediated repair and mTORC1 proteostasis. Synergy link:
+Compounds targeting high-out-degree nodes (AMPK, SIRT1) tend to be subadditive
+with each other because their downstream effects overlap. Compounds targeting
+pathway-independent nodes (e.g. Hetero + SenCells) are superadditive.
+
+--- Equation ---
+$$\\text{In-degree}(i) = \\sum_j |A_{ij}| \\quad \\text{(influence received)}$$$$\\text{Out-degree}(j) = \\sum_i |A_{ij}| \\quad \\text{(influence broadcast)}$$High out-degree = hub (perturbation propagates widely). High in-degree = integrator (state reflects many upstream signals).
+
+======================================================================
+SLIDE 49: Network Structure (3/4): Bottlenecks [A14]
+======================================================================
+
+[Figure: stage_A10_betweenness.png]
+
+--- Narrative ---
+Betweenness Centrality: Bottleneck Nodes Betweenness centrality measures how
+often a node sits on the shortest path between all other node pairs. High-
+betweenness nodes are bottlenecks -- most information flow in the network passes
+through them. Top bottleneck nodes SASP (1.00) -- Maximum betweenness. SASP sits
+at the nexus of the senescence->inflammation->NAD depletion feedback loop.
+Nearly every path from an intervention to a downstream damage variable passes
+through SASP signaling. This explains why anti-inflammatory compounds have broad
+but moderate effects. SenCells (0.95) -- The gateway between damage accumulation
+and SASP production. Senolytics directly target this bottleneck, explaining
+their high sensitivity score (60 in A9) and broad superadditivity in the synergy
+matrix. SIRT1 (0.74) -- The main conduit for NAD + status to reach downstream
+effectors (FOXO3, DNA repair, methylation). Disrupting SIRT1 availability (via
+NAD + depletion) bottlenecks four repair pathways simultaneously. NAD (0.60) --
+Upstream of SIRT1, NAD + is the metabolic bottleneck. Its high centrality
+explains why NMN and CD38 inhibitors show synergy with pathway-independent
+interventions (mitophagy, senolytics). Low-betweenness nodes BioAge (0.00) -- A
+terminal node (no outgoing edges), so no paths pass through it. AMPK (0.00) --
+Despite high out-degree, AMPK has zero betweenness because it's a source node:
+paths originate from it but don't pass through it. Its leverage comes from fan-
+out, not from being on others' paths. Structural explanation for synergy:
+Pathway-independent synergy (green cells in A10) occurs when two interventions
+target nodes whose shortest paths to BioAge do not share high-betweenness
+intermediaries. Pathway overlap (blue cells) occurs when both must route through
+the same bottleneck (e.g. SIRT1), creating diminishing returns via saturation.
+
+--- Equation ---
+$$C_B(v) = \\sum_{s \\neq v \\neq t} \\frac{\\sigma_{st}(v)}{\\sigma_{st}}$$$\\sigma_{st}$ = number of shortest paths from $s$ to $t$ $\\sigma_{st}(v)$ = number that pass through $v$ Computed via Floyd-Warshall on distance matrix $d_{ij} = 1/|A_{ij}|$, then normalized to [0, 1].
+
+======================================================================
+SLIDE 50: Network Structure (4/4): Path Distances [A15]
+======================================================================
+
+[Figure: stage_A10_paths.png]
+
+--- Narrative ---
+Intervention -> BioAge: Path Distances For each drug class, we compute the
+shortest weighted path from its entry point in the ODE network to the BioAge
+composite output. Shorter paths mean more direct leverage; longer paths mean the
+intervention must cascade through multiple intermediaries, introducing more
+opportunities for nonlinear interactions. Results Methylation targets
+(17alphaE2): dist = 2.9 -- The shortest path. Methylation feeds directly into
+BioAge (w meth = 0.30), so EZH2/SIRT1-mediated methylation reduction translates
+almost linearly to lifespan extension. This directness is why 17alphaE2 shows
+less synergy with other compounds -- its effect doesn't depend on what else is
+happening in the network. Heteroplasmy targets (Mitophagy): dist = 4.0 --
+Moderate path length. Heteroplasmy contributes to BioAge both directly (w H =
+0.25) and indirectly via ROS -> NAD depletion and DNA damage. The dual pathway
+explains mitophagy's strong synergy: it reduces upstream damage that compounds
+other interventions' benefits. AMPK (Rapa, Acarb, Cana): dist = 6.2 -- Longest
+path. AMPK must cascade through TSC2 -> mTORC1 -> Autophagy/SenCells -> SASP ->
+damage variables -> BioAge. Each hop introduces nonlinearity, which is why AMPK-
+activating drugs show the strongest interactions (both positive and negative) in
+the synergy matrix. NAD (NMN, CD38i): dist = 6.5 and SenCells (D+Q): dist = 6.6
+-- Also indirect. NAD routes through SIRT1 -> FOXO3 -> multiple branches.
+Senolytics route through SASP reduction -> downstream recovery. Both create
+cascading benefits that interact strongly with other interventions. Design
+principle: Combine a short-path drug (direct leverage, predictable effect) with
+a long-path drug (cascade amplification, nonlinear boost). The A10 synergy data
+confirms this: Mitophagy (dist=4) + Senolytic (dist=6.6) is the top pair, while
+Rapa (dist=6.2) + Acarb (dist=6.2) overlap heavily and are subadditive.
+
+--- Equation ---
+Shortest path distance from intervention node $s$ to BioAge:$$d(s, \\text{BioAge}) = \\min_{\\text{path}} \\sum_{\\text{edges}} \\frac{1}{|A_{ij}|}$$Computed via Floyd-Warshall. Color coding: Red = direct (d 5)
+
+======================================================================
+SLIDE 51: Model Specification [A16]
+======================================================================
+
+Model Specification A16 -- Complete mathematical specification of the ELM. All
+equations and parameters needed to reproduce the model.
+
+--- Narrative ---
+Model Specification This appendix contains the complete mathematical
+specification of the ELM -- all ODEs, algebraic intermediates, parameter values,
+compound injections, and sex-specific mechanisms. The six coupled ODEs (E1-E6)
+define the core dynamics. Seven algebraic intermediates (SIRT1, FOXO3, EZH2,
+TSC2, mTORC1, Autophagy, UPRmt) compute instantaneous functions of state. BioAge
+is a weighted sum of four state variables, with normalization constants derived
+from control simulation at t=1.0. All ~80 active parameters are listed in the
+tables at left, organized by subsystem. ITP compound injections and novel
+compound injections specify which pathways each drug activates and at what
+strength. Sex modifiers implement four distinct biological mechanisms rather
+than ad-hoc multipliers.
+
+======================================================================
+SLIDE 52: The Combination Prediction [A17]
+======================================================================
+
+The Combination Prediction All 8 Taguchi compounds at calibrated doses. The
+prediction is remarkable -- but every modeled variable stays within
+physiologically plausible bounds. +168% Male +140% Female 8 Compounds Validated:
+Rapa + Acarbose share the AMPK pathway -> the model predicted their combination
+would be less than the sum of its parts (+33%). The ITP observed +34%. The
+saturation logic works. Sanity-checked: We ran the full 8-compound stack and
+tracked every internal variable. Nothing blows up. NAD + , heteroplasmy,
+senescent cells, methylation -- all stay within ranges the model was calibrated
+on. The large extension comes from addressing six independent aging axes
+simultaneously, not from any single variable being pushed into fantasy
+territory.
+
+--- Narrative ---
+Why +168% Isn't As Crazy As It Sounds A number this large demands scepticism.
+Two things make it defensible: 1. Nothing is being pushed beyond what we
+calibrated. Each compound enters the model at exactly the dose the ITP tested
+(or, for novel compounds, at literature-estimated levels). When all eight run
+simultaneously, we checked every internal variable: NAD + levels, DNA damage,
+heteroplasmy, senescent cell counts. None leaves the range the model was fitted
+on by more than 35%. The extension is large because six different bottlenecks
+are being relieved at once -- not because any single lever is being cranked to
+an implausible setting. 2. Pairwise interactions are boring. We ran all 28 two-
+compound pairs. Most behave additively (mean ratio of actual to expected: 1.02).
+Five pairs sharing the same pathway show diminishing returns. Eleven cross-
+pathway pairs show mild synergy. No pair produces a wildly unexpected result.
+The full-stack prediction is the sum of many small, well-behaved pieces. What
+this doesn't prove: the model may still be wrong about biology we haven't
+measured. Whether these pathways actually combine as predicted in a living
+animal is what the Taguchi killifish screen (A24) is designed to test.
+
+======================================================================
+SLIDE 53: Telomere Rivers [A18]
+======================================================================
+
+Telomere Rivers: New Evidence A single intervention just achieved +65% median
+lifespan extension in mice. The biological ceiling is far higher than anyone
+thought. What are Rivers? CD4+ T cells donate telomeric vesicles (extracellular
+vesicles carrying stemness factors) to aged tissues. These vesicles carry
+NOTCH1, beta-catenin, WNT5A, and RUNX2 -- reversing senescence markers across
+five organs (liver, kidney, spleen, lung, brain). Detail Value Strain C57BL/6
+Treatment age 22 months (~human 65-70) Control median ~29 months Treated median
+~47 months Extension +65% Maximum lifespan ~60 months Sample size n = 10 per
+group Lanna, Valvo & Dustin, bioRxiv Nov 2025. Important caveats: Preprint, not
+yet peer-reviewed. n = 10 per group. Not yet independently replicated. However,
+the endpoint (alive vs. dead over 15+ months) is unambiguous -- this is not a
+biomarker study.
+
+--- Narrative ---
+Why This Matters The authors are from Oxford and UCL -- heavyweight
+affiliations. Their prior published work on telomere transfer appeared in Nature
+Cell Biology (2022). The mechanism: CPT1A-dependent fatty acid oxidation (FAO)
+at the immunological synapse powers telomere transfer. T cells package telomeric
+DNA with stemness transcription factors into extracellular vesicles ("Rivers").
+These vesicles reach aged tissues and reverse senescence markers. If replicated,
+this is the largest lifespan extension from a single intervention in normal
+(non-progeroid) mice in the literature.
+
+======================================================================
+SLIDE 54: Rivers as Ceiling Calibrator [A19]
+======================================================================
+
+Rivers as Ceiling Calibrator How far beyond a normal lifespan does each result
+reach? Gray = normal median lifespan. Colour = additional life from
+intervention.
+
+--- Narrative ---
+The Axes Argument Aging has multiple independent failure modes. Rivers targets
+the immune/telomere/stemness axis (1 axis). The ELM stack targets
+metabolic/damage/epigenetic/mitochondrial/senescence axes (5-6 axes). If axes
+are independent, more coverage should yield more effect. The predicted +168%
+from 6 axes is 2.6x the Rivers result from 1 axis -- consistent with diminishing
+returns across partially coupled pathways. Mice that naturally die at ~30 months
+can survive to at least 47-60 months (Rivers). The Taguchi-8 prediction of +168%
+implies ~80 months is an accessible extension of the survival range established
+by the Telomere Rivers intervention.
+
+======================================================================
+SLIDE 55: What the Model Misses [A20]
+======================================================================
+
+What the Model Misses The ELM is metabolic-centric. Entire categories of aging
+biology are outside its scope. Regenerative (not modeled) Wnt/beta-catenin
+signaling Tissue renewal and stem cell maintenance Notch1 pathway Cell fate
+decisions, tissue homeostasis Telomere dynamics Replicative capacity of dividing
+cells Senescence reversal Rivers reverses senescence markers (vs. clearance)
+EZH2 non-catalytic rejuvenation Separate from methylation writing Immune /
+systemic (not modeled) Thymic involution Immune system aging -- T cell
+production declines Stem cell exhaustion Tissue regeneration capacity loss
+Immune senescence Accumulated dysfunctional immune cells Structural wear (not
+modeled) AGE crosslinks Irreversible collagen crosslinks -- monotonically
+accumulating Organ-specific fibrosis Tissue stiffening (heart, lung, kidney)
+Protein aggregation Amyloid, lipofuscin -- cumulative, poorly cleared The
+unknown unknowns: Some of these failure modes only become rate-limiting once
+you've already rescued the earlier ones. We don't know what kills a 10-year-old
+mouse -- because there has never been one.
+
+--- Narrative ---
+Beyond the ELM's Scope Three independent rejuvenation pathways now exist in the
+literature: OSK reprogramming: partial cellular reprogramming (Yamanaka factors)
+EZH2 non-catalytic: rejuvenation via scaffolding function, separate from
+methylation Rivers: telomeric vesicle transfer from T cells The ELM models only
+OSK, and only partially. If any of these stack on top of metabolic rescue, the
+true ceiling may exceed +168%, not fall short. Conversely, AGE crosslinks
+(advanced glycation end-products) are irreversible collagen modifications that
+accumulate monotonically. They may impose a hard ceiling invisible at normal
+lifespans but rate-limiting at extended ones.
+
+======================================================================
+SLIDE 56: NAD-Obligate Tissues [A21]
+======================================================================
+
+The Canaries in the Coal Mine The ELM is NAD-centric. Its predictive power
+depends on how much a tissue relies on OXPHOS -- versus having metabolic escape
+routes. Tissues with low metabolic flexibility are NAD-obligate: when NAD+
+drops, they have nowhere to turn. The ELM models their failure well. Tissues
+with high metabolic flexibility can switch fuel sources (fatty acid beta-
+oxidation, glycolysis, ketolysis), buffering NAD+ decline for decades. Tissue
+Primary fuel Backups Flexibility Aging onset ELM fit Retinal photoreceptors
+OXPHOS (extreme) Minimal Very low 40s-50s Strong Cochlear hair cells OXPHOS None
+Very low 50s-60s Strong Dopaminergic neurons OXPHOS + ROS load Minimal Low 60s+
+Strong Cortical neurons OXPHOS Ketones Low-mod 60s-70s Good Pancreatic beta-
+cells OXPHOS-coupled Limited Low-mod 50s-60s Good Kidney prox. tubule OXPHOS
+Some Moderate 60s-70s Moderate Cardiomyocytes FAO (~70%) Glc, ketones, lactate
+Mod-high 70s+ Needs ext. Hepatocytes Mixed FA, glc, AA, ketones High Preserved
+Needs ext. Skeletal muscle FAO + glycolysis Ketones, glc, AA High Late Needs
+ext. Gut epithelium Butyrate + glutamine Glucose, SCFAs High Well-preserved
+Needs ext. The eyes go dim, the ears lose high frequencies, cognition fades --
+while the gut digests and the legs walk. That's not a random clinical
+observation. It's exactly what a NAD-centric model predicts.
+
+--- Narrative ---
+Domain of Validity The ELM is a model of the canaries in the coal mine -- NAD-
+obligate tissues that serve as early warning systems for systemic metabolic
+decline. Best predicted: macular degeneration, hearing loss, neurodegenerative
+diseases (Parkinson's, Alzheimer's) -- all conditions where OXPHOS-dependent
+tissues fail earliest. Needs extension: cardiac aging, liver disease, gut
+dysfunction -- tissues where metabolic flexibility buys decades of buffer time.
+For metabolically flexible tissues, the model would need: Alternative fuel
+pathway capacity terms Substrate switching kinetics Age-dependent degradation of
+compensatory mechanisms Sarcopenia does happen -- just decades after presbyopia.
+The compensatory mechanisms eventually fail too. The ELM captures the first wave
+of failures; extending it to the second wave is a concrete next step.
+
+======================================================================
+SLIDE 57: The Metabolic Gate Hypothesis [A22]
+======================================================================
+
+The Metabolic Gate Hypothesis The ELM's metabolic variables may gate the body's
+endogenous rejuvenation pipeline. If so, metabolic interventions are indirectly
+regenerative. Metabolic decline NAD+v, mTOR^, OXPHOSv (the ELM's world) v APC
+FAO drops below threshold Antigen-presenting cell fatty acid oxidation hits a
+metabolic cliff v Endogenous Rivers collapse Stemness factors lost, telomere
+maintenance lost v Accelerated aging More senescence -> more SASP -> feeds back
+to top What this means: Rapamycin, NMN, Urolithin A may keep the rejuvenation
+pipeline running -- not just rescue metabolic variables. Testable prediction: Do
+rapamycin-treated aged mice show higher serum Rivers (telomeric DNA+, NOTCH1+
+extracellular vesicles)?
+
+--- Narrative ---
+Cliff Dynamics If Rivers production requires fatty acid oxidation (FAO) above a
+metabolic threshold -- and the CPT1A dependence suggests it does (Hill
+coefficient $n \\approx 3\\text{-}4$) -- then metabolic decline crossing that
+threshold produces sudden regenerative collapse, not gradual fade. This matches
+the observed late-life acceleration of aging: systems don't decay linearly, they
+fail catastrophically once support systems cross critical thresholds. The gate
+hypothesis is modelable as one algebraic intermediate reusing existing ELM state
+variables: $\\text{Rivers competence} = \\text{Hill}(\\text{FAO}(\\text{NAD},
+\\text{AMPK}),\\; K_m,\\; n)$ where $n \\approx 3\\text{-}4$ captures the cliff.
+
+======================================================================
+SLIDE 58: Known vs. Unknown [A23]
+======================================================================
+
+What We Know vs. What We Don't The honest answer: the 8-compound stack at
+calibrated doses predicts +168% M / +140% F. Here's exactly what we've checked
+and what remains uncertain. [done] Checked Rapa+Acarb prediction: +33% vs +34%
+observed Biological ceiling >= +65% (Rivers, unreplicated preprint) 10 effective
+degrees of freedom from 12 data points Under the full stack, every modeled
+variable stays within physiologically plausible bounds All 28 pairwise
+combinations behave predictably (mean additivity ratio 1.02) [?] Not Yet Tested
+Whether independent pathways compound as predicted in living animals Where the
+organism-level ceiling actually is Novel compound dose-response calibration
+(NMN, CD38i, D+Q, UroA) What failure modes emerge at 60, 80+ months The
+prediction is +168% M / +140% F. The model's internal variables all stay in
+range, but 4 of 8 compounds lack lifespan calibration data. The Taguchi
+killifish screen (A24) is designed to test this prediction directly.
+
+--- Narrative ---
+What Would Narrow It We've confirmed that the model's internals behave sensibly
+under the full 8-compound stack -- no variable is pushed into implausible
+territory. Two investigations remain: Failure mode census: Survey mouse
+pathology literature -- what % of mortality does the ELM's four BioAge
+components actually cover? Multi-axis combination data: The Taguchi L18
+killifish screen (A24) will directly test whether pathways interact additively,
+synergistically, or antagonistically in living animals. Each converts a specific
+unknown into a known. The +168% prediction is the testable hypothesis.
+
+======================================================================
+SLIDE 59: Taguchi Combination Testing [A24]
+======================================================================
+
+Taguchi L18: Combination Longevity Screen in Killifish 8 compounds x mixed dose
+levels in a single orthogonal array. One experiment, 8 months: main effects,
+dose-response, and a screen for dominant interactions. The unisex rationale Two
+ITP compounds (17alpha-estradiol, aspirin) show zero lifespan effect in female
+mice . With long-term human translation in mind, we exclude male-only
+interventions. The screen uses the 4 ITP compounds effective in both sexes plus
+4 novel targets from the ELM's predictions: ITP unisex cocktail (4) Rapa --
+mTORC1 -> autophagy Acarb -- AMPK + gut microbiome Cana -- AMPK + antioxidant
+Gly -- antioxidant Novel targets (4) NMN -- NAD+ synthesis CD38i -- NAD+
+preservation D+Q -- senescent cell clearance UroA -- mitophagy L18 Orthogonal
+Array (2^1 x 3^7) -- = vehicle, Lo = low dose, Hi = high dose, [done] = on
+(CD38i: 2 levels only) Run Rapa Acarb Cana Gly NMN CD38i D+Q UroA 1 -- -- -- --
+-- -- -- -- 2 -- Lo Lo Lo Lo -- Lo Lo 3 -- Hi Hi Hi Hi -- Hi Hi 4 Lo -- -- Lo Lo
+-- Hi Hi 5 Lo Lo Lo Hi Hi -- -- -- 6 Lo Hi Hi -- -- -- Lo Lo 7 Hi -- Lo -- Hi --
+Lo Hi 8 Hi Lo Hi Lo -- -- Hi -- 9 Hi Hi -- Hi Lo -- -- Lo 10 -- -- Hi Hi Lo
+[done] Lo -- 11 -- Lo -- -- Hi [done] Hi Lo 12 -- Hi Lo Lo -- [done] -- Hi 13 Lo
+-- Lo Hi -- [done] Hi Lo 14 Lo Lo Hi -- Lo [done] -- Hi 15 Lo Hi -- Lo Hi [done]
+Lo -- 16 Hi -- Hi Lo Hi [done] -- Lo 17 Hi Lo -- Hi -- [done] Lo Hi 18 Hi Hi Lo
+-- Lo [done] Hi -- 19 Vehicle control 20 Hi Hi Hi Hi Hi [done] Hi Hi 20 groups x
+50 fish = 1,000 animals. Runs 1-18: L18 orthogonal array. Run 19: vehicle
+control. Run 20: all-8-high (non-orthogonal -- tests the full stack). Turquoise
+killifish ( N. furzeri ): vertebrate, 4-6 month lifespan, established aging
+model.
+
+--- Narrative ---
+Why Taguchi? Genichi Taguchi developed orthogonal arrays for Toyota in the
+1950s. The key insight: you don't need to test every possible combination. An
+L18 balanced fractional design (2^1 x 3^7 = 18 runs for 8 factors) ensures every
+factor level appears equally often, so main effects are cleanly separable from
+interactions. Standard practice in manufacturing and pharma (QPOP for oncology
+dose optimization). Never systematically applied to aging research -- a genuine
+methodological gap. Why these 8 compounds The ITP has validated 6 compounds in
+mice, but 17alpha-estradiol requires testosterone (zero female effect) and
+aspirin conflicts with estrogen signaling (zero female effect via COX-2->PGI2).
+We exclude both: the goal is interventions that work in both sexes, because we
+don't want to leave half the human population behind. The 4 remaining ITP
+compounds (Rapa, Acarb, Cana, Gly) form a unisex base . The 4 novel targets
+(NMN, CD38i, D+Q, UroA) are the ELM's predicted highest-value additions. None of
+these have known sex-specific failure modes. Decision-grade deliverables (a)
+Main effect of each compound by sex, with 95% confidence intervals (b) Screen
+for dominant pairwise interactions, ranked by effect size, with CIs (c)
+All-8-high arm verdict: does the full stack break? (toxicity, antagonism, or
+runaway synergy) (d) Whether the ITP unisex cocktail translates to killifish
+(cross-species portability) Candidate labs: Benayoun (USC), Brunet (Stanford),
+Valenzano (Jena) -- all have established killifish colonies. Cost comparison: A
+single ITP mouse study costs ~$1.5M over 3 years -- and that assumes mice die on
+schedule. If a cocktail achieves even a 2x extension, the confirmatory mouse
+study takes 5+ years; at 3-4x, over a decade. The killifish screen (4-6 month
+lifespan) delivers combination data in ~8 months for ~$200K, regardless of
+effect size. Why combinations are mandatory: See the Serial Reliability slide
+(early deck) -- if aging has multiple independent failure modes, single-
+intervention testing is structurally incapable of producing large effects or
+revealing later failure modes. Operational risk controls Fish randomized to
+tanks by stratified body-mass allocation to control husbandry variance. Compound
+administration via diet with batch-matched controls across all 20 groups.
+Mortality scored blind by two independent observers; discrepancies resolved by a
+third. Censoring protocol preregistered: fish removed for non-aging causes
+(injury, escaped tank) are right-censored at removal date. Full analysis plan
+preregistered before first fish is dosed: primary endpoint (median lifespan),
+secondary endpoints (main effects, pairwise interactions), and exploratory
+(all-8-high vs. model prediction). The statistical design is robust; these
+controls ensure execution artifacts do not undermine it.
+
+======================================================================
+SLIDE 60: Roadmap: Experiment, Then Extend [A25]
+======================================================================
+
+Roadmap: Experiment, Then Extend The model makes a testable prediction. Now we
+need the experiment. Then we let the data tell us what to add. [lab] Phase 1 --
+Generate the data that doesn't exist Taguchi L18 killifish screen -- 8
+compounds, 20 groups, ~1,000 fish, ~$200K, ~8 months. Directly tests the +168%
+prediction and reveals which interactions matter. Rivers + ITP drug interaction
+-- do rapamycin-treated aged mice show higher serum telomeric vesicles? Tests
+the metabolic gate hypothesis (Slide A22). Confirmatory mouse cohorts for the
+top killifish combinations. [wrench] Phase 2 -- Let the data extend the model
+Recalibrate against killifish combination outcomes -- which interactions did the
+model get right, which did it miss? Add pathways only where new data constrains
+them -- Rivers competence gate, immune function, AGE crosslinks. Each requires
+an endpoint to fit, not just a literature estimate. Cross-species translation --
+killifish -> mouse -> human dose and timescale mapping. The model is called
+Extensible for a reason. But extension without data is speculation. The
+killifish screen generates the data; the model earns its next set of parameters.
+Models without data are stories. Do not add epicycles before data constrains
+them.
+
+--- Narrative ---
+Why This Order Phase 1 comes first because the model's computational work is
+done. Every modeled variable stays in range under the full 8-compound stack. All
+28 pairwise combinations behave predictably. The prediction (+168% M / +140% F)
+uses only calibrated doses. What's missing is not more modeling -- it's
+combination data from living animals. The Taguchi screen is the highest-value
+experiment: 8 compounds, orthogonal design, main effects plus dominant
+interactions, all in ~8 months. The Rivers experiment (do ITP drugs boost
+telomeric vesicles?) is the single highest-information side experiment because
+it tests whether the metabolic and regenerative axes are coupled. Phase 2 waits
+for results. Adding ODE terms for AGE crosslinks, immune function, or telomere
+dynamics before empirical constraints exist would make the model more complex
+without making it more predictive. Each new pathway needs an endpoint to
+calibrate against -- otherwise it's just a parameter with a literature guess and
+no anchor.
+
+======================================================================
+SUPPLEMENTARY ANALYSIS: METHYLATION FRACTION OF BIOLOGICAL AGE
+(Referenced by Slide A6: BioAge Weight Sensitivity)
+======================================================================
+
+==============================================================================
+  METHYLATION FRACTION OF BIOLOGICAL AGE
+  Across published multi-component aging clocks
+==============================================================================
+
+RATIONALE
+----------------------------------------
+The ELM's BioAge weights four aging hallmarks: methylation (0.30),
+DNA damage (0.30), heteroplasmy (0.25), senescent cells (0.15).
+How does this compare to published biological age composites?
+
+METHOD
+----------------------------------------
+For each clock, map components to ELM-equivalent categories:
+  epigenetic   --  age-dependent chromatin/methylation remodeling
+  damage       --  DNA/mitochondrial/oxidative damage
+  senescence   --  SASP, cellular senescence, immune senescence
+  inflammation  --  systemic inflammaging (overlaps senescence)
+  metabolic    --  glucose, lipid, adipokine dysregulation
+  organ_decline  --  renal, hepatic, pulmonary function loss
+
+Variance contribution = (|beta| x population SD)^2 for weighted clocks,
+or equal counts for DunedinPACE (uniform weights).
+
+==============================================================================
+  GrimAge2
+  Lu et al. 2022, Aging 14(24):9484-9549, PMC9792204
+  PMID 36516495
+==============================================================================
+
+  Component                   Var contrib  Fraction  Category
+  ----------------------------------------------------------------------
+  DNAm ADM                         0.2374     10.9%  epigenetic
+  DNAm B2M                         0.1751      8.0%  inflammation
+  DNAm Cystatin C                  0.6659     30.6%  organ_decline
+  DNAm GDF-15                      0.0784      3.6%  damage
+  DNAm Leptin                      0.0927      4.3%  metabolic
+  DNAm CRP                         0.5792     26.6%  inflammation
+  DNAm A1C                         0.0407      1.9%  metabolic
+  DNAm PAI-1                       0.1946      8.9%  senescence
+  DNAm TIMP-1                      0.0337      1.5%  senescence
+  DNAm PACKYRS                     0.0784      3.6%  damage
+
+  Category totals:
+    inflammation             34.7%
+    organ_decline            30.6%
+    epigenetic               10.9%
+    senescence               10.5%
+    damage                    7.2%
+    metabolic                 6.1%
+
+  Strict epigenetic fraction:  10.9%
+  Broad (+ 1/2 damage coupling): 14.5%
+
+==============================================================================
+  PhenoAge
+  Levine et al. 2018, Aging 10(4):573-591, PMC5940111
+  PMID 29676998
+==============================================================================
+
+  Component                   Var contrib  Fraction  Category
+  ----------------------------------------------------------------------
+  Albumin                          0.0181      4.1%  organ_decline
+  Creatinine                       0.0361      8.2%  organ_decline
+  Glucose                          0.0858     19.4%  metabolic
+  ln(CRP)                          0.0131      3.0%  inflammation
+  Lymphocyte%                      0.0092      2.1%  senescence
+  MCV                              0.0180      4.1%  damage
+  RDW                              0.2459     55.7%  damage
+  Alk Phosphatase                  0.0032      0.7%  organ_decline
+  WBC                              0.0123      2.8%  inflammation
+
+  Category totals:
+    damage                   59.7%
+    metabolic                19.4%
+    organ_decline            13.0%
+    inflammation              5.7%
+    senescence                2.1%
+
+  Strict epigenetic fraction:  0.0%
+  Broad (+ 1/2 damage coupling): 29.9%
+
+==============================================================================
+  DunedinPACE
+  Belsky et al. 2022, eLife 11:e73420, PMC8853656
+  PMID 35029144
+==============================================================================
+
+  Component                   Var contrib  Fraction  Category
+  ----------------------------------------------------------------------
+  BMI                              1.0000      5.3%  metabolic
+  Waist-hip ratio                  1.0000      5.3%  metabolic
+  HbA1c                            1.0000      5.3%  metabolic
+  Leptin                           1.0000      5.3%  metabolic
+  Total cholesterol                1.0000      5.3%  metabolic
+  Triglycerides                    1.0000      5.3%  metabolic
+  HDL cholesterol                  1.0000      5.3%  metabolic
+  Lipoprotein(a)                   1.0000      5.3%  metabolic
+  ApoB/ApoA1                       1.0000      5.3%  metabolic
+  MAP                              1.0000      5.3%  organ_decline
+  VO2max                           1.0000      5.3%  organ_decline
+  FEV1/FVC                         1.0000      5.3%  organ_decline
+  FEV1                             1.0000      5.3%  organ_decline
+  eGFR                             1.0000      5.3%  organ_decline
+  BUN                              1.0000      5.3%  organ_decline
+  hs-CRP                           1.0000      5.3%  inflammation
+  WBC                              1.0000      5.3%  inflammation
+  Perio attachment                 1.0000      5.3%  damage
+  Dental caries                    1.0000      5.3%  damage
+
+  Category totals:
+    metabolic                47.4%
+    organ_decline            31.6%
+    inflammation             10.5%
+    damage                   10.5%
+
+  Strict epigenetic fraction:  0.0%
+  Broad (+ 1/2 damage coupling): 5.3%
+
+==============================================================================
+  DRIFT vs COMPOSITE CLOCK MORTALITY PREDICTION
+  Hillary et al. 2020, PMID 32736664 (LBC1936 cohort)
+==============================================================================
+
+  Clock             HR per SD   Type
+  ---------------------------------------------
+  Horvath (drift)       1.02       drift
+  Hannum (drift)        1.04       drift
+  PhenoAge              1.05       composite
+  GrimAge               1.10       composite
+
+  Mean log(HR) drift clocks:     0.0295
+  Mean log(HR) composite clocks: 0.0721
+  Ratio (drift / composite):     0.41
+  -> Pure drift captures ~41% of composite mortality signal
+
+==============================================================================
+  SUMMARY: METHYLATION FRACTION RANGE
+==============================================================================
+
+  GrimAge2         strict=10.9%   broad=14.5%
+  PhenoAge         strict=0.0%   broad=29.9%
+  DunedinPACE      strict=0.0%   broad=5.3%
+  HR-ratio method:        41%
+
+  RANGE: 0% to 30%
+  (lower = pure drift share of mortality prediction;
+   upper = epigenetic + damage-coupled remodeling in GrimAge)
+
+  ELM current w_meth = 0.30 -- within this range.
+  ELM calibration constraint: w_meth in [0.25, 0.40]
+
+CITATIONS
+----------------------------------------
+  Horvath 2013, Genome Biol 14:R115, PMID 24138928
+  Hannum et al. 2013, Mol Cell 49:359-367, PMID 23177740
+  Levine et al. 2018, Aging 10(4):573-591, PMID 29676998
+  Lu et al. 2019, Aging 11(2):303-327, PMID 30669119
+  Lu et al. 2022, Aging 14(24):9484-9549, PMID 36516495
+  Belsky et al. 2022, eLife 11:e73420, PMID 35029144
+  Hillary et al. 2020, Clin Epigenetics 12:57, PMID 32736664
