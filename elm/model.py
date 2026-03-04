@@ -2,16 +2,21 @@
 ELM Core Simulation Model
 
 This module contains the core ODE-based simulation for the ELM longevity model.
-The model integrates 8 biological subsystems:
+The model tracks 8 ODE state variables as interconnected subsystems:
 
-1. NAD+ Homeostasis - Synthesis, consumption, and supplementation
-2. Sirtuins - NAD+-dependent deacetylases (SIRT1, FOXO3)
-3. mTORC1 - Growth signaling and autophagy regulation
-4. DNA Damage & Repair - ROS damage and NAD+-dependent repair
-5. Epigenetics - Methylation drift and demethylation
-6. Mitochondria - Heteroplasmy dynamics
-7. Senescence - Cell entry, SASP, and clearance
-8. Cancer - Mutation accumulation and immune surveillance
+1. Heteroplasmy - Mitochondrial DNA damage fraction
+2. NAD+ - Nicotinamide adenine dinucleotide level
+3. DNA damage - Genomic lesion accumulation
+4. AMPK/mTORC1 signaling - Nutrient-sensing axis
+5. Autophagy - Cellular recycling flux
+6. Senescent cell burden
+7. SASP - Senescence-associated secretory phenotype
+8. Methylation drift - Epigenetic age
+
+Additional algebraic variables (SIRT1, FOXO3, EZH2, UPRmt, immune
+function) are computed from the state at each time step. The cancer
+module (mutation accumulation) is present but INACTIVE in all current
+predictions -- it does not influence BioAge or lifespan.
 
 Simulation outputs biological age trajectory and lifespan.
 
