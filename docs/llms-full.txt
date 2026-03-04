@@ -72,9 +72,12 @@ quantitative framework -- because none exists. The proposed Taguchi
 killifish screen costs $200K and 8 months. Either it validates the
 predictions or it provides the data to recalibrate. Either outcome
 advances the field more than additional single-compound studies can.
-The path from killifish to mice to humans is real and necessary,
-and we fully acknowledge the validation steps at each stage. But
-that path cannot begin until someone takes step one.
+Many aging researchers already take multi-intervention stacks
+themselves. It is time for the field's experimental priorities to
+catch up with its practitioners' private convictions. The path from
+killifish to mice to humans is real and necessary, and we fully
+acknowledge the validation steps at each stage. But that path
+cannot begin until someone takes step one.
 
 ## SLIDE Intro 0: Six drugs extend mouse lifespan
 

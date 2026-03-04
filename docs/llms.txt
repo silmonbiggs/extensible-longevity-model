@@ -135,6 +135,16 @@ generating combination data in the fastest, cheapest system
 available, and to build the quantitative framework that millions
 of people will eventually need -- whether or not they know it yet.
 
+This is not a fringe position. Many aging researchers already take
+multi-intervention stacks themselves -- readily observable in any
+long-form interview. Their personal choices reflect what serial
+reliability formalizes: one pathway addressed, seven ignored, is
+most of the problem unsolved. It is time for the field's
+experimental priorities to catch up with its practitioners' private
+convictions. Every year without combination data is another year
+that millions of people -- including the next generation --
+navigate longevity interventions by guesswork.
+
 The path from killifish to mice to humans is real and necessary,
 and we fully acknowledge the validation steps required at each
 stage. But that path cannot begin until someone takes step one.
