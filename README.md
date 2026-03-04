@@ -9,13 +9,11 @@ interactions that single-compound testing cannot reveal.
 
 ## LLM-Readable Content
 
-For AI-assisted review, point your LLM at one of these plain-text
-files directly:
-
-- **[llms.txt](https://silmonbiggs.github.io/extensible-longevity-model/llms.txt)**
-  -- brief summary (model, key results, experimental design).
-- **[llms-full.txt](https://silmonbiggs.github.io/extensible-longevity-model/llms-full.txt)**
-  -- complete slide-by-slide transcript with supplementary analyses.
+For AI-assisted review, read
+**[llms-full.txt](llms-full.txt)** in this repository -- it
+contains the complete slide-by-slide transcript with equations,
+narratives, and supplementary analyses. A shorter summary is in
+**[llms.txt](llms.txt)**.
 
 ## Interactive Slide Deck
 

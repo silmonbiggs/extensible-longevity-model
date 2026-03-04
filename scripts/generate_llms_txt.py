@@ -438,23 +438,25 @@ def generate_full(stages):
 
 
 def main():
+    repo_root = DOCS_DIR / '..'
+
     html = HTML_FILE.read_text(encoding='utf-8')
     raw_stages = extract_stages(html)
     print(f"Extracted {len(raw_stages)} stages from HTML")
 
     stages = [parse_stage(s) for s in raw_stages]
 
-    # Write brief (ASCII-normalized)
+    # Write brief (ASCII-normalized) to docs/ and repo root
     brief = ascii_normalize(generate_brief(stages))
-    brief_path = DOCS_DIR / 'llms.txt'
-    brief_path.write_text(brief, encoding='utf-8')
-    print(f"Written: {brief_path} ({len(brief)} bytes)")
+    for dest in [DOCS_DIR / 'llms.txt', repo_root / 'llms.txt']:
+        dest.write_text(brief, encoding='utf-8')
+        print(f"Written: {dest.resolve()} ({len(brief)} bytes)")
 
-    # Write full
+    # Write full to docs/ and repo root
     full = generate_full(stages)
-    full_path = DOCS_DIR / 'llms-full.txt'
-    full_path.write_text(full, encoding='utf-8')
-    print(f"Written: {full_path} ({len(full)} bytes)")
+    for dest in [DOCS_DIR / 'llms-full.txt', repo_root / 'llms-full.txt']:
+        dest.write_text(full, encoding='utf-8')
+        print(f"Written: {dest.resolve()} ({len(full)} bytes)")
 
 
 if __name__ == '__main__':
