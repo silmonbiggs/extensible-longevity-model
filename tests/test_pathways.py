@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Unit tests for individual pathway functions and numerical convergence.
+Unit tests for individual pathway functions, numerical convergence,
+uncertainty quantification, and dose-response.
 
 Run: python -m pytest tests/test_pathways.py -v
   or: python tests/test_pathways.py
@@ -42,6 +43,17 @@ from elm.pathways import (
     SENESCENCE_PARAMS,
     CANCER_PARAMS,
     BIOAGE_PARAMS,
+)
+from elm.dose_response import (
+    hill_dose_response,
+    effective_dose,
+    DOSE_RESPONSE_PARAMS,
+)
+from elm.uncertainty import (
+    run_monte_carlo,
+    predict_human_extension,
+    compute_attribution,
+    summarize_uncertainty,
 )
 
 
@@ -240,6 +252,119 @@ def test_combination_beats_additive_null():
         f"ELM ({elm_prediction:.1f}%, error {elm_error:.1f}) should beat "
         f"additive null ({additive_prediction:.1f}%, error {additive_error:.1f}) "
         f"vs observed {observed}%"
+    )
+
+
+# =========================================================================
+# Dose-response edge cases
+# =========================================================================
+
+def test_dose_response_at_zero():
+    """f(0) = 0 for all compounds."""
+    for name in DOSE_RESPONSE_PARAMS:
+        assert effective_dose(name, 0.0) == 0.0, f"{name}: f(0) != 0"
+
+def test_dose_response_at_one():
+    """f(1) = 1 for all compounds (calibration preserved by construction)."""
+    for name in DOSE_RESPONSE_PARAMS:
+        assert effective_dose(name, 1.0) == 1.0, f"{name}: f(1) != 1"
+
+def test_dose_response_diminishing_returns():
+    """f(2) < 2 for all compounds (diminishing returns)."""
+    for name, params in DOSE_RESPONSE_PARAMS.items():
+        f2 = hill_dose_response(2.0, params['n'], params['K'])
+        assert f2 < 2.0, f"{name}: f(2) = {f2} >= 2.0"
+        assert f2 > 1.0, f"{name}: f(2) = {f2} <= 1.0"
+
+def test_dose_response_monotonic():
+    """Dose-response should be monotonically increasing."""
+    for name, params in DOSE_RESPONSE_PARAMS.items():
+        prev = 0.0
+        for d in [0.0, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0]:
+            val = hill_dose_response(d, params['n'], params['K'])
+            assert val >= prev, f"{name}: not monotonic at d={d}"
+            prev = val
+
+def test_dose_response_unknown_compound():
+    """effective_dose should raise KeyError for unknown compound at non-unity dose."""
+    try:
+        effective_dose('nonexistent_compound', 2.0)
+        assert False, "Should have raised KeyError"
+    except KeyError:
+        pass
+
+
+# =========================================================================
+# Uncertainty module
+# =========================================================================
+
+def test_monte_carlo_produces_ci():
+    """Monte Carlo should produce valid confidence intervals."""
+    mc = run_monte_carlo(compound='rapamycin', sex='M', n_samples=100,
+                         seed=42, include_trajectories=False)
+    assert mc.extension_median is not None
+    assert mc.extension_ci_90 is not None
+    lo, hi = mc.extension_ci_90
+    assert lo < mc.extension_median < hi, (
+        f"CI not ordered: {lo} < {mc.extension_median} < {hi}"
+    )
+
+def test_monte_carlo_reproducible():
+    """Same seed should give identical MC results."""
+    mc1 = run_monte_carlo(compound='rapamycin', sex='M', n_samples=50,
+                          seed=99, include_trajectories=False)
+    mc2 = run_monte_carlo(compound='rapamycin', sex='M', n_samples=50,
+                          seed=99, include_trajectories=False)
+    assert mc1.extension_median == mc2.extension_median
+
+def test_monte_carlo_ci_covers_point_estimate():
+    """The 90% CI should contain the deterministic extension (roughly)."""
+    mc = run_monte_carlo(compound='rapamycin', sex='M', n_samples=200,
+                         seed=42, include_trajectories=False)
+    control = run_control(sex='M')
+    treated = simulate(compound='rapamycin', sex='M')
+    det_ext = calculate_lifespan_extension(treated, control)
+    lo, hi = mc.extension_ci_90
+    assert lo < det_ext < hi, (
+        f"Deterministic extension {det_ext:.1f}% outside 90% CI [{lo:.1f}, {hi:.1f}]"
+    )
+
+def test_monte_carlo_trajectories():
+    """Trajectory statistics should be computed when requested."""
+    mc = run_monte_carlo(compound='rapamycin', sex='M', n_samples=50,
+                         seed=42, include_trajectories=True)
+    assert mc.BioAge_median is not None
+    assert mc.NAD_median is not None
+    assert mc.Survival_median is not None
+    assert len(mc.BioAge_median) > 0
+
+def test_human_prediction_dampened():
+    """Human extension should be less than mouse (dampening < 1)."""
+    pred = predict_human_extension(23.0, 'mtor_pathway', n_samples=500)
+    assert pred.human_extension_median < 23.0, (
+        f"Human prediction {pred.human_extension_median:.1f}% not dampened from mouse 23%"
+    )
+    assert pred.human_extension_median > 0
+
+def test_summarize_uncertainty():
+    """Summary string should contain key statistics."""
+    mc = run_monte_carlo(compound='rapamycin', sex='M', n_samples=50,
+                         seed=42, include_trajectories=False)
+    summary = summarize_uncertainty(mc)
+    assert 'Median' in summary
+    assert '90% CI' in summary
+
+def test_attribution_sums_approximately():
+    """Greedy subtraction contributions should roughly sum to full stack."""
+    components = {
+        'Rapamycin': {'mtorc1_drug_inhibition': 0.4424, 'ampk': 0.2949},
+        'Acarbose': {'ampk': 0.1941, 'gut_microbiome': 0.1412},
+    }
+    attr = compute_attribution(components, sex='M', verbose=False)
+    total = sum(attr.contributions.values())
+    # contributions + interaction should equal full stack
+    assert abs(total + attr.interaction_effect - attr.full_stack_extension) < 0.1, (
+        f"Attribution doesn't sum: {total} + {attr.interaction_effect} != {attr.full_stack_extension}"
     )
 
 

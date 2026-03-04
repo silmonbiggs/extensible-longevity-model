@@ -104,11 +104,26 @@ move the simplex to a better basin.
 ## Key Results
 
 - Calibration: 12 ITP targets, +/-0.08% mean error, 10 effective DOF
-- Out-of-sample validation: Rapa+Acarb predicted +33.0%, observed +34% (not fit)
+- Out-of-sample validation: Rapa+Acarb predicted +33%, observed +34% (not fit)
 - Testable prediction: Rapa+NMN superadditive (+31.8% M / +36.0% F)
 - Serial reliability framework explains why single interventions yield +10-26%
 - Taguchi L18 killifish screen: 8 compounds, $200K, 8 months, 1,000 fish
   (vs. ~$1.5M / 3+ years for a single ITP mouse study)
+
+## Uncertainty Quantification
+
+The elm/uncertainty.py module provides Monte Carlo uncertainty
+bounds. Key predictions with 90% confidence intervals (1,000
+samples, CV_lifespan=12%, CV_trajectory=15%):
+
+  - Rapamycin male: +23% (90% CI: 0-49%)
+  - Rapa+Acarb male: +33% (90% CI: 8-61%)
+  - Rapa+NMN male: +32% (90% CI: 7-60%)
+
+Wide CIs reflect genuine biological variation in mouse lifespan
+(ITP reports ~12% CV across sites). The point estimates are the
+model's best prediction; the CIs show the range of individual
+outcomes. Reproducible: run_monte_carlo(compound, seed=42).
 
 ## Compounds Modeled (ITP-validated)
 
