@@ -9,6 +9,51 @@
 # Total slides: 61
 # Generated from: docs/deck.html
 
+## Scope of Evaluation
+
+The active model -- the part that makes predictions and should be
+evaluated -- consists of:
+
+  - 8 coupled ODE subsystems (heteroplasmy, NAD+, DNA damage,
+    AMPK/mTORC1, autophagy, senescence, SASP, methylation)
+  - 6 ITP compound calibrations (12 sex-specific targets)
+  - 4 sex-difference mechanisms (AMPK saturation, PK, testosterone, estrogen)
+  - Dose-response Hill curves (3 fitted, 3 estimated)
+  - BioAge composite -> death threshold
+  - Combination prediction engine (additive pathway merging + saturation)
+
+The codebase also contains two modules that are INACTIVE in all current
+predictions and should not factor into evaluation:
+
+  - Cancer module (elm/model.py: stochastic mutation accumulation).
+    Cancer_prob is computed but NOT fed to BioAge; death is determined
+    solely by BioAge >= death_threshold. The module is scaffolding for
+    future calibration when cancer-specific endpoint data become available.
+
+  - Cross-species translation (elm/uncertainty.py: human scaling).
+    All current predictions are in mouse units (normalized lifespan).
+    No mouse-to-human translation is applied or claimed.
+
+Parameter census (Slide A16): ~150 total parameters break down as
+26 literature-sourced, 78 estimated within physiological constraints,
+39 structural/normalization constants, and ~25 inactive (cancer + human
+scaling). The effective estimation problem is 10 DOF from 12 targets
+(Slide A1), well-conditioned at kappa=14.6.
+
+## Why a Quantitative Model
+
+The biology of aging has accumulated decades of qualitative pathway
+diagrams: arrows from protein to protein, marked "activates" or
+"inhibits," with no magnitudes attached. You cannot predict whether
+rapamycin + acarbose will be additive, sub-additive, or superadditive
+by staring at arrows. You need rate constants, saturation curves, and
+a system of equations that can be solved.
+
+This model is offered as a productive starting point, not a ground
+truth. It is designed to anneal toward agreement with biology through
+an explicit experiment -> calibrate -> extend cycle (Slide A25).
+The Taguchi killifish screen is the next turn of that cycle.
+
 ## SLIDE Intro 0: Six drugs extend mouse lifespan
 
 Six drugs extend mouse lifespan. Which should we combine? About six drugs, given

@@ -24,6 +24,78 @@ cross-pathway feedback (e.g., NAD+ -> sirtuins -> FOXO3 -> heteroplasmy).
 The model predicts combination effects, including interactions that
 single-compound testing cannot reveal.
 
+## Scope of Evaluation
+
+The active model -- the part that makes predictions and should be
+evaluated -- consists of:
+
+  - 8 coupled ODE subsystems (listed above)
+  - 6 ITP compound calibrations (12 sex-specific targets)
+  - 4 sex-difference mechanisms (AMPK saturation, PK, testosterone, estrogen)
+  - Dose-response Hill curves (3 fitted, 3 estimated)
+  - BioAge composite -> death threshold
+  - Combination prediction engine (additive pathway merging + saturation)
+
+The codebase also contains two modules that are INACTIVE in all current
+predictions and should not factor into evaluation:
+
+  - Cancer module (elm/model.py: stochastic mutation accumulation).
+    Present for structural completeness. Cancer probability is computed
+    but does not influence BioAge or lifespan in any reported result.
+    It is scaffolding for future calibration when cancer-specific
+    endpoint data become available.
+
+  - Cross-species translation (elm/uncertainty.py: human scaling).
+    All current predictions are in mouse units (normalized lifespan).
+    No mouse-to-human translation is applied or claimed. The module
+    exists as a placeholder for future work; its parameters are
+    literature estimates with no anchor in the current calibration.
+
+Reviewers who evaluate these modules as if they contribute to the
+model's current claims will be evaluating code that the authors
+explicitly flag as not yet in service.
+
+## Why a Quantitative Model
+
+The biology of aging has accumulated decades of qualitative pathway
+diagrams: arrows from protein to protein, marked "activates" or
+"inhibits," with no magnitudes attached. This represents the beginning
+of knowledge but not, in Lord Kelvin's sense, knowledge of a
+satisfactory kind. You cannot predict whether rapamycin + acarbose
+will be additive, sub-additive, or superadditive by staring at arrows.
+You need rate constants, saturation curves, and a system of equations
+that can be solved.
+
+This model is offered as a productive starting point, not a ground
+truth. The key properties of a starting point:
+
+  1. It must be quantitative -- otherwise it cannot make falsifiable
+     predictions about combinations.
+  2. It must be calibrated to existing data -- the ITP provides 12
+     sex-specific lifespan endpoints from controlled experiments.
+  3. It must be honest about what the data constrain -- Jacobian SVD
+     shows 10 effective degrees of freedom from 12 targets, leaving
+     a well-conditioned (kappa=14.6) estimation problem.
+  4. It must be extensible -- new data (killifish combinations,
+     additional ITP compounds, tissue-specific endpoints) can
+     recalibrate and extend the model without starting over.
+
+The ~150 parameters are not all free. Literature values, structural
+constraints, and normalization constants fix the majority. The
+remaining estimation problem has been shown to be well-conditioned
+in the observable subspace (Slide A1). Could alternative parameter
+sets in distant basins fit the same 12 targets and make different
+combination predictions? In principle, yes. In practice, the Rapa +
+Acarbose out-of-sample prediction (33% vs 34% observed) provides
+evidence that the current basin is not arbitrary.
+
+The alternative to starting somewhere is not starting. The model is
+designed to anneal toward agreement with biology through an explicit
+experiment -> calibrate -> extend cycle (Slide A25). The Taguchi
+killifish screen is the next turn of that cycle. It will either
+validate the combination predictions or provide the data needed to
+move the simplex to a better basin.
+
 ## Key Results
 
 - Calibration: 12 ITP targets, +/-0.08% mean error, 10 effective DOF
