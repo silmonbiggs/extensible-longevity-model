@@ -126,7 +126,7 @@ Total slides: 61
 
 GitHub: https://github.com/silmonbiggs/extensible-longevity-model
 Model package: elm/ (Python, ODE engine)
-Slide deck source: docs/index.html
+Slide deck source: docs/deck.html
 Figure generation: scripts/generate_figures.py
 
 ## For Complete Content

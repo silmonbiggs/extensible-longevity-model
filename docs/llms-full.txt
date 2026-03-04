@@ -7,11 +7,9 @@
 # clickable nodes, and dynamically rendered figures.
 #
 # Total slides: 61
-# Generated from: docs/index.html
+# Generated from: docs/deck.html
 
-======================================================================
-SLIDE 0: Six drugs extend mouse lifespan [Intro 0]
-======================================================================
+## SLIDE Intro 0: Six drugs extend mouse lifespan
 
 Six drugs extend mouse lifespan. Which should we combine? About six drugs, given
 individually to mice, make them live 5-26% longer. These results come from the
@@ -34,9 +32,7 @@ matters, because it means they're not all doing the same thing. The question is
 whether combining drugs that work through different pathways could produce
 larger effects than any single drug achieves alone.
 
-======================================================================
-SLIDE 1: Why single drugs hit a ceiling [Intro 1]
-======================================================================
+## SLIDE Intro 1: Why single drugs hit a ceiling
 
 [Figure: stage_A26_serial_reliability.png]
 
@@ -58,9 +54,7 @@ can you see what's behind the first wall. Figure uses Gaussian failure-time
 distributions for clarity. Real failure modes follow different distributions,
 but the masking principle is identical.
 
-======================================================================
-SLIDE 2: The same logic inside cells [Intro 2]
-======================================================================
+## SLIDE Intro 2: The same logic inside cells
 
 The same competing-failures logic applies inside cells The previous slide used
 organ-level examples (cancer, cardiovascular disease) to build intuition. The
@@ -91,9 +85,7 @@ central signaling hub. The model accounts for this coupling. Two questions
 follow: (1) Can we test combinations efficiently? (2) Does the model actually
 predict correctly? The next two slides address each.
 
-======================================================================
-SLIDE 3: How to test 8 interventions at once [Intro 3]
-======================================================================
+## SLIDE Intro 3: How to test 8 interventions at once
 
 There is a principled way to test 8 interventions in one experiment The ITP has
 built an extraordinary single-compound foundation. But as the previous slides
@@ -124,9 +116,7 @@ invalidates a model's coupling assumptions Model predictions focus the screen;
 screen results recalibrate the model Next: how well can a model do with existing
 literature and data?
 
-======================================================================
-SLIDE 4: Does It Work? [Intro 4]
-======================================================================
+## SLIDE Intro 4: Does It Work?
 
 We can't test every combination experimentally. So we built a model -- and it
 correctly predicts a combination it has never seen. Calibrated to 6 individual
@@ -150,9 +140,7 @@ separated, not overfitting.
 
 [Additional figures: stage_08_mixing_bars.png]
 
-======================================================================
-SLIDE 5: A Testable Prediction [Intro 5]
-======================================================================
+## SLIDE Intro 5: A Testable Prediction
 
 The model makes a testable prediction: Rapamycin + NMN should be superadditive
 These two compounds together do more than the sum of their parts. Scenario Male
@@ -175,9 +163,7 @@ This is the opposite of rapamycin + acarbose, which both converge on AMPK and
 produce sub-additive results. This prediction is robust to BioAge weight
 variation: less than 0.5% shift across the plausible w meth range [0.25, 0.40].
 
-======================================================================
-SLIDE 6: The Thesis [0]
-======================================================================
+## SLIDE 0: The Thesis
 
 --- Narrative ---
 The Thesis The model has four subsystems. We start with the one that turns out
@@ -195,13 +181,11 @@ space. The rest are set by published biology or don't affect predictions. This
 is a 10-parameter model wearing a 196-parameter coat.
 
 --- Equation ---
-$$\\text{BioAge} = w_H \\frac{H}{N_H} + \\text{(other terms introduced in Stages 1-6)}$$ $$\\begin{aligned} w_H &= 0.25 &\\quad \\%\\; &\\text{heteroplasmy weight} \\\\ N_H &= 0.18 &\\quad \\%\\; &\\text{heteroplasmy norm (derived from control)} \\end{aligned}$$The full equation with all four components is shown in Stage 7.
+$$\text{BioAge} = w_H \frac{H}{N_H} + \text{(other terms introduced in Stages 1-6)}$$ $$\begin{aligned} w_H &= 0.25 &\quad \%\; &\text{heteroplasmy weight} \\ N_H &= 0.18 &\quad \%\; &\text{heteroplasmy norm (derived from control)} \end{aligned}$$The full equation with all four components is shown in Stage 7.
 
 [Additional figures: stage_00_thesis.png]
 
-======================================================================
-SLIDE 7: Heteroplasmy Dynamics [1]
-======================================================================
+## SLIDE 1: Heteroplasmy Dynamics
 
 --- Narrative ---
 Heteroplasmy Dynamics Mitochondrial DNA mutations accumulate through random
@@ -219,13 +203,11 @@ fuel into energy. Rising heteroplasmy is progressive energy failure -- the prime
 mover of aging in this model.
 
 --- Equation ---
-$$\\frac{dH}{dt} = \\left[\\frac{H(1-H)}{N_{\\text{eff}}} + \\mu \\cdot H(1-H) - s \\cdot H\\right] \\times \\tau$$$$s = s_0 + s_{\\text{foxo3}} \\cdot \\text{FOXO3}$$ $$\\begin{aligned} N_{\\text{eff}} &= 100 &\\quad \\%\\; &\\text{effective mtDNA population} \\\\ \\mu &= 0.20 &\\quad \\%\\; &\\text{transcription advantage} \\\\ s_0 &= 0.001 &\\quad \\%\\; &\\text{baseline selection} \\\\ s_{\\text{foxo3}} &= 0.10 &\\quad \\%\\; &\\text{FOXO3 selection boost} \\\\ \\tau &= 12.0 &\\quad \\%\\; &\\text{time scale} \\end{aligned}$$
+$$\frac{dH}{dt} = \left[\frac{H(1-H)}{N_{\text{eff}}} + \mu \cdot H(1-H) - s \cdot H\right] \times \tau$$$$s = s_0 + s_{\text{foxo3}} \cdot \text{FOXO3}$$ $$\begin{aligned} N_{\text{eff}} &= 100 &\quad \%\; &\text{effective mtDNA population} \\ \mu &= 0.20 &\quad \%\; &\text{transcription advantage} \\ s_0 &= 0.001 &\quad \%\; &\text{baseline selection} \\ s_{\text{foxo3}} &= 0.10 &\quad \%\; &\text{FOXO3 selection boost} \\ \tau &= 12.0 &\quad \%\; &\text{time scale} \end{aligned}$$
 
 [Additional figures: stage_01_heteroplasmy.png]
 
-======================================================================
-SLIDE 8: NAD+ Supply [2a]
-======================================================================
+## SLIDE 2a: NAD+ Supply
 
 --- Narrative ---
 NAD+ Supply NAD+ is the cell's energy currency for signaling and repair. Its
@@ -235,13 +217,11 @@ problem: impaired OXPHOS reduces NAD+ regeneration from NADH, draining the pool
 from both sides.
 
 --- Equation ---
-$$\\frac{d[\\text{NAD}]}{dt} = \\underbrace{k_{\\text{nampt}}\\,e^{-k_{\\text{age}}\\,t}(1 + k_{\\text{ampk}} \\cdot \\text{AMPK})}_{\\text{supply}} - \\;(\\text{consumption terms in next stage})$$ $$\\begin{aligned} k_{\\text{nampt}} &= 0.55 &\\quad \\%\\; &\\text{NAMPT synthesis rate} \\\\ k_{\\text{age}} &= 0.431 &\\quad \\%\\; &\\text{age-related decline (exponential)} \\\\ k_{\\text{ampk}} &= 0.50 &\\quad \\%\\; &\\text{AMPK boost to synthesis} \\end{aligned}$$
+$$\frac{d[\text{NAD}]}{dt} = \underbrace{k_{\text{nampt}}\,e^{-k_{\text{age}}\,t}(1 + k_{\text{ampk}} \cdot \text{AMPK})}_{\text{supply}} - \;(\text{consumption terms in next stage})$$ $$\begin{aligned} k_{\text{nampt}} &= 0.55 &\quad \%\; &\text{NAMPT synthesis rate} \\ k_{\text{age}} &= 0.431 &\quad \%\; &\text{age-related decline (exponential)} \\ k_{\text{ampk}} &= 0.50 &\quad \%\; &\text{AMPK boost to synthesis} \end{aligned}$$
 
 [Additional figures: stage_01_nad_decline.png]
 
-======================================================================
-SLIDE 9: NAD+ Consumption [2b]
-======================================================================
+## SLIDE 2b: NAD+ Consumption
 
 --- Narrative ---
 NAD+ Consumption As NAD+ supply drops, demand rises. CD38 , an ectoenzyme that
@@ -251,11 +231,9 @@ mitophagy -- loses activity as its cofactor disappears. The result: a widening
 gap between NAD+ supply and demand that accelerates with age.
 
 --- Equation ---
-$$\\text{Consumption} = k_{\\text{basal}} + \\text{CD38} + k_{\\text{parp}} \\cdot \\text{Damage} + k_{\\text{sirt}} \\cdot \\text{SIRT1}$$$$\\text{SIRT1} = \\frac{\\text{NAD}^{n_s}}{K_{s}^{n_s} + \\text{NAD}^{n_s}}$$ $$\\begin{aligned} k_{\\text{basal}} &= 0.40 &\\quad \\%\\; &\\text{basal consumption} \\\\ k_{\\text{parp}} &= 0.70 &\\quad \\%\\; &\\text{PARP1 consumption} \\\\ k_{\\text{sirt}} &= 0.10 &\\quad \\%\\; &\\text{SIRT1 consumption} \\end{aligned}$$
+$$\text{Consumption} = k_{\text{basal}} + \text{CD38} + k_{\text{parp}} \cdot \text{Damage} + k_{\text{sirt}} \cdot \text{SIRT1}$$$$\text{SIRT1} = \frac{\text{NAD}^{n_s}}{K_{s}^{n_s} + \text{NAD}^{n_s}}$$ $$\begin{aligned} k_{\text{basal}} &= 0.40 &\quad \%\; &\text{basal consumption} \\ k_{\text{parp}} &= 0.70 &\quad \%\; &\text{PARP1 consumption} \\ k_{\text{sirt}} &= 0.10 &\quad \%\; &\text{SIRT1 consumption} \end{aligned}$$
 
-======================================================================
-SLIDE 10: PARP1 / Repair Fails [3]
-======================================================================
+## SLIDE 3: PARP1 / Repair Fails
 
 --- Narrative ---
 PARP1 / Repair Fails Heteroplasmy generates ROS , which inflict oxidative DNA
@@ -270,13 +248,11 @@ PARP1 activation ^ -> NAD vv. The model assigns DNA damage a 25% weight in
 BioAge.
 
 --- Equation ---
-$$\\frac{d[\\text{Damage}]}{dt} = k_{\\text{ros}} \\cdot \\text{ROS} \\cdot (1 - k_{\\text{aox}} \\cdot \\text{aox}) - k_{\\text{ber}} \\left(\\frac{\\text{NAD}}{\\text{NAD}_0}\\right)^{n_{\\text{ber}}} \\!\\cdot\\, \\text{Damage}$$ $$\\begin{aligned} k_{\\text{ros}} &= 0.60 &\\quad \\%\\; &\\text{ROS damage rate} \\\\ k_{\\text{ber}} &= 0.35 &\\quad \\%\\; &\\text{base excision repair} \\\\ k_{\\text{aox}} &= 0.55 &\\quad \\%\\; &\\text{antioxidant efficacy} \\\\ n_{\\text{ber}} &= 0.7 &\\quad \\%\\; &\\text{NAD-repair exponent} \\\\ \\text{ROS} &= 1 + 0.5\\,H &\\quad \\%\\; &\\text{from heteroplasmy} \\end{aligned}$$
+$$\frac{d[\text{Damage}]}{dt} = k_{\text{ros}} \cdot \text{ROS} \cdot (1 - k_{\text{aox}} \cdot \text{aox}) - k_{\text{ber}} \left(\frac{\text{NAD}}{\text{NAD}_0}\right)^{n_{\text{ber}}} \!\cdot\, \text{Damage}$$ $$\begin{aligned} k_{\text{ros}} &= 0.60 &\quad \%\; &\text{ROS damage rate} \\ k_{\text{ber}} &= 0.35 &\quad \%\; &\text{base excision repair} \\ k_{\text{aox}} &= 0.55 &\quad \%\; &\text{antioxidant efficacy} \\ n_{\text{ber}} &= 0.7 &\quad \%\; &\text{NAD-repair exponent} \\ \text{ROS} &= 1 + 0.5\,H &\quad \%\; &\text{from heteroplasmy} \end{aligned}$$
 
 [Additional figures: stage_02_dna_damage.png]
 
-======================================================================
-SLIDE 11: The Signaling Hub [4]
-======================================================================
+## SLIDE 4: The Signaling Hub
 
 --- Narrative ---
 The Signaling Hub AMP-activated protein kinase (AMPK), the cell's energy sensor,
@@ -286,13 +262,11 @@ boosts autophagy (cellular self-recycling). Drug inhibition (rapamycin) and TSC2
 inhibition are mechanistically independent and stack multiplicatively .
 
 --- Equation ---
-$$\\text{TSC2} = b_0 + b_{\\max} \\cdot \\frac{\\text{AMPK}^n}{K_m^n + \\text{AMPK}^n}$$$$\\text{mTORC1} = \\left(1 - \\alpha \\cdot \\frac{\\text{TSC2}^{n_2}}{K_{m2}^{n_2} + \\text{TSC2}^{n_2}}\\right)(1 - d_{\\text{drug}})$$$$\\text{Autophagy} = \\frac{V_{\\max} \\cdot u}{K_a + u}, \\quad u = w_1\\!\\cdot\\!\\text{AMPK} + w_2\\!\\cdot\\!\\text{FOXO3} + w_3\\!\\cdot\\!\\text{gut} + \\Delta_{\\text{UPR}} + \\Delta_{\\text{mTOR}}$$ $$\\begin{aligned} b_0 &= 0.30 &\\quad \\%\\; &\\text{TSC2 basal} \\\\ b_{\\max} &= 0.70 &\\quad \\%\\; &\\text{TSC2 max AMPK response} \\\\ K_m &= 0.35 &\\quad \\%\\; &\\text{TSC2 Hill half-max} \\\\ n &= 1.5 &\\quad \\%\\; &\\text{TSC2 Hill coefficient} \\\\ \\alpha &= 0.65 &\\quad \\%\\; &\\text{max inhibition of mTORC1} \\\\ K_{m2} &= 0.50 &\\quad \\%\\; &\\text{mTORC1 Hill half-max} \\\\ n_2 &= 1.2 &\\quad \\%\\; &\\text{mTORC1 Hill coefficient} \\\\ K_a &= 0.35 &\\quad \\%\\; &\\text{autophagy half-max} \\end{aligned}$$
+$$\text{TSC2} = b_0 + b_{\max} \cdot \frac{\text{AMPK}^n}{K_m^n + \text{AMPK}^n}$$$$\text{mTORC1} = \left(1 - \alpha \cdot \frac{\text{TSC2}^{n_2}}{K_{m2}^{n_2} + \text{TSC2}^{n_2}}\right)(1 - d_{\text{drug}})$$$$\text{Autophagy} = \frac{V_{\max} \cdot u}{K_a + u}, \quad u = w_1\!\cdot\!\text{AMPK} + w_2\!\cdot\!\text{FOXO3} + w_3\!\cdot\!\text{gut} + \Delta_{\text{UPR}} + \Delta_{\text{mTOR}}$$ $$\begin{aligned} b_0 &= 0.30 &\quad \%\; &\text{TSC2 basal} \\ b_{\max} &= 0.70 &\quad \%\; &\text{TSC2 max AMPK response} \\ K_m &= 0.35 &\quad \%\; &\text{TSC2 Hill half-max} \\ n &= 1.5 &\quad \%\; &\text{TSC2 Hill coefficient} \\ \alpha &= 0.65 &\quad \%\; &\text{max inhibition of mTORC1} \\ K_{m2} &= 0.50 &\quad \%\; &\text{mTORC1 Hill half-max} \\ n_2 &= 1.2 &\quad \%\; &\text{mTORC1 Hill coefficient} \\ K_a &= 0.35 &\quad \%\; &\text{autophagy half-max} \end{aligned}$$
 
 [Additional figures: stage_03_autophagy.png]
 
-======================================================================
-SLIDE 12: The Amplifier [5]
-======================================================================
+## SLIDE 5: The Amplifier
 
 --- Narrative ---
 The Amplifier Damaged cells become senescent and secrete a senescence-associated
@@ -305,13 +279,11 @@ unconstrained -- see Slide A4 for a full analysis of what this means for
 predictions.
 
 --- Equation ---
-$$\\frac{d[\\text{Sen}]}{dt} = k_{\\text{dmg}}(\\text{Damage} - D_{\\text{thresh}})^{+} + k_{\\text{sasp}} \\cdot \\text{SASP} \\;\\ldots$$$$\\ldots\\; - \\;(k_{\\text{nat}} + k_{\\text{auto}} \\cdot \\text{Autophagy}) \\cdot \\text{Sen}$$ $$\\begin{aligned} k_{\\text{dmg}} &= 0.40 &\\quad \\%\\; &\\text{damage-driven entry} \\\\ D_{\\text{thresh}} &= 0.30 &\\quad \\%\\; &\\text{damage threshold} \\\\ k_{\\text{sasp}} &= 0.20 &\\quad \\%\\; &\\text{SASP paracrine entry} \\\\ k_{\\text{nat}} &= 0.02 &\\quad \\%\\; &\\text{natural clearance} \\\\ k_{\\text{auto}} &= 0.70 &\\quad \\%\\; &\\text{autophagy clearance} \\end{aligned}$$
+$$\frac{d[\text{Sen}]}{dt} = k_{\text{dmg}}(\text{Damage} - D_{\text{thresh}})^{+} + k_{\text{sasp}} \cdot \text{SASP} \;\ldots$$$$\ldots\; - \;(k_{\text{nat}} + k_{\text{auto}} \cdot \text{Autophagy}) \cdot \text{Sen}$$ $$\begin{aligned} k_{\text{dmg}} &= 0.40 &\quad \%\; &\text{damage-driven entry} \\ D_{\text{thresh}} &= 0.30 &\quad \%\; &\text{damage threshold} \\ k_{\text{sasp}} &= 0.20 &\quad \%\; &\text{SASP paracrine entry} \\ k_{\text{nat}} &= 0.02 &\quad \%\; &\text{natural clearance} \\ k_{\text{auto}} &= 0.70 &\quad \%\; &\text{autophagy clearance} \end{aligned}$$
 
 [Additional figures: stage_04_senescence.png]
 
-======================================================================
-SLIDE 13: The Clock [6]
-======================================================================
+## SLIDE 6: The Clock
 
 --- Narrative ---
 The Clock DNA methylation drifts with age -- the basis of epigenetic clocks.
@@ -325,13 +297,11 @@ methylation a BioAge weight of 30% , tied with DNA damage as the joint-largest
 component.
 
 --- Equation ---
-$$\\frac{d\\,\\text{Meth}}{dt} = \\underbrace{k_{\\text{ezh2}} \\!\\cdot\\! \\text{EZH2} \\!\\cdot\\! (0.1 + \\text{Dmg})}_{\\text{damage-dependent}} + \\underbrace{k_{\\text{dnmt}}}_{\\text{baseline}} + \\underbrace{k_{\\text{sasp}} \\!\\cdot\\! \\text{SASP}}_{\\text{inflammation}} - \\underbrace{k_{\\text{tet}} \\!\\cdot\\! \\text{Meth}}_{\\text{erasure}}$$$$\\text{EZH2} = \\text{clamp}\\!\\left(1 - 0.5 \\cdot \\text{SIRT1} - k_{\\text{ampk}} \\cdot \\text{AMPK},\\; 0.1,\\; 1.0\\right)$$ $$\\begin{aligned} k_{\\text{ezh2}} &= 1.85 &\\quad \\%\\; &\\text{EZH2 methylation rate} \\\\ k_{\\text{dnmt}} &= 0.28 &\\quad \\%\\; &\\text{DNMT baseline drift} \\\\ k_{\\text{sasp}} &= 0.42 &\\quad \\%\\; &\\text{SASP-driven drift} \\\\ k_{\\text{tet}} &= 0.02 &\\quad \\%\\; &\\text{TET demethylation} \\\\ k_{\\text{ampk}} &= 0.70 &\\quad \\%\\; &\\text{AMPK inhibition of EZH2} \\\\ \\text{Meth}_0 &= 0.25 &\\quad \\%\\; &\\text{youthful methylation} \\end{aligned}$$
+$$\frac{d\,\text{Meth}}{dt} = \underbrace{k_{\text{ezh2}} \!\cdot\! \text{EZH2} \!\cdot\! (0.1 + \text{Dmg})}_{\text{damage-dependent}} + \underbrace{k_{\text{dnmt}}}_{\text{baseline}} + \underbrace{k_{\text{sasp}} \!\cdot\! \text{SASP}}_{\text{inflammation}} - \underbrace{k_{\text{tet}} \!\cdot\! \text{Meth}}_{\text{erasure}}$$$$\text{EZH2} = \text{clamp}\!\left(1 - 0.5 \cdot \text{SIRT1} - k_{\text{ampk}} \cdot \text{AMPK},\; 0.1,\; 1.0\right)$$ $$\begin{aligned} k_{\text{ezh2}} &= 1.85 &\quad \%\; &\text{EZH2 methylation rate} \\ k_{\text{dnmt}} &= 0.28 &\quad \%\; &\text{DNMT baseline drift} \\ k_{\text{sasp}} &= 0.42 &\quad \%\; &\text{SASP-driven drift} \\ k_{\text{tet}} &= 0.02 &\quad \%\; &\text{TET demethylation} \\ k_{\text{ampk}} &= 0.70 &\quad \%\; &\text{AMPK inhibition of EZH2} \\ \text{Meth}_0 &= 0.25 &\quad \%\; &\text{youthful methylation} \end{aligned}$$
 
 [Additional figures: stage_05_intermediates.png]
 
-======================================================================
-SLIDE 14: The Aging System [7]
-======================================================================
+## SLIDE 7: The Aging System
 
 --- Narrative ---
 The Aging System The six subsystems from Stages 1-6 feed into a single composite
@@ -348,11 +318,9 @@ through different upstream paths. The last targets inflammation directly. Then
 we calibrate.
 
 --- Equation ---
-$$\\text{BioAge} = w_m \\frac{\\text{Meth}}{N_m} + w_d \\frac{\\text{Damage}}{N_d} + w_H \\frac{H}{N_H} + w_s \\frac{\\text{SenCells}}{N_s}$$ $$\\begin{aligned} w_m &= 0.30 &\\quad \\%\\; &\\text{methylation weight} \\\\ w_d &= 0.30 &\\quad \\%\\; &\\text{damage weight} \\\\ w_H &= 0.25 &\\quad \\%\\; &\\text{heteroplasmy weight} \\\\ w_s &= 0.15 &\\quad \\%\\; &\\text{senescence weight} \\\\ N_m &= 1.09 &\\quad \\%\\; &\\text{methylation at t=1.0 in control} \\\\ N_d &= 0.67 &\\quad \\%\\; &\\text{damage at t=1.0 in control} \\\\ N_H &= 0.18 &\\quad \\%\\; &\\text{heteroplasmy at t=1.0 in control} \\\\ N_s &= 0.22 &\\quad \\%\\; &\\text{senescence at t=1.0 in control} \\end{aligned}$$
+$$\text{BioAge} = w_m \frac{\text{Meth}}{N_m} + w_d \frac{\text{Damage}}{N_d} + w_H \frac{H}{N_H} + w_s \frac{\text{SenCells}}{N_s}$$ $$\begin{aligned} w_m &= 0.30 &\quad \%\; &\text{methylation weight} \\ w_d &= 0.30 &\quad \%\; &\text{damage weight} \\ w_H &= 0.25 &\quad \%\; &\text{heteroplasmy weight} \\ w_s &= 0.15 &\quad \%\; &\text{senescence weight} \\ N_m &= 1.09 &\quad \%\; &\text{methylation at t=1.0 in control} \\ N_d &= 0.67 &\quad \%\; &\text{damage at t=1.0 in control} \\ N_H &= 0.18 &\quad \%\; &\text{heteroplasmy at t=1.0 in control} \\ N_s &= 0.22 &\quad \%\; &\text{senescence at t=1.0 in control} \end{aligned}$$
 
-======================================================================
-SLIDE 15: Rapamycin [8.1]
-======================================================================
+## SLIDE 8.1: Rapamycin
 
 --- Narrative ---
 8.1 Rapamycin The 'grow now' signal silencer -- turning down mTORC1 tells cells
@@ -363,13 +331,11 @@ mTORC1 plus AMPK->TSC2 inhibition. NIA Interventions Testing Program (ITP) male:
 +23% lifespan extension.
 
 --- Equation ---
-$$\\text{mTORC1} = (1 - I_{\\text{TSC2}})(1 - d_{\\text{drug}})$$$$\\text{AMPK}_{\\text{treated}} = \\text{AMPK}_{\\text{ctrl}} + \\text{ampk}_{\\text{direct}}$$ $$\\begin{aligned} d_{\\text{drug}} &= 0.84 &\\quad \\%\\; &\\text{mTORC1 direct inhibition (FKBP12)} \\\\ \\text{ampk}_{\\text{direct}} &= 0.56 &\\quad \\%\\; &\\text{AMPK boost} \\to I_{\\text{TSC2}} \\text{ (Stage 4)} \\end{aligned}$$
+$$\text{mTORC1} = (1 - I_{\text{TSC2}})(1 - d_{\text{drug}})$$$$\text{AMPK}_{\text{treated}} = \text{AMPK}_{\text{ctrl}} + \text{ampk}_{\text{direct}}$$ $$\begin{aligned} d_{\text{drug}} &= 0.84 &\quad \%\; &\text{mTORC1 direct inhibition (FKBP12)} \\ \text{ampk}_{\text{direct}} &= 0.56 &\quad \%\; &\text{AMPK boost} \to I_{\text{TSC2}} \text{ (Stage 4)} \end{aligned}$$
 
 [Additional figures: stage_06_rapa_states.png, stage_06_rapa_bar.png]
 
-======================================================================
-SLIDE 16: Acarbose [8.2]
-======================================================================
+## SLIDE 8.2: Acarbose
 
 --- Narrative ---
 8.2 Acarbose The starvation mimic -- slowing sugar absorption makes cells think
@@ -380,13 +346,11 @@ modulates gut microbiome composition. Gut microbiome changes reduce CD38
 senescent cell accumulation. ITP male: +22% lifespan extension.
 
 --- Equation ---
-$$\\text{AMPK}_{\\text{eff}} = f(\\text{ampk}_{\\text{direct}} + \\text{other inputs})$$$$\\text{Target}_i \\times \\max\\!\\left(c_i,\\; 1 - \\text{gut} \\cdot k_{\\text{gut},i}\\right) \\quad i \\in \\{\\text{CD38},\\, \\text{DNMT},\\, \\text{SenCells}\\}$$ $$\\begin{aligned} \\text{ampk}_{\\text{direct}} &= 0.44 &\\quad \\%\\; &\\text{AMPK activation} \\\\ \\text{gut} &= 0.32 &\\quad \\%\\; &\\text{gut microbiome effect} \\\\ k_{\\text{gut,cd38}} &= 0.75 &\\quad \\%\\; &\\text{CD38 reduction (protects NAD+)} \\\\ k_{\\text{gut,dnmt}} &= 0.45 &\\quad \\%\\; &\\text{DNMT inhibition (slows methylation)} \\\\ k_{\\text{gut,sen}} &= 0.40 &\\quad \\%\\; &\\text{senescence entry reduction} \\end{aligned}$$
+$$\text{AMPK}_{\text{eff}} = f(\text{ampk}_{\text{direct}} + \text{other inputs})$$$$\text{Target}_i \times \max\!\left(c_i,\; 1 - \text{gut} \cdot k_{\text{gut},i}\right) \quad i \in \{\text{CD38},\, \text{DNMT},\, \text{SenCells}\}$$ $$\begin{aligned} \text{ampk}_{\text{direct}} &= 0.44 &\quad \%\; &\text{AMPK activation} \\ \text{gut} &= 0.32 &\quad \%\; &\text{gut microbiome effect} \\ k_{\text{gut,cd38}} &= 0.75 &\quad \%\; &\text{CD38 reduction (protects NAD+)} \\ k_{\text{gut,dnmt}} &= 0.45 &\quad \%\; &\text{DNMT inhibition (slows methylation)} \\ k_{\text{gut,sen}} &= 0.40 &\quad \%\; &\text{senescence entry reduction} \end{aligned}$$
 
 [Additional figures: stage_06_acarb_states.png, stage_06_acarb_bar.png]
 
-======================================================================
-SLIDE 17: Canagliflozin [8.3]
-======================================================================
+## SLIDE 8.3: Canagliflozin
 
 --- Narrative ---
 8.3 Canagliflozin The glucose dumper -- excreting sugar in urine reduces the
@@ -396,13 +360,11 @@ activating AMPK mildly. Primary effect is antioxidant (reduced mitochondrial
 ROS). ITP male: +14% lifespan extension.
 
 --- Equation ---
-$$\\text{ROS}_{\\text{eff}} = \\text{ROS} \\cdot (1 - k_{\\text{aox}} \\cdot \\text{aox})$$ $$\\begin{aligned} \\text{ampk}_{\\text{direct}} &= 0.15 &\\quad \\%\\; &\\text{AMPK activation} \\\\ \\text{aox} &= 0.88 &\\quad \\%\\; &\\text{antioxidant strength} \\end{aligned}$$
+$$\text{ROS}_{\text{eff}} = \text{ROS} \cdot (1 - k_{\text{aox}} \cdot \text{aox})$$ $$\begin{aligned} \text{ampk}_{\text{direct}} &= 0.15 &\quad \%\; &\text{AMPK activation} \\ \text{aox} &= 0.88 &\quad \%\; &\text{antioxidant strength} \end{aligned}$$
 
 [Additional figures: stage_06_cana_states.png, stage_06_cana_bar.png]
 
-======================================================================
-SLIDE 18: 17\u03B1-Estradiol [8.4]
-======================================================================
+## SLIDE 8.4: 17\u03B1-Estradiol
 
 --- Narrative ---
 8.4 17alpha-Estradiol The male-only energy sensor -- a non-feminizing estrogen
@@ -412,13 +374,11 @@ substrate (5alpha-reductase pathway) -- male-only efficacy. PMID 27312235 --
 14.4 ppm in diet. ITP male: +19%, female: 0%
 
 --- Equation ---
-$$\\text{ROS}_{\\text{eff}} = \\text{ROS} \\cdot (1 - k_{\\text{aox}} \\cdot \\text{aox})$$ $$\\begin{aligned} \\text{ampk}_{\\text{direct}} &= 0.42 &\\quad \\%\\; &\\text{AMPK activation} \\\\ \\text{aox} &= 0.46 &\\quad \\%\\; &\\text{antioxidant strength} \\end{aligned}$$Requires testosterone (male-only)
+$$\text{ROS}_{\text{eff}} = \text{ROS} \cdot (1 - k_{\text{aox}} \cdot \text{aox})$$ $$\begin{aligned} \text{ampk}_{\text{direct}} &= 0.42 &\quad \%\; &\text{AMPK activation} \\ \text{aox} &= 0.46 &\quad \%\; &\text{antioxidant strength} \end{aligned}$$Requires testosterone (male-only)
 
 [Additional figures: stage_06_17ae2_states.png, stage_06_17ae2_bar.png]
 
-======================================================================
-SLIDE 19: Glycine [8.5]
-======================================================================
+## SLIDE 8.5: Glycine
 
 --- Narrative ---
 8.5 Glycine The simplest shield -- an amino acid that soaks up reactive oxygen
@@ -427,13 +387,11 @@ with very mild AMPK activation. Smallest effect among the six compounds. ITP
 male: +6%, female: +4%
 
 --- Equation ---
-$$\\text{ROS}_{\\text{eff}} = \\text{ROS} \\cdot (1 - k_{\\text{aox}} \\cdot \\text{aox})$$ $$\\begin{aligned} \\text{aox} &= 0.54 &\\quad \\%\\; &\\text{antioxidant strength} \\\\ \\text{ampk}_{\\text{direct}} &= 0.04 &\\quad \\%\\; &\\text{AMPK activation} \\end{aligned}$$
+$$\text{ROS}_{\text{eff}} = \text{ROS} \cdot (1 - k_{\text{aox}} \cdot \text{aox})$$ $$\begin{aligned} \text{aox} &= 0.54 &\quad \%\; &\text{antioxidant strength} \\ \text{ampk}_{\text{direct}} &= 0.04 &\quad \%\; &\text{AMPK activation} \end{aligned}$$
 
 [Additional figures: stage_06_glycine_states.png, stage_06_glycine_bar.png]
 
-======================================================================
-SLIDE 20: Aspirin [8.6]
-======================================================================
+## SLIDE 8.6: Aspirin
 
 --- Narrative ---
 8.6 Aspirin The inflammation brake -- quieting the alarm that senescent cells
@@ -443,13 +401,11 @@ sex mechanism explained in Stage 13. ITP male: +8%, female: 0% All six compounds
 now visible. Next: calibration results.
 
 --- Equation ---
-$$\\text{ROS}_{\\text{eff}} = \\text{ROS} \\cdot (1 - k_{\\text{aox}} \\cdot \\text{aox})$$$$\\text{SASP}_{\\text{eff}} = \\text{SASP} \\cdot (1 - k_{\\text{ai}})$$ $$\\begin{aligned} \\text{aox} &= 0.20 &\\quad \\%\\; &\\text{antioxidant strength} \\\\ \\text{ampk}_{\\text{direct}} &= 0.12 &\\quad \\%\\; &\\text{AMPK activation} \\\\ k_{\\text{ai}} &= 0.09 &\\quad \\%\\; &\\text{anti-inflammatory} \\end{aligned}$$
+$$\text{ROS}_{\text{eff}} = \text{ROS} \cdot (1 - k_{\text{aox}} \cdot \text{aox})$$$$\text{SASP}_{\text{eff}} = \text{SASP} \cdot (1 - k_{\text{ai}})$$ $$\begin{aligned} \text{aox} &= 0.20 &\quad \%\; &\text{antioxidant strength} \\ \text{ampk}_{\text{direct}} &= 0.12 &\quad \%\; &\text{AMPK activation} \\ k_{\text{ai}} &= 0.09 &\quad \%\; &\text{anti-inflammatory} \end{aligned}$$
 
 [Additional figures: stage_06_aspirin_states.png, stage_06_aspirin_bar.png]
 
-======================================================================
-SLIDE 21: Calibration [9]
-======================================================================
+## SLIDE 9: Calibration
 
 --- Narrative ---
 Male Calibration Model calibrated to male ITP data: Compound ITP Model Rapamycin
@@ -460,13 +416,11 @@ Overfit? 10 effective DOF for 12 data points (Slide A1). The real test: an out-
 of-sample combination prediction.
 
 --- Equation ---
-$$S(t) = \\frac{1}{1 + \\exp\\!\\left(\\frac{t - t_{\\text{death}}}{\\sigma}\\right)}$$ $$\\begin{aligned} \\sigma &= 0.12 &\\quad \\%\\; &\\text{transition sharpness} \\end{aligned}$$
+$$S(t) = \frac{1}{1 + \exp\!\left(\frac{t - t_{\text{death}}}{\sigma}\right)}$$ $$\begin{aligned} \sigma &= 0.12 &\quad \%\; &\text{transition sharpness} \end{aligned}$$
 
 [Additional figures: stage_07_male_calibration.png, stage_08_survival_curves.png]
 
-======================================================================
-SLIDE 22: Prediction [10]
-======================================================================
+## SLIDE 10: Prediction
 
 --- Narrative ---
 Rapamycin + Acarbose Independent validation. Model was NOT fit to combination
@@ -476,13 +430,11 @@ modeled from 9-month start, matching ITP combo protocol (Strong 2022). Not fit
 -- predicted.
 
 --- Equation ---
-$$\\text{Autophagy} = \\frac{V_{\\max} \\cdot x}{K_m + x}$$$$f(a+b) $$\\begin{aligned} K_m &= 0.35 &\\quad \\%\\; &\\text{autophagy half-max} \\\\ x &= \\textstyle\\sum_i w_i \\cdot \\text{input}_i &\\quad \\%\\; &\\text{weighted pathway sum} \\end{aligned}$$
+$$\text{Autophagy} = \frac{V_{\max} \cdot x}{K_m + x}$$$$f(a+b) $$\begin{aligned} K_m &= 0.35 &\quad \%\; &\text{autophagy half-max} \\ x &= \textstyle\sum_i w_i \cdot \text{input}_i &\quad \%\; &\text{weighted pathway sum} \end{aligned}$$
 
 [Additional figures: stage_08_mixing_bars.png]
 
-======================================================================
-SLIDE 23: Why Males? [11]
-======================================================================
+## SLIDE 11: Why Males?
 
 --- Narrative ---
 AMPK Sex Difference Female AMPK baseline is 1.4x male (estrogen -> LKB1, liver
@@ -492,13 +444,11 @@ for acarbose, canagliflozin, glycine. Not fit to sex data -- predicted from
 literature.
 
 --- Equation ---
-$$\\text{scaling}_F = \\frac{1}{1 + k \\cdot (\\text{baseline}_F - 1)}$$ $$\\begin{aligned} k &= 11 &\\quad \\%\\; &\\text{saturation steepness (acarbose)} \\\\ \\text{baseline}_F &= 1.4 &\\quad \\%\\; &\\text{female AMPK (rel. to male)} \\end{aligned}$$
+$$\text{scaling}_F = \frac{1}{1 + k \cdot (\text{baseline}_F - 1)}$$ $$\begin{aligned} k &= 11 &\quad \%\; &\text{saturation steepness (acarbose)} \\ \text{baseline}_F &= 1.4 &\quad \%\; &\text{female AMPK (rel. to male)} \end{aligned}$$
 
 [Additional figures: stage_09_ampk_mf_bars.png]
 
-======================================================================
-SLIDE 24: The Saturation Curve [11b]
-======================================================================
+## SLIDE 11b: The Saturation Curve
 
 --- Narrative ---
 The Saturation Curve Female mice start with 1.4x higher AMPK activity (estrogen
@@ -508,9 +458,7 @@ dose moves females less than males.
 
 [Additional figures: stage_09_ampk_saturation.png]
 
-======================================================================
-SLIDE 25: The Exception [12]
-======================================================================
+## SLIDE 12: The Exception
 
 --- Narrative ---
 Rapamycin Pharmacokinetics (PK) Rapamycin breaks the AMPK pattern: F (+26%) > M
@@ -521,13 +469,11 @@ answer is absorption: females have 3.48x higher blood levels (cytochrome P450
 saturation disadvantage. Demonstrates model extensibility .
 
 --- Equation ---
-$$\\text{effective}_F = \\text{dose} \\times r_{\\text{pk}}$$$$\\text{mTORC1}_F = f(\\text{effective}_F)$$ $$\\begin{aligned} r_{\\text{pk}} &= 3.48 &\\quad \\%\\; &\\text{female/male blood level ratio} \\end{aligned}$$
+$$\text{effective}_F = \text{dose} \times r_{\text{pk}}$$$$\text{mTORC1}_F = f(\text{effective}_F)$$ $$\begin{aligned} r_{\text{pk}} &= 3.48 &\quad \%\; &\text{female/male blood level ratio} \end{aligned}$$
 
 [Additional figures: stage_10_rapa_dose_response.png, stage_10_mf_updated.png]
 
-======================================================================
-SLIDE 26: 17\u03B1-Estradiol [13.1]
-======================================================================
+## SLIDE 13.1: 17\u03B1-Estradiol
 
 --- Narrative ---
 17alpha-Estradiol +19% male, 0% female. Why? 17alphaE2 activates AMPK and
@@ -538,13 +484,11 @@ there is zero effect . Castrated males lose all benefit ( Garratt 2018, PMID
 29806096 ).
 
 --- Equation ---
-$$\\text{effect}_F = 0 \\quad (\\text{no testosterone substrate})$$ $$\\begin{aligned} \\text{ampk}_{\\text{direct}} &= 0.42 &\\quad \\%\\; &\\text{male only} \\\\ \\text{aox} &= 0.46 &\\quad \\%\\; &\\text{male only} \\end{aligned}$$
+$$\text{effect}_F = 0 \quad (\text{no testosterone substrate})$$ $$\begin{aligned} \text{ampk}_{\text{direct}} &= 0.42 &\quad \%\; &\text{male only} \\ \text{aox} &= 0.46 &\quad \%\; &\text{male only} \end{aligned}$$
 
 [Additional figures: stage_11a_testosterone.png, stage_11a_mf_cumulative.png]
 
-======================================================================
-SLIDE 27: Aspirin [13.2]
-======================================================================
+## SLIDE 13.2: Aspirin
 
 --- Narrative ---
 Aspirin +8% male, 0% female. Why? Aspirin is redundant with or interferes with
@@ -557,13 +501,11 @@ cardioprotection (OR 0.66->1.50). ( Egan 2004, Science ; Grosser 2006, PLOS Med
 )
 
 --- Equation ---
-$$\\text{effect}_F = 0 \\quad (\\text{COX inhibition blocks estrogen} \\to \\text{COX-2} \\to \\text{PGI}_2 \\text{ pathway})$$ $$\\begin{aligned} \\text{aox} &= 0.20 &\\quad \\%\\; &\\text{male only} \\\\ \\text{ampk}_{\\text{direct}} &= 0.12 &\\quad \\%\\; &\\text{male only} \\\\ k_{\\text{ai}} &= 0.09 &\\quad \\%\\; &\\text{male only} \\end{aligned}$$
+$$\text{effect}_F = 0 \quad (\text{COX inhibition blocks estrogen} \to \text{COX-2} \to \text{PGI}_2 \text{ pathway})$$ $$\begin{aligned} \text{aox} &= 0.20 &\quad \%\; &\text{male only} \\ \text{ampk}_{\text{direct}} &= 0.12 &\quad \%\; &\text{male only} \\ k_{\text{ai}} &= 0.09 &\quad \%\; &\text{male only} \end{aligned}$$
 
 [Additional figures: stage_11b_estrogen_intf.png, stage_11b_mf_cumulative.png]
 
-======================================================================
-SLIDE 28: Four Sex Mechanisms [13.3]
-======================================================================
+## SLIDE 13.3: Four Sex Mechanisms
 
 --- Narrative ---
 Four Sex Mechanisms Every compound's sex difference is now explained by one of
@@ -574,9 +516,7 @@ to sex data. One (PK) uses measured blood levels.
 
 [Additional figures: stage_11_mf_complete.png]
 
-======================================================================
-SLIDE 29: The Full Picture [14]
-======================================================================
+## SLIDE 14: The Full Picture
 
 --- Narrative ---
 The Full Picture BioAge = 0.30*Meth + 0.30*Damage + 0.25*H + 0.15*SenCells The
@@ -592,11 +532,9 @@ out-of-sample combination prediction (rapa + acarbose: 33% predicted, 34%
 observed). Click any node or compound for parameter details and references.
 
 --- Equation ---
-$$\\text{BioAge} = w_m \\frac{\\text{Meth}}{N_m} + w_d \\frac{\\text{Damage}}{N_d} + w_H \\frac{H}{N_H} + w_s \\frac{\\text{SenCells}}{N_s}$$ $$\\begin{aligned} w_m &= 0.30 &\\quad \\%\\; &\\text{methylation weight} \\\\ w_d &= 0.30 &\\quad \\%\\; &\\text{damage weight} \\\\ w_H &= 0.25 &\\quad \\%\\; &\\text{heteroplasmy weight} \\\\ w_s &= 0.15 &\\quad \\%\\; &\\text{senescence weight} \\\\ N_m &= 1.09 &\\quad \\%\\; &\\text{methylation norm} \\\\ N_d &= 0.67 &\\quad \\%\\; &\\text{damage norm} \\\\ N_H &= 0.18 &\\quad \\%\\; &\\text{heteroplasmy norm} \\\\ N_s &= 0.22 &\\quad \\%\\; &\\text{senescence norm} \\end{aligned}$$
+$$\text{BioAge} = w_m \frac{\text{Meth}}{N_m} + w_d \frac{\text{Damage}}{N_d} + w_H \frac{H}{N_H} + w_s \frac{\text{SenCells}}{N_s}$$ $$\begin{aligned} w_m &= 0.30 &\quad \%\; &\text{methylation weight} \\ w_d &= 0.30 &\quad \%\; &\text{damage weight} \\ w_H &= 0.25 &\quad \%\; &\text{heteroplasmy weight} \\ w_s &= 0.15 &\quad \%\; &\text{senescence weight} \\ N_m &= 1.09 &\quad \%\; &\text{methylation norm} \\ N_d &= 0.67 &\quad \%\; &\text{damage norm} \\ N_H &= 0.18 &\quad \%\; &\text{heteroplasmy norm} \\ N_s &= 0.22 &\quad \%\; &\text{senescence norm} \end{aligned}$$
 
-======================================================================
-SLIDE 30: Combination Predictions [15]
-======================================================================
+## SLIDE 15: Combination Predictions
 
 [Figure: stage_14_dose_matrix.png]
 
@@ -616,9 +554,7 @@ essentially saturated at 1x.
 
 [Additional figures: stage_14_greedy_male.png, stage_14_greedy_female.png, stage_14_greedy_male_2x.png, stage_14_greedy_female_2x.png]
 
-======================================================================
-SLIDE 31: Risk-Benefit Analysis [16]
-======================================================================
+## SLIDE 16: Risk-Benefit Analysis
 
 [Figure: stage_15_optimal_cocktails.png]
 
@@ -643,9 +579,7 @@ acarbose, 17alphaE2) or estimated from pharmacology (cana, aspirin, glycine).
 
 [Additional figures: stage_15_risk_profile.png]
 
-======================================================================
-SLIDE 32: Adding Targets [17]
-======================================================================
+## SLIDE 17: Adding Targets
 
 [Figure: stage_16_whatif.png]
 
@@ -687,9 +621,7 @@ range, but the quantitative dominance depends on the specific weights chosen.
 
 [Additional figures: stage_16_bioage_composition.png]
 
-======================================================================
-SLIDE 33: Limitations [18]
-======================================================================
+## SLIDE 18: Limitations
 
 --- Narrative ---
 What This Model Cannot Do Every model is a simplification. Before interpreting
@@ -724,9 +656,7 @@ observed). Rank intervention targets by predicted leverage (Slide A9-A10).
 Identify which novel targets to test first and which pairs to prioritize (Slide
 A10-A11). Explain sex differences through four mechanistic routes (Stage 13.3).
 
-======================================================================
-SLIDE 34: Identifiability Analysis [A1]
-======================================================================
+## SLIDE A1: Identifiability Analysis
 
 [Figure: stage_A1_svd_spectrum.png]
 
@@ -748,11 +678,9 @@ k_nmn_synthesis and k_sirt_consumption form a gauge pair (their ratio is
 constrained but individual values are not).
 
 --- Equation ---
-$$J = U \\Sigma V^T \\quad \\text{where } J_{ij} = \\frac{\\partial (\\text{extension}_i)}{\\partial \\theta_j}$$$$\\text{rank}(J) = 10, \\quad \\kappa_{\\text{full}} = \\frac{\\sigma_1}{\\sigma_{10}} = 14.6, \\quad \\kappa_{\\text{obs}} = 210$$ $$\\sigma_1 = 251.4$$ &mdash; heteroplasmy dynamics $$\\sigma_2 = 68.3$$ &mdash; mTOR signaling chain $$\\sigma_3 = 31.0$$ &mdash; AMPK &rarr; methylation $$\\sigma_{10} = 1.2$$ &mdash; sirtuin sensitivity
+$$J = U \Sigma V^T \quad \text{where } J_{ij} = \frac{\partial (\text{extension}_i)}{\partial \theta_j}$$$$\text{rank}(J) = 10, \quad \kappa_{\text{full}} = \frac{\sigma_1}{\sigma_{10}} = 14.6, \quad \kappa_{\text{obs}} = 210$$ $$\sigma_1 = 251.4$$ &mdash; heteroplasmy dynamics $$\sigma_2 = 68.3$$ &mdash; mTOR signaling chain $$\sigma_3 = 31.0$$ &mdash; AMPK &rarr; methylation $$\sigma_{10} = 1.2$$ &mdash; sirtuin sensitivity
 
-======================================================================
-SLIDE 35: Gauge Symmetry [A2]
-======================================================================
+## SLIDE A2: Gauge Symmetry
 
 [Figure: gauge_drift_ratios.png]
 
@@ -769,11 +697,9 @@ antioxidant) track the drift closely. This confirms genuine mechanistic content
 beyond simple rate rescaling.
 
 --- Equation ---
-$$\\text{Drift ratio} = \\frac{\\Delta\\text{ext}_i / \\text{ext}_i}{\\Delta\\text{ext}_{\\text{ctrl}} / \\text{ext}_{\\text{ctrl}}}$$ Canagliflozin M: 0.151 (most buffered) Acarbose M: 0.207 (least buffered) Spread: 37% (partial, not full)
+$$\text{Drift ratio} = \frac{\Delta\text{ext}_i / \text{ext}_i}{\Delta\text{ext}_{\text{ctrl}} / \text{ext}_{\text{ctrl}}}$$ Canagliflozin M: 0.151 (most buffered) Acarbose M: 0.207 (least buffered) Spread: 37% (partial, not full)
 
-======================================================================
-SLIDE 36: Leave-One-Out Vulnerability [A3]
-======================================================================
+## SLIDE A3: Leave-One-Out Vulnerability
 
 [Figure: loo_jacobian_residuals.png]
 
@@ -793,11 +719,9 @@ errors are bounded within ~5% for all compounds -- consistent with a 10-DOF
 model fit to 12 targets.
 
 --- Equation ---
-$$\\text{Captured}(i) = \\frac{\\|\\text{proj}_{\\text{row}(J_{-i})} J_i\\|}{\\|J_i\\|}$$ Glycine: 79.2% &mdash; most vulnerable 17&alpha;E2: 99.9% &mdash; most implied Rapamycin: 95.4% &mdash; best-conditioned Leave-One-Out error bounded within ~5%
+$$\text{Captured}(i) = \frac{\|\text{proj}_{\text{row}(J_{-i})} J_i\|}{\|J_i\|}$$ Glycine: 79.2% &mdash; most vulnerable 17&alpha;E2: 99.9% &mdash; most implied Rapamycin: 95.4% &mdash; best-conditioned Leave-One-Out error bounded within ~5%
 
-======================================================================
-SLIDE 37: SASP: The Phantom Node [A4]
-======================================================================
+## SLIDE A4: SASP: The Phantom Node
 
 --- Narrative ---
 SASP: Fully Wired, Nearly Silent The SASP module computes 5 downstream effects
@@ -819,9 +743,7 @@ remain ready to calibrate once senolytic trial data (e.g., dasatinib+quercetin
 ITP results) and CD38 inhibitor measurements become available. The structural
 coupling is in place; only the parameter values are unconstrained.
 
-======================================================================
-SLIDE 38: Rapa + NMN Prediction [A5]
-======================================================================
+## SLIDE A5: Rapa + NMN Prediction
 
 --- Narrative ---
 Rapa + NMN: A Testable Prediction Rapamycin (mTORC1 inhibition + AMPK) and NMN
@@ -842,11 +764,9 @@ prediction. The full prediction (32% M / 36% F) is a structural upper bound
 conditioned on late-life extrapolation.
 
 --- Equation ---
-$$\\text{ext}_{\\text{combo}} = \\frac{t_{\\text{death,combo}} - t_{\\text{death,ctrl}}}{t_{\\text{death,ctrl}}}$$$$\\text{ext}_{\\text{combo}} > \\text{ext}_{\\text{rapa}} + \\text{ext}_{\\text{NMN}}$$ Male: 31.8% (additive floor 26.4%) Female: 36.0% (additive floor 29.6%) Superadditivity: +5.4% (M), +6.4% (F) Both compounds from 9-month start (plausible ITP protocol)
+$$\text{ext}_{\text{combo}} = \frac{t_{\text{death,combo}} - t_{\text{death,ctrl}}}{t_{\text{death,ctrl}}}$$$$\text{ext}_{\text{combo}} > \text{ext}_{\text{rapa}} + \text{ext}_{\text{NMN}}$$ Male: 31.8% (additive floor 26.4%) Female: 36.0% (additive floor 29.6%) Superadditivity: +5.4% (M), +6.4% (F) Both compounds from 9-month start (plausible ITP protocol)
 
-======================================================================
-SLIDE 39: Rapa + NMN Superadditivity Robustness [A5b]
-======================================================================
+## SLIDE A5b: Rapa + NMN Superadditivity Robustness
 
 [Figure: stage_A5_sensitivity.png]
 
@@ -858,9 +778,7 @@ zero. Most sensitive parameter: k_nmn_synthesis (NMN->NAD efficiency, +/-1.5
 pp). Second: Km_nad_sirt1 (NAD affinity for SIRT1, +/-1.3 pp). BioAge weights
 shift the total prediction but barely affect the superadditive component.
 
-======================================================================
-SLIDE 40: BioAge Weight Sensitivity [A6]
-======================================================================
+## SLIDE A6: BioAge Weight Sensitivity
 
 [Figure: w_meth_sweep.png]
 
@@ -891,11 +809,9 @@ accelerated drift, not just stochastic CpG noise. Analysis:
 scripts/clock_pca/clock_methylation_fraction.py
 
 --- Equation ---
-$$\\text{BioAge} = w_m \\cdot \\frac{\\text{Meth}}{N_m} + w_d \\cdot \\frac{\\text{Damage}}{N_d} + w_H \\cdot \\frac{H}{N_H} + w_s \\cdot \\frac{\\text{SenCells}}{N_s}$$ w meth constrained to [0.25, 0.40] by calibration data Current: 0.30 (mean error 0.08%) Rapa+NMN prediction robust to weight variation (&lt;0.5%)
+$$\text{BioAge} = w_m \cdot \frac{\text{Meth}}{N_m} + w_d \cdot \frac{\text{Damage}}{N_d} + w_H \cdot \frac{H}{N_H} + w_s \cdot \frac{\text{SenCells}}{N_s}$$ w meth constrained to [0.25, 0.40] by calibration data Current: 0.30 (mean error 0.08%) Rapa+NMN prediction robust to weight variation (&lt;0.5%)
 
-======================================================================
-SLIDE 41: Weight Sensitivity: H & Sen [A6b]
-======================================================================
+## SLIDE A6b: Weight Sensitivity: H & Sen
 
 [Figure: stage_A6b_weight_sensitivity.png]
 
@@ -919,9 +835,7 @@ redistributed proportionally when a single weight is varied. The Rapa+Acarb
 validation prediction tracks the calibration: it passes (+/-1pp of observed 34%)
 only within the same weight ranges that pass individual calibration.
 
-======================================================================
-SLIDE 42: Feedback Loops [A7]
-======================================================================
+## SLIDE A7: Feedback Loops
 
 --- Narrative ---
 Feedback Loops The aging network contains three positive feedback (vicious
@@ -939,13 +853,11 @@ system gets worse faster the worse it already is. This explains why aging
 accelerates in late life.
 
 --- Equation ---
-Three positive feedback loops:$$\\begin{aligned}\\color{#e74c3c}{\\text{Loop 3:}} \\quad & \\text{Damage} \\xrightarrow{k_{\\text{parp}}} \\text{NAD}\\!\\downarrow \\;\\to\\; \\text{PARP1/Repair}\\!\\downarrow \\;\\to\\; \\text{Damage} \\\\[4pt]\\color{#e67e22}{\\text{Loop 2:}} \\quad & \\text{SASP} \\xrightarrow{k_{\\text{cd38}}} \\text{NAD}\\!\\downarrow \\;\\to\\; \\text{PARP1/Repair}\\!\\downarrow \\;\\to\\; \\text{Damage}\\!\\uparrow \\\\[4pt]\\color{#e67e22}{\\text{Loop 1:}} \\quad & \\text{Sen} \\xrightarrow{k_{\\text{sasp}}} \\text{SASP} \\xrightarrow{k_{\\text{par}}} \\text{Sen}\\end{aligned}$$Loop-breaking lifespan gains (untreated control):$$\\begin{aligned}\\text{PARP-NAD} &: +3.0\\% \\\\\\text{SASP-NAD-Damage} &: +0.2\\% \\\\\\text{SASP Paracrine} &: +0.1\\%\\end{aligned}$$
+Three positive feedback loops:$$\begin{aligned}\color{#e74c3c}{\text{Loop 3:}} \quad & \text{Damage} \xrightarrow{k_{\text{parp}}} \text{NAD}\!\downarrow \;\to\; \text{PARP1/Repair}\!\downarrow \;\to\; \text{Damage} \\[4pt]\color{#e67e22}{\text{Loop 2:}} \quad & \text{SASP} \xrightarrow{k_{\text{cd38}}} \text{NAD}\!\downarrow \;\to\; \text{PARP1/Repair}\!\downarrow \;\to\; \text{Damage}\!\uparrow \\[4pt]\color{#e67e22}{\text{Loop 1:}} \quad & \text{Sen} \xrightarrow{k_{\text{sasp}}} \text{SASP} \xrightarrow{k_{\text{par}}} \text{Sen}\end{aligned}$$Loop-breaking lifespan gains (untreated control):$$\begin{aligned}\text{PARP-NAD} &: +3.0\% \\\text{SASP-NAD-Damage} &: +0.2\% \\\text{SASP Paracrine} &: +0.1\%\end{aligned}$$
 
 [Additional figures: stage_17_loop_breaking.png]
 
-======================================================================
-SLIDE 43: Hallmark Importance [A8]
-======================================================================
+## SLIDE A8: Hallmark Importance
 
 --- Narrative ---
 Hallmark Importance "What if this hallmark never deteriorated?" For each state
@@ -964,13 +876,11 @@ also preserves NAD + , which maintains PARP1/Repair capacity, which prevents
 more damage -- a virtuous cycle.
 
 --- Equation ---
-$$S_i = \\frac{\\Delta\\%\\;\\text{lifespan}}{\\Delta\\, p_i}\\bigg|_{p_i=0.1}$$Node clamping results:$$\\begin{aligned}\\text{DNA Damage} &: +68\\% \\quad (w_d = 0.25) \\\\\\text{Methylation} &: +36\\% \\quad (w_m = 0.30) \\\\\\text{Heteroplasmy} &: +15\\% \\quad (w_H = 0.25) \\\\\\text{SenCells} &: +14\\% \\quad (w_s = 0.15)\\end{aligned}$$
+$$S_i = \frac{\Delta\%\;\text{lifespan}}{\Delta\, p_i}\bigg|_{p_i=0.1}$$Node clamping results:$$\begin{aligned}\text{DNA Damage} &: +68\% \quad (w_d = 0.25) \\\text{Methylation} &: +36\% \quad (w_m = 0.30) \\\text{Heteroplasmy} &: +15\% \quad (w_H = 0.25) \\\text{SenCells} &: +14\% \quad (w_s = 0.15)\end{aligned}$$
 
 [Additional figures: stage_17_node_clamping.png]
 
-======================================================================
-SLIDE 44: Pathway Sensitivity [A9]
-======================================================================
+## SLIDE A9: Pathway Sensitivity
 
 --- Narrative ---
 Intervention Point Sensitivity For each intervention point, we apply a standard
@@ -995,13 +905,11 @@ frequency-dependent; more aggressive dosing protocols would increase its
 ranking.
 
 --- Equation ---
-$$S_i = \\frac{\\Delta\\%\\;\\text{lifespan}}{\\Delta\\, p_i}\\bigg|_{p_i=0.1}$$Top intervention point sensitivities:$$\\begin{aligned}\\text{AMPK activation} &: 62 \\\\\\text{Senolytic (D+Q)} &: 60 \\\\\\text{Gut microbiome} &: 22 \\\\\\text{Mitophagy} &: 13 \\\\\\text{mTORC1 inhibition} &: 7\\end{aligned}$$
+$$S_i = \frac{\Delta\%\;\text{lifespan}}{\Delta\, p_i}\bigg|_{p_i=0.1}$$Top intervention point sensitivities:$$\begin{aligned}\text{AMPK activation} &: 62 \\\text{Senolytic (D+Q)} &: 60 \\\text{Gut microbiome} &: 22 \\\text{Mitophagy} &: 13 \\\text{mTORC1 inhibition} &: 7\end{aligned}$$
 
 [Additional figures: stage_17_pathway_sensitivity.png]
 
-======================================================================
-SLIDE 45: Pairwise Synergy [A10]
-======================================================================
+## SLIDE A10: Pairwise Synergy
 
 [Figure: stage_A10_synergy_full.png]
 
@@ -1033,11 +941,9 @@ right). Cross-block cells show ITPxnovel synergies -- the most actionable
 predictions for experimental design.
 
 --- Equation ---
-$$\\Delta_{ij} = \\text{ext}(i{+}j) - \\text{ext}(i) - \\text{ext}(j)$$Since ext({}) = 0, this is a proper interaction term.$$\\Delta > 0 \\;\\Rightarrow\\; \\text{super-additive (pathway-independent)}$$$$\\Delta < 0 \\;\\Rightarrow\\; \\text{sub-additive (shared bottleneck)}$$All 45 pairs x 2 sexes = 90 pairwise simulations + 10 singles x 2 sexes.
+$$\Delta_{ij} = \text{ext}(i{+}j) - \text{ext}(i) - \text{ext}(j)$$Since ext({}) = 0, this is a proper interaction term.$$\Delta > 0 \;\Rightarrow\; \text{super-additive (pathway-independent)}$$$$\Delta < 0 \;\Rightarrow\; \text{sub-additive (shared bottleneck)}$$All 45 pairs x 2 sexes = 90 pairwise simulations + 10 singles x 2 sexes.
 
-======================================================================
-SLIDE 46: Conditional Synergy [A11]
-======================================================================
+## SLIDE A11: Conditional Synergy
 
 [Figure: stage_A10_synergy_conditional.png]
 
@@ -1074,11 +980,9 @@ SASP-dependent result in this matrix. The Mitophagy+NMN synergy (+33 pp) is more
 robust as it operates through the NAD+/heteroplasmy axis.
 
 --- Equation ---
-$$\\Delta_{ij|B} = \\text{ext}(B{+}i{+}j) - \\text{ext}(B{+}i) - \\text{ext}(B{+}j) + \\text{ext}(B)$$where $B$ = ITP base (Rapa + Acarb + Cana + Gly). This is the second-order interaction term conditioned on a nonzero baseline -- it isolates the novelxnovel interaction from the already-captured basexnovel effects.
+$$\Delta_{ij|B} = \text{ext}(B{+}i{+}j) - \text{ext}(B{+}i) - \text{ext}(B{+}j) + \text{ext}(B)$$where $B$ = ITP base (Rapa + Acarb + Cana + Gly). This is the second-order interaction term conditioned on a nonzero baseline -- it isolates the novelxnovel interaction from the already-captured basexnovel effects.
 
-======================================================================
-SLIDE 47: Network Structure (1/4): Adjacency [A12]
-======================================================================
+## SLIDE A12: Network Structure (1/4): Adjacency
 
 [Figure: stage_A10_adjacency.png]
 
@@ -1103,11 +1007,9 @@ propagates broadly. BioAge row: Only 4 direct inputs (Meth 0.30, DNA_Dmg 0.30,
 Hetero 0.25, SenCells 0.15) -- the composite death clock.
 
 --- Equation ---
-$$A_{ij} = \\text{ODE coupling strength of } j \\text{ on } i$$Green: $A_{ij} > 0$ (activating) &emsp; Blue: $A_{ij} 15 state variables x 15 = 225 cells, of which 31 are nonzero -- the network is sparse (14% density), meaning most node pairs interact only indirectly.
+$$A_{ij} = \text{ODE coupling strength of } j \text{ on } i$$Green: $A_{ij} > 0$ (activating) &emsp; Blue: $A_{ij} 15 state variables x 15 = 225 cells, of which 31 are nonzero -- the network is sparse (14% density), meaning most node pairs interact only indirectly.
 
-======================================================================
-SLIDE 48: Network Structure (2/4): Node Degree [A13]
-======================================================================
+## SLIDE A13: Network Structure (2/4): Node Degree
 
 [Figure: stage_A10_degree.png]
 
@@ -1133,11 +1035,9 @@ with each other because their downstream effects overlap. Compounds targeting
 pathway-independent nodes (e.g. Hetero + SenCells) are superadditive.
 
 --- Equation ---
-$$\\text{In-degree}(i) = \\sum_j |A_{ij}| \\quad \\text{(influence received)}$$$$\\text{Out-degree}(j) = \\sum_i |A_{ij}| \\quad \\text{(influence broadcast)}$$High out-degree = hub (perturbation propagates widely). High in-degree = integrator (state reflects many upstream signals).
+$$\text{In-degree}(i) = \sum_j |A_{ij}| \quad \text{(influence received)}$$$$\text{Out-degree}(j) = \sum_i |A_{ij}| \quad \text{(influence broadcast)}$$High out-degree = hub (perturbation propagates widely). High in-degree = integrator (state reflects many upstream signals).
 
-======================================================================
-SLIDE 49: Network Structure (3/4): Bottlenecks [A14]
-======================================================================
+## SLIDE A14: Network Structure (3/4): Bottlenecks
 
 [Figure: stage_A10_betweenness.png]
 
@@ -1168,11 +1068,9 @@ intermediaries. Pathway overlap (blue cells) occurs when both must route through
 the same bottleneck (e.g. SIRT1), creating diminishing returns via saturation.
 
 --- Equation ---
-$$C_B(v) = \\sum_{s \\neq v \\neq t} \\frac{\\sigma_{st}(v)}{\\sigma_{st}}$$$\\sigma_{st}$ = number of shortest paths from $s$ to $t$ $\\sigma_{st}(v)$ = number that pass through $v$ Computed via Floyd-Warshall on distance matrix $d_{ij} = 1/|A_{ij}|$, then normalized to [0, 1].
+$$C_B(v) = \sum_{s \neq v \neq t} \frac{\sigma_{st}(v)}{\sigma_{st}}$$$\sigma_{st}$ = number of shortest paths from $s$ to $t$ $\sigma_{st}(v)$ = number that pass through $v$ Computed via Floyd-Warshall on distance matrix $d_{ij} = 1/|A_{ij}|$, then normalized to [0, 1].
 
-======================================================================
-SLIDE 50: Network Structure (4/4): Path Distances [A15]
-======================================================================
+## SLIDE A15: Network Structure (4/4): Path Distances
 
 [Figure: stage_A10_paths.png]
 
@@ -1204,11 +1102,9 @@ confirms this: Mitophagy (dist=4) + Senolytic (dist=6.6) is the top pair, while
 Rapa (dist=6.2) + Acarb (dist=6.2) overlap heavily and are subadditive.
 
 --- Equation ---
-Shortest path distance from intervention node $s$ to BioAge:$$d(s, \\text{BioAge}) = \\min_{\\text{path}} \\sum_{\\text{edges}} \\frac{1}{|A_{ij}|}$$Computed via Floyd-Warshall. Color coding: Red = direct (d 5)
+Shortest path distance from intervention node $s$ to BioAge:$$d(s, \text{BioAge}) = \min_{\text{path}} \sum_{\text{edges}} \frac{1}{|A_{ij}|}$$Computed via Floyd-Warshall. Color coding: Red = direct (d 5)
 
-======================================================================
-SLIDE 51: Model Specification [A16]
-======================================================================
+## SLIDE A16: Model Specification
 
 Model Specification A16 -- Complete mathematical specification of the ELM. All
 equations and parameters needed to reproduce the model.
@@ -1226,9 +1122,7 @@ compound injections specify which pathways each drug activates and at what
 strength. Sex modifiers implement four distinct biological mechanisms rather
 than ad-hoc multipliers.
 
-======================================================================
-SLIDE 52: The Combination Prediction [A17]
-======================================================================
+## SLIDE A17: The Combination Prediction
 
 The Combination Prediction All 8 Taguchi compounds at calibrated doses. The
 prediction is remarkable -- but every modeled variable stays within
@@ -1260,9 +1154,7 @@ this doesn't prove: the model may still be wrong about biology we haven't
 measured. Whether these pathways actually combine as predicted in a living
 animal is what the Taguchi killifish screen (A24) is designed to test.
 
-======================================================================
-SLIDE 53: Telomere Rivers [A18]
-======================================================================
+## SLIDE A18: Telomere Rivers
 
 Telomere Rivers: New Evidence A single intervention just achieved +65% median
 lifespan extension in mice. The biological ceiling is far higher than anyone
@@ -1287,9 +1179,7 @@ These vesicles reach aged tissues and reverse senescence markers. If replicated,
 this is the largest lifespan extension from a single intervention in normal
 (non-progeroid) mice in the literature.
 
-======================================================================
-SLIDE 54: Rivers as Ceiling Calibrator [A19]
-======================================================================
+## SLIDE A19: Rivers as Ceiling Calibrator
 
 Rivers as Ceiling Calibrator How far beyond a normal lifespan does each result
 reach? Gray = normal median lifespan. Colour = additional life from
@@ -1306,9 +1196,7 @@ can survive to at least 47-60 months (Rivers). The Taguchi-8 prediction of +168%
 implies ~80 months is an accessible extension of the survival range established
 by the Telomere Rivers intervention.
 
-======================================================================
-SLIDE 55: What the Model Misses [A20]
-======================================================================
+## SLIDE A20: What the Model Misses
 
 What the Model Misses The ELM is metabolic-centric. Entire categories of aging
 biology are outside its scope. Regenerative (not modeled) Wnt/beta-catenin
@@ -1337,9 +1225,7 @@ true ceiling may exceed +168%, not fall short. Conversely, AGE crosslinks
 accumulate monotonically. They may impose a hard ceiling invisible at normal
 lifespans but rate-limiting at extended ones.
 
-======================================================================
-SLIDE 56: NAD-Obligate Tissues [A21]
-======================================================================
+## SLIDE A21: NAD-Obligate Tissues
 
 The Canaries in the Coal Mine The ELM is NAD-centric. Its predictive power
 depends on how much a tissue relies on OXPHOS -- versus having metabolic escape
@@ -1373,9 +1259,7 @@ compensatory mechanisms Sarcopenia does happen -- just decades after presbyopia.
 The compensatory mechanisms eventually fail too. The ELM captures the first wave
 of failures; extending it to the second wave is a concrete next step.
 
-======================================================================
-SLIDE 57: The Metabolic Gate Hypothesis [A22]
-======================================================================
+## SLIDE A22: The Metabolic Gate Hypothesis
 
 The Metabolic Gate Hypothesis The ELM's metabolic variables may gate the body's
 endogenous rejuvenation pipeline. If so, metabolic interventions are indirectly
@@ -1391,17 +1275,15 @@ extracellular vesicles)?
 --- Narrative ---
 Cliff Dynamics If Rivers production requires fatty acid oxidation (FAO) above a
 metabolic threshold -- and the CPT1A dependence suggests it does (Hill
-coefficient $n \\approx 3\\text{-}4$) -- then metabolic decline crossing that
+coefficient $n \approx 3\text{-}4$) -- then metabolic decline crossing that
 threshold produces sudden regenerative collapse, not gradual fade. This matches
 the observed late-life acceleration of aging: systems don't decay linearly, they
 fail catastrophically once support systems cross critical thresholds. The gate
 hypothesis is modelable as one algebraic intermediate reusing existing ELM state
-variables: $\\text{Rivers competence} = \\text{Hill}(\\text{FAO}(\\text{NAD},
-\\text{AMPK}),\\; K_m,\\; n)$ where $n \\approx 3\\text{-}4$ captures the cliff.
+variables: $\text{Rivers competence} = \text{Hill}(\text{FAO}(\text{NAD},
+\text{AMPK}),\; K_m,\; n)$ where $n \approx 3\text{-}4$ captures the cliff.
 
-======================================================================
-SLIDE 58: Known vs. Unknown [A23]
-======================================================================
+## SLIDE A23: Known vs. Unknown
 
 What We Know vs. What We Don't The honest answer: the 8-compound stack at
 calibrated doses predicts +168% M / +140% F. Here's exactly what we've checked
@@ -1427,9 +1309,7 @@ killifish screen (A24) will directly test whether pathways interact additively,
 synergistically, or antagonistically in living animals. Each converts a specific
 unknown into a known. The +168% prediction is the testable hypothesis.
 
-======================================================================
-SLIDE 59: Taguchi Combination Testing [A24]
-======================================================================
+## SLIDE A24: Taguchi Combination Testing
 
 Taguchi L18: Combination Longevity Screen in Killifish 8 compounds x mixed dose
 levels in a single orthogonal array. One experiment, 8 months: main effects,
@@ -1494,9 +1374,7 @@ secondary endpoints (main effects, pairwise interactions), and exploratory
 (all-8-high vs. model prediction). The statistical design is robust; these
 controls ensure execution artifacts do not undermine it.
 
-======================================================================
-SLIDE 60: Roadmap: Experiment, Then Extend [A25]
-======================================================================
+## SLIDE A25: Roadmap: Experiment, Then Extend
 
 Roadmap: Experiment, Then Extend The model makes a testable prediction. Now we
 need the experiment. Then we let the data tell us what to add. [lab] Phase 1 --
@@ -1532,10 +1410,8 @@ without making it more predictive. Each new pathway needs an endpoint to
 calibrate against -- otherwise it's just a parameter with a literature guess and
 no anchor.
 
-======================================================================
-SUPPLEMENTARY ANALYSIS: METHYLATION FRACTION OF BIOLOGICAL AGE
+## SUPPLEMENTARY: Methylation Fraction of Biological Age
 (Referenced by Slide A6: BioAge Weight Sensitivity)
-======================================================================
 
 ==============================================================================
   METHYLATION FRACTION OF BIOLOGICAL AGE

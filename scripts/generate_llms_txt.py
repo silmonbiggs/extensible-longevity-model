@@ -14,7 +14,7 @@ from pathlib import Path
 from html import unescape
 
 DOCS_DIR = Path(os.path.dirname(__file__)) / '..' / 'docs'
-HTML_FILE = DOCS_DIR / 'index.html'
+HTML_FILE = DOCS_DIR / 'deck.html'
 
 
 def _safe_chr(m):
@@ -97,6 +97,12 @@ def strip_html(text):
     text = re.sub(r'<[^>]+>', ' ', text)
     # Decode HTML entities
     text = unescape(text)
+    # Unescape JS string backslashes: \\frac -> \frac, \\text -> \text, etc.
+    text = text.replace('\\\\', '\x00BACKSLASH\x00')  # protect literal \\
+    text = text.replace('\\n', '\n')
+    text = text.replace('\\t', ' ')
+    text = text.replace("\\'", "'")
+    text = text.replace('\x00BACKSLASH\x00', '\\')  # restore single backslash
     # ASCII-normalize Unicode punctuation
     text = ascii_normalize(text)
     # Collapse whitespace
@@ -272,9 +278,7 @@ def format_slide(idx, stage, verbose=True):
     """Format a single slide for text output."""
     lines = []
     label = stage['sub'] if stage['sub'] else f'Intro {idx}'
-    lines.append(f"{'='*70}")
-    lines.append(f"SLIDE {idx}: {stage['title']} [{label}]")
-    lines.append(f"{'='*70}")
+    lines.append(f"## SLIDE {label}: {stage['title']}")
 
     if stage.get('mainGraph'):
         lines.append(f"\n[Figure: {stage['mainGraph']}]")
@@ -296,6 +300,11 @@ def format_slide(idx, stage, verbose=True):
         # Keep LaTeX mostly intact but strip HTML wrappers
         eq = re.sub(r'<[^>]+>', ' ', eq)
         eq = re.sub(r'\\u([0-9a-fA-F]{4})', lambda m: chr(int(m.group(1), 16)), eq)
+        # Unescape JS string backslashes for clean LaTeX: \\frac -> \frac
+        eq = eq.replace('\\\\', '\x00BS\x00')
+        eq = eq.replace('\\n', '\n')
+        eq = eq.replace("\\'", "'")
+        eq = eq.replace('\x00BS\x00', '\\')
         eq = ascii_normalize(eq)
         eq = re.sub(r'\s+', ' ', eq).strip()
         if eq:
@@ -387,7 +396,7 @@ def generate_brief(stages):
     lines.append("")
     lines.append("GitHub: https://github.com/silmonbiggs/extensible-longevity-model")
     lines.append("Model package: elm/ (Python, ODE engine)")
-    lines.append("Slide deck source: docs/index.html")
+    lines.append("Slide deck source: docs/deck.html")
     lines.append("Figure generation: scripts/generate_figures.py")
     lines.append("")
     lines.append("## For Complete Content")
@@ -411,7 +420,7 @@ def generate_full(stages):
     lines.append("# clickable nodes, and dynamically rendered figures.")
     lines.append("#")
     lines.append(f"# Total slides: {len(stages)}")
-    lines.append(f"# Generated from: docs/index.html")
+    lines.append(f"# Generated from: docs/deck.html")
     lines.append("")
 
     for i, stage in enumerate(stages):
@@ -420,10 +429,8 @@ def generate_full(stages):
     # Append supplementary analyses
     clock_pca_path = Path(os.path.dirname(__file__)) / 'clock_pca' / 'clock_methylation_fraction.txt'
     if clock_pca_path.exists():
-        lines.append("=" * 70)
-        lines.append("SUPPLEMENTARY ANALYSIS: METHYLATION FRACTION OF BIOLOGICAL AGE")
+        lines.append("## SUPPLEMENTARY: Methylation Fraction of Biological Age")
         lines.append("(Referenced by Slide A6: BioAge Weight Sensitivity)")
-        lines.append("=" * 70)
         lines.append("")
         lines.append(ascii_normalize(clock_pca_path.read_text(encoding='utf-8')))
 
