@@ -1,19 +1,15 @@
 # Extensible Longevity Model (ELM)
 
+> **LLM access:** For a complete machine-readable summary of this
+> project, read [llms-full.txt](llms-full.txt) in this repository.
+> A shorter summary is in [llms.txt](llms.txt).
+
 A mechanistic ODE model of aging interventions, calibrated to the
 NIA Interventions Testing Program (ITP) data. The model captures
 8 interconnected aging subsystems (heteroplasmy, NAD+ metabolism,
 DNA damage, AMPK/mTORC1 signaling, autophagy, senescence, SASP,
 methylation) and predicts combination effects -- including
 interactions that single-compound testing cannot reveal.
-
-## LLM-Readable Content
-
-For AI-assisted review, read
-**[llms-full.txt](llms-full.txt)** in this repository -- it
-contains the complete slide-by-slide transcript with equations,
-narratives, and supplementary analyses. A shorter summary is in
-**[llms.txt](llms.txt)**.
 
 ## Interactive Slide Deck
 
