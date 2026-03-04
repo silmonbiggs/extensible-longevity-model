@@ -1447,25 +1447,27 @@ Main effect of each compound by sex, with 95% confidence intervals (b) Screen
 for dominant pairwise interactions, ranked by effect size, with CIs (c)
 All-8-high arm verdict: does the full stack break? (toxicity, antagonism, or
 runaway synergy) (d) Whether the ITP unisex cocktail translates to killifish
-(cross-species portability) Candidate labs: Benayoun (USC), Brunet (Stanford),
-Valenzano (Jena) -- all have established killifish colonies. Cost comparison: A
-single ITP mouse study costs ~$1.5M over 3 years -- and that assumes mice die on
-schedule. If a cocktail achieves even a 2x extension, the confirmatory mouse
-study takes 5+ years; at 3-4x, over a decade. The killifish screen (4-6 month
-lifespan) delivers combination data in ~8 months for ~$200K, regardless of
-effect size. Why combinations are mandatory: See the Serial Reliability slide
-(early deck) -- if aging has multiple independent failure modes, single-
-intervention testing is structurally incapable of producing large effects or
-revealing later failure modes. Operational risk controls Fish randomized to
-tanks by stratified body-mass allocation to control husbandry variance. Compound
-administration via diet with batch-matched controls across all 20 groups.
-Mortality scored blind by two independent observers; discrepancies resolved by a
-third. Censoring protocol preregistered: fish removed for non-aging causes
-(injury, escaped tank) are right-censored at removal date. Full analysis plan
-preregistered before first fish is dosed: primary endpoint (median lifespan),
-secondary endpoints (main effects, pairwise interactions), and exploratory
-(all-8-high vs. model prediction). The statistical design is robust; these
-controls ensure execution artifacts do not undermine it.
+(cross-species portability) Lab requirements: An established turquoise killifish
+colony with experience in lifespan assays. Several groups worldwide have
+published killifish aging studies and maintain suitable colonies. Cost
+comparison: A single ITP mouse study costs ~$1.5M over 3 years -- and that
+assumes mice die on schedule. If a cocktail achieves even a 2x extension, the
+confirmatory mouse study takes 5+ years; at 3-4x, over a decade. The killifish
+screen (4-6 month lifespan) delivers combination data in ~8 months for ~$200K,
+regardless of effect size. Why combinations are mandatory: See the Serial
+Reliability slide (early deck) -- if aging has multiple independent failure
+modes, single-intervention testing is structurally incapable of producing large
+effects or revealing later failure modes. Operational risk controls Fish
+randomized to tanks by stratified body-mass allocation to control husbandry
+variance. Compound administration via diet with batch-matched controls across
+all 20 groups. Mortality scored blind by two independent observers;
+discrepancies resolved by a third. Censoring protocol preregistered: fish
+removed for non-aging causes (injury, escaped tank) are right-censored at
+removal date. Full analysis plan preregistered before first fish is dosed:
+primary endpoint (median lifespan), secondary endpoints (main effects, pairwise
+interactions), and exploratory (all-8-high vs. model prediction). The
+statistical design is robust; these controls ensure execution artifacts do not
+undermine it.
 
 ## SLIDE A25: Roadmap: Experiment, Then Extend
 
