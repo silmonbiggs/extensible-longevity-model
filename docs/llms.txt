@@ -7,10 +7,22 @@
 ## What This Is
 
 A mechanistic ODE model of aging interventions, calibrated to the NIA
-Interventions Testing Program (ITP) data. The model captures 8 interconnected
-aging subsystems (heteroplasmy, NAD+ metabolism, DNA damage, AMPK/mTORC1
-signaling, autophagy, senescence, SASP, methylation) and predicts combination
-effects  --  including interactions that single-compound testing cannot reveal.
+Interventions Testing Program (ITP) data. The model tracks 8 state
+variables as interconnected ODE subsystems:
+
+  1. Heteroplasmy (mitochondrial DNA damage fraction)
+  2. NAD+ (nicotinamide adenine dinucleotide level)
+  3. DNA damage (genomic lesion accumulation)
+  4. AMPK/mTORC1 signaling (nutrient-sensing axis)
+  5. Autophagy (cellular recycling flux)
+  6. Senescent cell burden
+  7. SASP (senescence-associated secretory phenotype)
+  8. Methylation drift (epigenetic age)
+
+These are NOT independent -- they form a coupled ODE system with
+cross-pathway feedback (e.g., NAD+ -> sirtuins -> FOXO3 -> heteroplasmy).
+The model predicts combination effects, including interactions that
+single-compound testing cannot reveal.
 
 ## Key Results
 
@@ -90,7 +102,7 @@ Total slides: 61
   [A2] Gauge Symmetry
   [A3] Leave-One-Out Vulnerability
 
-### Stress Tests
+### Stress Tests (sensitivity analysis)
   [A4] SASP: The Phantom Node
   [A5] Rapa + NMN Prediction
   [A5b] Rapa + NMN Superadditivity Robustness
@@ -122,12 +134,25 @@ Total slides: 61
   [A24] Taguchi Combination Testing
   [A25] Roadmap: Experiment, Then Extend
 
-## Source Code
+## Sensitivity Analysis
+
+The deck includes extensive sensitivity and robustness analysis:
+- Slide A1: Jacobian SVD -- 10 effective DOF from 12 data points
+- Slide A5: parameter perturbation tornado (+/-20%) for all compounds
+- Slide A5b: Rapa+NMN superadditivity robustness tornado
+- Slide A6: BioAge weight (w_meth) sweep with clock PCA constraint
+- Slide A6b: heteroplasmy and senescence weight sweeps
+- Slide A9: pathway intervention-point sensitivity ranking
+- Slide A10: full 8x8 pairwise synergy matrix
+
+## Source Code and Reproducibility
 
 GitHub: https://github.com/silmonbiggs/extensible-longevity-model
 Model package: elm/ (Python, ODE engine)
-Slide deck source: docs/deck.html
+Dependencies: requirements.txt (numpy, matplotlib)
+Smoke test: python tests/smoke_test.py (all 12 ITP targets within +/-1%)
 Figure generation: scripts/generate_figures.py
+Slide deck source: docs/deck.html
 
 ## For Complete Content
 

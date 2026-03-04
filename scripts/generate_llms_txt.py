@@ -331,10 +331,22 @@ def generate_brief(stages):
     lines.append("## What This Is")
     lines.append("")
     lines.append("A mechanistic ODE model of aging interventions, calibrated to the NIA")
-    lines.append("Interventions Testing Program (ITP) data. The model captures 8 interconnected")
-    lines.append("aging subsystems (heteroplasmy, NAD+ metabolism, DNA damage, AMPK/mTORC1")
-    lines.append("signaling, autophagy, senescence, SASP, methylation) and predicts combination")
-    lines.append("effects — including interactions that single-compound testing cannot reveal.")
+    lines.append("Interventions Testing Program (ITP) data. The model tracks 8 state")
+    lines.append("variables as interconnected ODE subsystems:")
+    lines.append("")
+    lines.append("  1. Heteroplasmy (mitochondrial DNA damage fraction)")
+    lines.append("  2. NAD+ (nicotinamide adenine dinucleotide level)")
+    lines.append("  3. DNA damage (genomic lesion accumulation)")
+    lines.append("  4. AMPK/mTORC1 signaling (nutrient-sensing axis)")
+    lines.append("  5. Autophagy (cellular recycling flux)")
+    lines.append("  6. Senescent cell burden")
+    lines.append("  7. SASP (senescence-associated secretory phenotype)")
+    lines.append("  8. Methylation drift (epigenetic age)")
+    lines.append("")
+    lines.append("These are NOT independent -- they form a coupled ODE system with")
+    lines.append("cross-pathway feedback (e.g., NAD+ -> sirtuins -> FOXO3 -> heteroplasmy).")
+    lines.append("The model predicts combination effects, including interactions that")
+    lines.append("single-compound testing cannot reveal.")
     lines.append("")
     lines.append("## Key Results")
     lines.append("")
@@ -374,7 +386,7 @@ def generate_brief(stages):
         ('Calibration',             21, 30),
         ('Combinations',            30, 34),
         ('Validation',              34, 37),
-        ('Stress Tests',            37, 45),
+        ('Stress Tests (sensitivity analysis)',  37, 45),
         ('Interactions & Network',  45, 52),
         ('The Prediction',          52, 55),
         ("What's Next",             55, len(stages)),
@@ -392,12 +404,25 @@ def generate_brief(stages):
             lines.extend(entries)
             lines.append("")
 
-    lines.append("## Source Code")
+    lines.append("## Sensitivity Analysis")
+    lines.append("")
+    lines.append("The deck includes extensive sensitivity and robustness analysis:")
+    lines.append("- Slide A1: Jacobian SVD -- 10 effective DOF from 12 data points")
+    lines.append("- Slide A5: parameter perturbation tornado (+/-20%) for all compounds")
+    lines.append("- Slide A5b: Rapa+NMN superadditivity robustness tornado")
+    lines.append("- Slide A6: BioAge weight (w_meth) sweep with clock PCA constraint")
+    lines.append("- Slide A6b: heteroplasmy and senescence weight sweeps")
+    lines.append("- Slide A9: pathway intervention-point sensitivity ranking")
+    lines.append("- Slide A10: full 8x8 pairwise synergy matrix")
+    lines.append("")
+    lines.append("## Source Code and Reproducibility")
     lines.append("")
     lines.append("GitHub: https://github.com/silmonbiggs/extensible-longevity-model")
     lines.append("Model package: elm/ (Python, ODE engine)")
-    lines.append("Slide deck source: docs/deck.html")
+    lines.append("Dependencies: requirements.txt (numpy, matplotlib)")
+    lines.append("Smoke test: python tests/smoke_test.py (all 12 ITP targets within +/-1%)")
     lines.append("Figure generation: scripts/generate_figures.py")
+    lines.append("Slide deck source: docs/deck.html")
     lines.append("")
     lines.append("## For Complete Content")
     lines.append("")
