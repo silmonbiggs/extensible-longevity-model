@@ -14,11 +14,18 @@ The model integrates 8 biological subsystems:
 8. Cancer - Mutation accumulation and immune surveillance
 
 Simulation outputs biological age trajectory and lifespan.
+
+Integration uses scipy.integrate.solve_ivp (RK45, adaptive stepping).
+
+Sensitivity analysis: see scripts/generate_figures.py (tornado charts,
+weight sweeps, pairwise synergy matrix) and tests/test_pathways.py
+(numerical convergence, null model comparison).
 """
 
 import numpy as np
 from dataclasses import dataclass
 from typing import Dict, Tuple, Optional, Any
+from scipy.integrate import solve_ivp
 
 # Import pathway parameters
 from .pathways import (
@@ -844,326 +851,317 @@ def simulate(
     osk_reprogramming = interventions.get('osk', 0)
     nad_target = interventions.get('nad_target', 0)
 
-    # State arrays
-    NAD = np.zeros(n)
-    SIRT1 = np.zeros(n)
-    FOXO3 = np.zeros(n)
-    EZH2 = np.zeros(n)
-    Autophagy = np.zeros(n)
-    DNA_damage = np.zeros(n)
-    Methylation = np.zeros(n)
-    Heteroplasmy = np.zeros(n)
-    SenCells = np.zeros(n)
-    SASP = np.zeros(n)
-    Mutations = np.zeros(n)
-    BioAge = np.zeros(n)
-    Cancer_prob = np.zeros(n)
-    Immune_function = np.zeros(n)
-    UPRmt = np.zeros(n)
-    TSC2 = np.zeros(n)
-    mTORC1_activity = np.zeros(n)
+    # -----------------------------------------------------------------
+    # State vector: 8 ODE variables
+    #   [0] NAD, [1] DNA_damage, [2] Methylation, [3] Heteroplasmy,
+    #   [4] SenCells, [5] SASP, [6] Mutations, [7] sen_duration
+    # -----------------------------------------------------------------
+    I_NAD, I_DMG, I_METH, I_H, I_SEN, I_SASP, I_MUT, I_SENDUR = range(8)
 
-    # NAD+ targeting tracking
-    NAD_target_dose = np.zeros(n)
-    NAD_target_achievable = np.ones(n, dtype=bool)
+    y0 = np.array([
+        1.0,                                # NAD
+        0.05,                               # DNA_damage
+        METHYLATION_PARAMS['meth_young'],   # Methylation
+        HETEROPLASMY_PARAMS['H_0'],         # Heteroplasmy
+        0.01,                               # SenCells
+        SASP_PARAMS['SASP_young'],          # SASP
+        5.0,                                # Mutations
+        0.0,                                # sen_duration
+    ])
 
-    # Initial conditions
-    NAD[0] = 1.0
-    SIRT1[0] = calculate_sirt1(NAD[0], 0, SIRTUIN_PARAMS)
-    FOXO3[0] = calculate_foxo3(SIRT1[0], SIRTUIN_PARAMS)
-    EZH2[0] = 1.0 - 0.5 * SIRT1[0]
-    DNA_damage[0] = 0.05
-    Methylation[0] = METHYLATION_PARAMS['meth_young']
-    Heteroplasmy[0] = HETEROPLASMY_PARAMS['H_0']
-    SenCells[0] = 0.01
-    SASP[0] = SASP_PARAMS['SASP_young']
-    Mutations[0] = 5.0
-    Immune_function[0] = 1.0
-    UPRmt[0] = 0.05
-    TSC2[0] = calculate_tsc2(0, TSC2_PARAMS)  # Basal TSC2 at zero AMPK
-    mTORC1_activity[0] = calculate_mtorc1_activity(TSC2[0], 0, TSC2_PARAMS)
-    Autophagy[0] = calculate_autophagy(0, FOXO3[0], 0, 0, 0, AUTOPHAGY_PARAMS)
+    # Pulse schedule helpers
+    def _is_pulse_active(t, interval, duration):
+        if t < start_time:
+            return False
+        phase = (t - start_time) % interval
+        return phase < duration
 
-    # Pulse tracking
-    last_senolytic_pulse = -1.0
-    last_mitophagy_pulse = -1.0
-    last_osk_pulse = -1.0
-    sen_duration = 0.0
+    # Convert senolytic instantaneous kill to continuous fast clearance
+    # rate over the pulse duration: -ln(1-f)/d gives equivalent total kill.
+    sen_pulse_interval = SENESCENCE_PARAMS.get('senolytic_pulse_interval', 0.1)
+    sen_pulse_duration = SENESCENCE_PARAMS.get('senolytic_pulse_duration', 0.01)
+    if senolytic > 0 and sen_pulse_duration > 0:
+        kill_frac = SENESCENCE_PARAMS['k_senolytic_kill_fraction'] * senolytic
+        senolytic_fast_rate = -np.log(max(1e-12, 1 - kill_frac)) / sen_pulse_duration
+    else:
+        senolytic_fast_rate = 0.0
 
-    # Cancer tracking
-    cancer_occurred = False
-    cancer_time = None
+    mito_interval = HETEROPLASMY_PARAMS.get('mitophagy_pulse_interval', 0.1)
+    mito_duration = HETEROPLASMY_PARAMS.get('mitophagy_pulse_duration', 0.03)
+    osk_interval = METHYLATION_PARAMS.get('osk_pulse_interval', 0.1)
+    osk_duration = METHYLATION_PARAMS.get('osk_pulse_duration', 0.01)
 
-    # Main simulation loop
-    for i in range(1, n):
-        t = t_array[i]
+    def rhs(t, y):
+        """ODE right-hand side for the 8-variable state vector."""
+        nad     = max(y[I_NAD], 0.001)
+        damage  = max(y[I_DMG], 0.0)
+        meth    = max(y[I_METH], METHYLATION_PARAMS['meth_young'] * 0.5)
+        hetero  = np.clip(y[I_H], HETEROPLASMY_PARAMS['H_floor'], 1.0)
+        sen     = max(y[I_SEN], SENESCENCE_PARAMS['sen_min_residual'])
+        sasp    = max(y[I_SASP], SASP_PARAMS['SASP_young'] * 0.5)
+        mut     = max(y[I_MUT], 0.0)
+        sendur  = max(y[I_SENDUR], 0.0)
+
         age_factor = t
         active = 1.0 if t >= start_time else 0.0
 
-        # Effective AMPK
+        # AMPK
         ampk_eff = calculate_effective_ampk(
             ampk_direct=ampk_boost * active,
             gut_contribution=gut_microbiome * active,
             params=AMPK_PARAMS
         )
 
-        # TSC2 and mTORC1 (canonical AMPK -> TSC2 -> Rheb -> mTORC1 pathway)
-        TSC2[i] = calculate_tsc2(ampk_eff, TSC2_PARAMS)
+        # TSC2 / mTORC1
+        tsc2 = calculate_tsc2(ampk_eff, TSC2_PARAMS)
         drug_inh = mtorc1_inhibition * active
-        mTORC1_activity[i] = calculate_mtorc1_activity(TSC2[i], drug_inh, TSC2_PARAMS)
-        mtorc1_inh = 1.0 - mTORC1_activity[i]
-        mtorc1_effects = calculate_mtorc1_effects(mtorc1_inh, MTORC1_PARAMS)
+        mtorc1_act = calculate_mtorc1_activity(tsc2, drug_inh, TSC2_PARAMS)
+        mtorc1_effects = calculate_mtorc1_effects(1.0 - mtorc1_act, MTORC1_PARAMS)
 
         # SASP effects
-        sasp_effects = get_sasp_effects(SASP[i-1], SASP_PARAMS)
+        sasp_effects = get_sasp_effects(sasp, SASP_PARAMS)
 
-        # OXPHOS efficiency
-        oxphos_eff = max(0.30, 1 - NAD_PARAMS['k_hetero_oxphos'] * Heteroplasmy[i-1])
+        # ROS and UPRmt
+        ros_level = 1.0 + 0.5 * hetero
+        nad_ratio = nad / NAD_PARAMS['NAD_young']
+        uprmt = calculate_uprmt(hetero, ros_level, nad_ratio, UPRMT_PARAMS)
+        uprmt_effects = get_uprmt_effects(uprmt, UPRMT_PARAMS)
 
-        # UPRmt
-        ros_level = 1.0 + 0.5 * Heteroplasmy[i-1]
-        nad_ratio = NAD[i-1] / NAD_PARAMS['NAD_young']
-        UPRmt[i] = calculate_uprmt(Heteroplasmy[i-1], ros_level, nad_ratio, UPRMT_PARAMS)
-        uprmt_effects = get_uprmt_effects(UPRmt[i], UPRMT_PARAMS)
-
-        # NAD+ Homeostasis
-        consumption = calculate_nad_consumption(
-            nad=NAD[i-1],
-            dna_damage=DNA_damage[i-1],
-            sirt1=SIRT1[i-1],
-            sasp=SASP[i-1],
-            age_factor=age_factor,
-            cd38_inhibitor=cd38_inhibitor * active,
-            gut_antiinflam=gut_microbiome * active,
-            params=NAD_PARAMS
-        )
-
-        # NAD+ targeting mode (closed-loop control)
-        if nad_target > 0 and active > 0:
-            base_synthesis = calculate_nad_synthesis(
-                ampk=ampk_eff,
-                nmn_supplement=0,
-                age_factor=age_factor,
-                heteroplasmy=Heteroplasmy[i-1],
-                params=NAD_PARAMS
-            )
-
-            required_dose, achievable = compute_nmn_dose_for_nad_target(
-                current_nad=NAD[i-1],
-                target_nad=nad_target,
-                age_factor=age_factor,
-                base_synthesis=base_synthesis,
-                consumption=consumption,
-                params=NMN_SATURATION_PARAMS
-            )
-
-            NAD_target_dose[i] = required_dose
-            NAD_target_achievable[i] = achievable
-
-            if achievable:
-                NAD[i] = nad_target
-            else:
-                nmn_boost, _ = compute_nmn_boost_saturated(100.0, age_factor, NMN_SATURATION_PARAMS)
-                synthesis = base_synthesis + nmn_boost
-                dNAD = synthesis - consumption
-                NAD[i] = np.clip(NAD[i-1] + dNAD * dt, NAD_PARAMS['NAD_min'], nad_target)
-        else:
-            synthesis = calculate_nad_synthesis(
-                ampk=ampk_eff,
-                nmn_supplement=nmn_supplement * active,
-                age_factor=age_factor,
-                heteroplasmy=Heteroplasmy[i-1],
-                params=NAD_PARAMS
-            )
-            dNAD = synthesis - consumption
-            # No artificial floor needed: substrate-dependent consumption
-            # creates a natural equilibrium as NAD → 0
-            NAD[i] = min(NAD[i-1] + dNAD * dt, NAD_PARAMS['NAD_max'])
-            NAD[i] = max(NAD[i], 0.001)  # safety net only (should never bind)
-
-        # SIRT1 and FOXO3
-        SIRT1[i] = calculate_sirt1(NAD[i], sirt1_direct * active, SIRTUIN_PARAMS)
-        FOXO3[i] = calculate_foxo3(SIRT1[i], SIRTUIN_PARAMS)
+        # SIRT1 / FOXO3 / EZH2 (algebraic)
+        sirt1 = calculate_sirt1(nad, sirt1_direct * active, SIRTUIN_PARAMS)
+        foxo3 = calculate_foxo3(sirt1, SIRTUIN_PARAMS)
         ampk_ezh2_inhib = METHYLATION_PARAMS['k_ezh2_ampk_inhibition'] * ampk_eff * active
-        EZH2[i] = np.clip(1.0 - 0.5 * SIRT1[i] - ampk_ezh2_inhib, 0.1, 1.0)
+        ezh2 = np.clip(1.0 - 0.5 * sirt1 - ampk_ezh2_inhib, 0.1, 1.0)
 
-        # Autophagy
-        Autophagy[i] = calculate_autophagy(
-            ampk=ampk_eff,
-            foxo3=FOXO3[i],
+        # Autophagy (algebraic)
+        autophagy = calculate_autophagy(
+            ampk=ampk_eff, foxo3=foxo3,
             gut=gut_microbiome * active,
             uprmt_autophagy=uprmt_effects['autophagy_boost'],
             mtorc1_autophagy=mtorc1_effects['autophagy_boost'],
             params=AUTOPHAGY_PARAMS
         )
 
-        # DNA Damage
-        osk_pulse_active = False
-        if osk_reprogramming > 0 and active > 0:
-            if t - last_osk_pulse >= METHYLATION_PARAMS['osk_pulse_interval']:
-                last_osk_pulse = t
-                osk_pulse_active = True
-            elif t - last_osk_pulse < METHYLATION_PARAMS['osk_pulse_duration']:
-                osk_pulse_active = True
+        # --- dNAD ---
+        consumption = calculate_nad_consumption(
+            nad=nad, dna_damage=damage, sirt1=sirt1, sasp=sasp,
+            age_factor=age_factor,
+            cd38_inhibitor=cd38_inhibitor * active,
+            gut_antiinflam=gut_microbiome * active,
+            params=NAD_PARAMS
+        )
+        if nad_target > 0 and active > 0:
+            base_syn = calculate_nad_synthesis(
+                ampk=ampk_eff, nmn_supplement=0,
+                age_factor=age_factor, heteroplasmy=hetero, params=NAD_PARAMS
+            )
+            _, achievable = compute_nmn_dose_for_nad_target(
+                current_nad=nad, target_nad=nad_target,
+                age_factor=age_factor, base_synthesis=base_syn,
+                consumption=consumption, params=NMN_SATURATION_PARAMS
+            )
+            if achievable:
+                dNAD = (nad_target - nad) * 100.0  # fast pull toward target
+            else:
+                nmn_boost, _ = compute_nmn_boost_saturated(100.0, age_factor, NMN_SATURATION_PARAMS)
+                dNAD = base_syn + nmn_boost - consumption
+        else:
+            synthesis = calculate_nad_synthesis(
+                ampk=ampk_eff, nmn_supplement=nmn_supplement * active,
+                age_factor=age_factor, heteroplasmy=hetero, params=NAD_PARAMS
+            )
+            dNAD = synthesis - consumption
+        # Soft bounds
+        if nad >= NAD_PARAMS['NAD_max'] and dNAD > 0:
+            dNAD = 0.0
+        if nad <= 0.001 and dNAD < 0:
+            dNAD = 0.0
 
-        proliferation = CANCER_PARAMS['k_osk_proliferation'] if osk_pulse_active else 0.0
-
+        # --- dDamage ---
+        osk_pulse = _is_pulse_active(t, osk_interval, osk_duration) if (osk_reprogramming > 0 and active > 0) else False
+        proliferation = CANCER_PARAMS['k_osk_proliferation'] if osk_pulse else 0.0
         damage_rate = calculate_damage_rate(
-            ros_level=ros_level,
-            proliferation=proliferation,
-            antioxidant=antioxidant * active,
-            ampk=ampk_eff * active,
+            ros_level=ros_level, proliferation=proliferation,
+            antioxidant=antioxidant * active, ampk=ampk_eff * active,
             uprmt_proteostasis=uprmt_effects['proteostasis_boost'],
             mtorc1_damage_reduction=mtorc1_effects['damage_reduction'],
             sasp_ros=sasp_effects['ros_production'],
             params=DNA_REPAIR_PARAMS
         )
-
         repair_rate = calculate_repair_rate(
-            nad=NAD[i],
-            sirt1=SIRT1[i],
-            dna_damage=DNA_damage[i-1],
-            params=DNA_REPAIR_PARAMS
+            nad=nad, sirt1=sirt1, dna_damage=damage, params=DNA_REPAIR_PARAMS
         )
-
         dDamage = damage_rate - repair_rate
-        DNA_damage[i] = np.clip(DNA_damage[i-1] + dDamage * dt, 0, DNA_REPAIR_PARAMS['damage_max'])
-        unrepaired = max(0, damage_rate - repair_rate)
+        if damage >= DNA_REPAIR_PARAMS['damage_max'] and dDamage > 0:
+            dDamage = 0.0
+        if damage <= 0 and dDamage < 0:
+            dDamage = 0.0
 
-        # Methylation
+        # --- dMeth ---
         meth_rate = calculate_methylation_rate(
-            ezh2=EZH2[i],
-            dnmt=1.0,
-            damage=DNA_damage[i],
-            sasp=SASP[i-1],
+            ezh2=ezh2, dnmt=1.0, damage=damage, sasp=sasp,
             sasp_meth_accel=sasp_effects['meth_acceleration'],
-            gut=gut_microbiome * active,
-            params=METHYLATION_PARAMS
+            gut=gut_microbiome * active, params=METHYLATION_PARAMS
         )
-        tet_activity = 1.0 + METHYLATION_PARAMS['k_tet_akg_boost'] * akg_supplement * active
+        tet_act = 1.0 + METHYLATION_PARAMS['k_tet_akg_boost'] * akg_supplement * active
         demeth_rate = calculate_demethylation_rate(
-            meth=Methylation[i-1],
-            tet_activity=tet_activity,
-            osk_active=osk_pulse_active,
+            meth=meth, tet_activity=tet_act, osk_active=osk_pulse,
             params=METHYLATION_PARAMS
         )
         dMeth = meth_rate - demeth_rate
-        Methylation[i] = max(METHYLATION_PARAMS['meth_young'] * 0.5, Methylation[i-1] + dMeth * dt)
+        if meth <= METHYLATION_PARAMS['meth_young'] * 0.5 and dMeth < 0:
+            dMeth = 0.0
 
-        # Heteroplasmy
-        mitophagy_pulse_active = False
-        if mitophagy > 0 and active > 0:
-            if t - last_mitophagy_pulse >= HETEROPLASMY_PARAMS['mitophagy_pulse_interval']:
-                last_mitophagy_pulse = t
-                mitophagy_pulse_active = True
-            elif t - last_mitophagy_pulse < HETEROPLASMY_PARAMS['mitophagy_pulse_duration']:
-                mitophagy_pulse_active = True
-
+        # --- dH ---
+        mito_pulse = _is_pulse_active(t, mito_interval, mito_duration) if (mitophagy > 0 and active > 0) else False
         dH = calculate_heteroplasmy_dynamics(
-            H=Heteroplasmy[i-1],
-            foxo3=FOXO3[i],
-            mitophagy_active=mitophagy_pulse_active,
-            mitophagy_strength=mitophagy,
+            H=hetero, foxo3=foxo3,
+            mitophagy_active=mito_pulse, mitophagy_strength=mitophagy,
             params=HETEROPLASMY_PARAMS
         )
-        Heteroplasmy[i] = np.clip(Heteroplasmy[i-1] + dH * dt, HETEROPLASMY_PARAMS['H_floor'], 1.0)
+        if hetero >= 1.0 and dH > 0:
+            dH = 0.0
+        if hetero <= HETEROPLASMY_PARAMS['H_floor'] and dH < 0:
+            dH = 0.0
 
-        # Senescent Cells
+        # --- dSen ---
         sen_entry = calculate_senescence_rate(
-            damage=DNA_damage[i],
-            sirt1=SIRT1[i],
-            ampk=ampk_eff * active,
+            damage=damage, sirt1=sirt1, ampk=ampk_eff * active,
             gut=gut_microbiome * active,
             uprmt_sen_reduction=uprmt_effects['sen_reduction'],
             mtorc1_sen_reduction=mtorc1_effects['senescence_reduction'],
             sasp_paracrine=sasp_effects['paracrine_senescence'],
             params=SENESCENCE_PARAMS
         )
-
-        senolytic_pulse_active = False
-        senolytic_pulse_just_started = False
-        if senolytic > 0 and active > 0:
-            if t - last_senolytic_pulse >= SENESCENCE_PARAMS['senolytic_pulse_interval']:
-                last_senolytic_pulse = t
-                senolytic_pulse_active = True
-                senolytic_pulse_just_started = True
-            elif t - last_senolytic_pulse < SENESCENCE_PARAMS['senolytic_pulse_duration']:
-                senolytic_pulse_active = True
-
-        if senolytic_pulse_just_started:
-            kill_fraction = SENESCENCE_PARAMS['k_senolytic_kill_fraction'] * senolytic
-            SenCells[i-1] *= (1 - kill_fraction)
-            SenCells[i-1] = max(SenCells[i-1], SENESCENCE_PARAMS['sen_min_residual'])
-
+        sen_pulse = _is_pulse_active(t, sen_pulse_interval, sen_pulse_duration) if (senolytic > 0 and active > 0) else False
         sen_clear = calculate_senescence_clearance(
-            sen=SenCells[i-1],
-            autophagy=Autophagy[i],
-            senolytic_active=senolytic_pulse_active,
+            sen=sen, autophagy=autophagy, senolytic_active=sen_pulse,
             params=SENESCENCE_PARAMS
         )
-
         dSen = sen_entry - sen_clear
-        SenCells[i] = np.clip(SenCells[i-1] + dSen * dt, SENESCENCE_PARAMS['sen_min_residual'], 1.0)
+        # Senolytic fast kill (continuous equivalent of instantaneous fraction kill)
+        if sen_pulse and senolytic_fast_rate > 0:
+            dSen -= senolytic_fast_rate * sen
+        if sen <= SENESCENCE_PARAMS['sen_min_residual'] and dSen < 0:
+            dSen = 0.0
 
-        if SenCells[i] > SenCells[i-1]:
-            sen_duration += dt
-        else:
-            sen_duration = max(0, sen_duration - dt * 0.5)
-
-        # SASP dynamics
+        # --- dSASP ---
         sasp_prod = calculate_sasp_production(
-            sen_cells=SenCells[i],
-            sen_duration=sen_duration,
-            params=SASP_PARAMS
+            sen_cells=sen, sen_duration=sendur, params=SASP_PARAMS
         )
-        liver_function = max(0.5, 1.0 - 0.3 * age_factor)
-        sasp_clear = calculate_sasp_clearance(
-            sasp=SASP[i-1],
-            liver_function=liver_function,
-            antiinflam=antiinflam * active,
-            params=SASP_PARAMS
+        liver_fn = max(0.5, 1.0 - 0.3 * age_factor)
+        sasp_clr = calculate_sasp_clearance(
+            sasp=sasp, liver_function=liver_fn,
+            antiinflam=antiinflam * active, params=SASP_PARAMS
         )
-        if senolytic_pulse_active:
-            sasp_clear += SASP_PARAMS['k_senolytic_sasp_reduction'] * SASP[i-1]
+        if sen_pulse:
+            sasp_clr += SASP_PARAMS['k_senolytic_sasp_reduction'] * sasp
+        dSASP = sasp_prod - sasp_clr
+        if sasp >= 2.0 and dSASP > 0:
+            dSASP = 0.0
+        if sasp <= SASP_PARAMS['SASP_young'] * 0.5 and dSASP < 0:
+            dSASP = 0.0
 
-        dSASP = sasp_prod - sasp_clear
-        SASP[i] = np.clip(SASP[i-1] + dSASP * dt, SASP_PARAMS['SASP_young'] * 0.5, 2.0)
-
-        # Immune Function
-        Immune_function[i] = max(0.2, 1.0 - CANCER_PARAMS['k_immune_age_decline'] * age_factor - sasp_effects['immune_suppression'])
-
-        # Mutations
+        # --- dMut ---
+        unrepaired = max(0, damage_rate - repair_rate)
+        immune_fn = max(0.2, 1.0 - CANCER_PARAMS['k_immune_age_decline'] * age_factor
+                        - sasp_effects['immune_suppression'])
         mut_rate = calculate_mutation_rate(
-            unrepaired_damage=unrepaired,
-            proliferation=proliferation,
+            unrepaired_damage=unrepaired, proliferation=proliferation,
             ros=ros_level + sasp_effects['ros_production'],
             params=CANCER_PARAMS
         )
-        p53_activity = 0.5 + 0.5 * SIRT1[i]
+        p53_act = 0.5 + 0.5 * sirt1
         mut_clear = calculate_mutation_clearance(
-            mutations=Mutations[i-1],
-            immune_function=Immune_function[i],
-            p53_activity=p53_activity,
-            senescent_cells=SenCells[i],
+            mutations=mut, immune_function=immune_fn,
+            p53_activity=p53_act, senescent_cells=sen,
             params=CANCER_PARAMS
         )
         dMut = mut_rate - mut_clear
-        Mutations[i] = max(0, Mutations[i-1] + dMut * dt)
+        if mut <= 0 and dMut < 0:
+            dMut = 0.0
+
+        # --- dSenDur (tracks how long SenCells has been rising) ---
+        dSenDur = 1.0 if dSen > 0 else -0.5
+        if sendur <= 0 and dSenDur < 0:
+            dSenDur = 0.0
+
+        return [dNAD, dDamage, dMeth, dH, dSen, dSASP, dMut, dSenDur]
+
+    # -----------------------------------------------------------------
+    # Integrate with scipy RK45
+    # -----------------------------------------------------------------
+    sol = solve_ivp(
+        rhs, [t_array[0], t_array[-1]], y0,
+        method='RK45', t_eval=t_array,
+        rtol=1e-8, atol=1e-10, max_step=0.01
+    )
+
+    if sol.status != 0:
+        raise RuntimeError(f"ODE integration failed: {sol.message}")
+
+    # Extract state trajectories
+    NAD          = sol.y[I_NAD]
+    DNA_damage   = sol.y[I_DMG]
+    Methylation  = sol.y[I_METH]
+    Heteroplasmy = sol.y[I_H]
+    SenCells     = sol.y[I_SEN]
+    SASP_arr     = sol.y[I_SASP]
+    Mutations    = sol.y[I_MUT]
+
+    # -----------------------------------------------------------------
+    # Post-process: compute algebraic quantities on output grid
+    # -----------------------------------------------------------------
+    SIRT1          = np.zeros(n)
+    FOXO3          = np.zeros(n)
+    Autophagy      = np.zeros(n)
+    TSC2_arr       = np.zeros(n)
+    mTORC1_act_arr = np.zeros(n)
+    BioAge         = np.zeros(n)
+    Cancer_prob    = np.zeros(n)
+
+    cancer_occurred = False
+    cancer_time = None
+
+    for i in range(n):
+        t = t_array[i]
+        active = 1.0 if t >= start_time else 0.0
+        ampk_eff = calculate_effective_ampk(
+            ampk_direct=ampk_boost * active,
+            gut_contribution=gut_microbiome * active,
+            params=AMPK_PARAMS
+        )
+        TSC2_arr[i] = calculate_tsc2(ampk_eff, TSC2_PARAMS)
+        mTORC1_act_arr[i] = calculate_mtorc1_activity(
+            TSC2_arr[i], mtorc1_inhibition * active, TSC2_PARAMS
+        )
+        SIRT1[i] = calculate_sirt1(NAD[i], sirt1_direct * active, SIRTUIN_PARAMS)
+        FOXO3[i] = calculate_foxo3(SIRT1[i], SIRTUIN_PARAMS)
+
+        mtorc1_eff = calculate_mtorc1_effects(1.0 - mTORC1_act_arr[i], MTORC1_PARAMS)
+        uprmt_val = calculate_uprmt(
+            Heteroplasmy[i], 1.0 + 0.5 * Heteroplasmy[i],
+            NAD[i] / NAD_PARAMS['NAD_young'], UPRMT_PARAMS
+        )
+        uprmt_eff = get_uprmt_effects(uprmt_val, UPRMT_PARAMS)
+        Autophagy[i] = calculate_autophagy(
+            ampk=ampk_eff, foxo3=FOXO3[i],
+            gut=gut_microbiome * active,
+            uprmt_autophagy=uprmt_eff['autophagy_boost'],
+            mtorc1_autophagy=mtorc1_eff['autophagy_boost'],
+            params=AUTOPHAGY_PARAMS
+        )
+
+        BioAge[i] = calculate_bioage(
+            meth=Methylation[i], damage=DNA_damage[i],
+            H=Heteroplasmy[i], sen=SenCells[i], sasp=SASP_arr[i],
+            params=BIOAGE_PARAMS
+        )
         Cancer_prob[i] = calculate_cancer_probability(Mutations[i], CANCER_PARAMS)
 
         if not cancer_occurred and rng.random() < Cancer_prob[i] * dt:
             cancer_occurred = True
             cancer_time = t
-
-        # Biological Age
-        BioAge[i] = calculate_bioage(
-            meth=Methylation[i],
-            damage=DNA_damage[i],
-            H=Heteroplasmy[i],
-            sen=SenCells[i],
-            sasp=SASP[i],
-            params=BIOAGE_PARAMS
-        )
 
     # Find death time
     death_idx = np.argmax(BioAge >= BIOAGE_PARAMS['death_threshold'])
@@ -1175,7 +1173,6 @@ def simulate(
     sigma = 0.12
     Survival = 1.0 / (1.0 + np.exp((t_array - t_death) / sigma))
 
-    # Extension will be calculated by caller (avoids recursion)
     extension_percent = 0.0
 
     return SimulationResult(
@@ -1192,9 +1189,9 @@ def simulate(
         Methylation=Methylation,
         Heteroplasmy=Heteroplasmy,
         SenCells=SenCells,
-        SASP=SASP,
-        TSC2=TSC2,
-        mTORC1_activity=mTORC1_activity,
+        SASP=SASP_arr,
+        TSC2=TSC2_arr,
+        mTORC1_activity=mTORC1_act_arr,
         Mutations=Mutations,
         Cancer_prob=Cancer_prob,
         cancer_occurred=cancer_occurred,
