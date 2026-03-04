@@ -59,6 +59,23 @@ truth. It is designed to anneal toward agreement with biology through
 an explicit experiment -> calibrate -> extend cycle (Slide A25).
 The Taguchi killifish screen is the next turn of that cycle.
 
+## The Cost of Not Starting
+
+If serial reliability holds (Slide 2), single-compound testing
+cannot reveal the information needed to guide multi-compound
+interventions. No amount of single-compound mouse studies -- at
+$1.5M and 3+ years each -- will ever answer whether rapamycin +
+NMN is additive, sub-additive, or superadditive. That question
+requires running the combination. Meanwhile, tens of thousands of
+people are already combining longevity interventions without a
+quantitative framework -- because none exists. The proposed Taguchi
+killifish screen costs $200K and 8 months. Either it validates the
+predictions or it provides the data to recalibrate. Either outcome
+advances the field more than additional single-compound studies can.
+The path from killifish to mice to humans is real and necessary,
+and we fully acknowledge the validation steps at each stage. But
+that path cannot begin until someone takes step one.
+
 ## SLIDE Intro 0: Six drugs extend mouse lifespan
 
 Six drugs extend mouse lifespan. Which should we combine? About six drugs, given
@@ -668,10 +685,14 @@ assignment. The BioAge weights (30/30/25/15) are moderately constrained priors
 -- w meth is allowable over [0.25, 0.40] -- not tight posteriors. The
 qualitative conclusion (heteroplasmy is underaddressed) is robust across this
 range, but the quantitative dominance depends on the specific weights chosen.
-Uncertainty: Monte Carlo (1,000 samples, CV lifespan =12%, CV trajectory =15%)
-gives 90% CIs for single compounds. Example: rapamycin male +23% (90% CI:
-0-49%). Wide CIs reflect genuine biological variation in mouse lifespan (ITP
-reports ~12% CV across sites). See elm/uncertainty.py.
+Individual variation: The model predicts median lifespan extension. But
+individual mice vary -- ITP reports ~12% CV in lifespan across genetically
+identical animals at multiple sites. A Monte Carlo resampling (1,000 draws from
+a log-normal with that CV) gives the spread of individual outcomes around the
+median. Example: rapamycin male median +23%; 5th-95th percentile of individual
+lifespans: 0-49%. This is not uncertainty about the model -- it is the expected
+range of individual outcomes given that the model is correct. Parameter
+sensitivity is shown separately in the tornado charts (Slides A5, A5b).
 
 [Additional figures: stage_16_bioage_composition.png]
 
@@ -830,11 +851,14 @@ total Rapa+NMN prediction shifts by at most +/-1.5 pp. The superadditive
 component (+5.5 pp baseline) survives all perturbations -- it never drops below
 zero. Most sensitive parameter: k_nmn_synthesis (NMN->NAD efficiency, +/-1.5
 pp). Second: Km_nad_sirt1 (NAD affinity for SIRT1, +/-1.3 pp). BioAge weights
-shift the total prediction but barely affect the superadditive component. Monte
-Carlo uncertainty: Rapa+NMN male +32% (90% CI: 7-60%, 1,000 samples). The wide
-CI reflects biological variation (~12% lifespan CV), not parameter fragility.
-The tornado above shows the prediction is structurally robust; the CI quantifies
-how much individual animals would vary around that prediction.
+shift the total prediction but barely affect the superadditive component. Two
+kinds of uncertainty: The tornado above answers how sensitive is the prediction
+to parameter choices? Answer: not very -- +/-1.5 pp at most. A separate
+question: how much would individual animals vary? ITP mice show ~12% CV in
+lifespan. Resampling the median prediction with that variation gives a 5th-95th
+percentile range of 7-60% for individual lifespans under Rapa+NMN. The model's
+structural prediction is robust (tornado); individual outcomes spread around it
+(Monte Carlo).
 
 ## SLIDE A6: BioAge Weight Sensitivity
 
@@ -1192,11 +1216,15 @@ tracked every internal variable. Nothing blows up. NAD + , heteroplasmy,
 senescent cells, methylation -- all stay within ranges the model was calibrated
 on. The large extension comes from addressing six independent aging axes
 simultaneously, not from any single variable being pushed into fantasy
-territory. Uncertainty: Monte Carlo (1,000 samples) gives 90% CIs for key
-predictions. Rapa+Acarb: +33% (90% CI: 8-61%). Rapa+NMN: +32% (90% CI: 7-60%).
-Wide intervals reflect genuine ITP biological variation (~12% CV across sites),
-not model instability. Point estimates are robust; individual outcomes vary. See
-elm/uncertainty.py.
+territory. Individual variation: The numbers above are predicted median lifespan
+extensions. Individual mice vary: ITP reports ~12% CV in lifespan across
+genetically identical animals. Resampling the model's median with that variation
+(1,000 log-normal draws) gives the 5th-95th percentile range of individual
+outcomes. Rapa+Acarb: median +33%, individual range 8-61%. Rapa+NMN: median
++32%, individual range 7-60%. This is not uncertainty about whether the model is
+right -- it is the expected spread of individual lifespans if it is. Parameter
+sensitivity is a separate question, addressed by the tornado charts (Slides A5,
+A5b).
 
 --- Narrative ---
 Why +168% Isn't As Crazy As It Sounds A number this large demands scepticism.

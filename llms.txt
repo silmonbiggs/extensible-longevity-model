@@ -101,6 +101,44 @@ killifish screen is the next turn of that cycle. It will either
 validate the combination predictions or provide the data needed to
 move the simplex to a better basin.
 
+## The Cost of Not Starting
+
+The default reviewer instinct is "treat with appropriate caution."
+But caution relative to what?
+
+If serial reliability holds (Slide 2), single-compound testing
+cannot reveal the information needed to guide multi-compound
+interventions. No amount of single-compound mouse studies -- at
+$1.5M and 3+ years each -- will ever answer whether rapamycin +
+NMN is additive, sub-additive, or superadditive. That question
+requires running the combination.
+
+Meanwhile, tens of thousands of people are already combining
+longevity interventions, guided by intuition, anecdote, and
+qualitative pathway diagrams. That number is growing. They are
+conducting slow, uncontrolled experiments on themselves, without
+a quantitative framework -- because none exists.
+
+The proposed Taguchi killifish screen costs $200K and takes 8
+months. If it confirms the model's combination predictions, those
+results feed a targeted mouse validation. If it contradicts them,
+the model recalibrates against real combination data for the first
+time. Either outcome advances the field more than any number of
+additional single-compound studies can.
+
+The risk of acting on an imperfect model: a $200K experiment
+produces data that may require reinterpretation. The risk of not
+acting: combination guidance never improves, because the
+experiments needed to generate it are never run. The cautious
+position is not to wait. The cautious position is to start
+generating combination data in the fastest, cheapest system
+available, and to build the quantitative framework that millions
+of people will eventually need -- whether or not they know it yet.
+
+The path from killifish to mice to humans is real and necessary,
+and we fully acknowledge the validation steps required at each
+stage. But that path cannot begin until someone takes step one.
+
 ## Key Results
 
 - Calibration: 12 ITP targets, +/-0.08% mean error, 10 effective DOF
@@ -110,20 +148,22 @@ move the simplex to a better basin.
 - Taguchi L18 killifish screen: 8 compounds, $200K, 8 months, 1,000 fish
   (vs. ~$1.5M / 3+ years for a single ITP mouse study)
 
-## Uncertainty Quantification
+## Individual Variation
 
-The elm/uncertainty.py module provides Monte Carlo uncertainty
-bounds. Key predictions with 90% confidence intervals (1,000
-samples, CV_lifespan=12%, CV_trajectory=15%):
+The model predicts median lifespan extension. Individual mice
+vary -- ITP reports ~12% CV in lifespan across genetically
+identical animals at multiple sites. A Monte Carlo resampling
+(1,000 log-normal draws with that CV) gives the 5th-95th
+percentile range of individual outcomes around the median:
 
-  - Rapamycin male: +23% (90% CI: 0-49%)
-  - Rapa+Acarb male: +33% (90% CI: 8-61%)
-  - Rapa+NMN male: +32% (90% CI: 7-60%)
+  - Rapamycin male: median +23%, individual range 0-49%
+  - Rapa+Acarb male: median +33%, individual range 8-61%
+  - Rapa+NMN male: median +32%, individual range 7-60%
 
-Wide CIs reflect genuine biological variation in mouse lifespan
-(ITP reports ~12% CV across sites). The point estimates are the
-model's best prediction; the CIs show the range of individual
-outcomes. Reproducible: run_monte_carlo(compound, seed=42).
+This is NOT uncertainty about whether the model is right -- it
+is the expected spread of individual lifespans if it is. Parameter
+sensitivity is a separate question, addressed by the tornado
+charts (Slides A5, A5b). Reproducible: run_monte_carlo(seed=42).
 
 ## Compounds Modeled (ITP-validated)
 
