@@ -7,15 +7,21 @@ DNA damage, AMPK/mTORC1 signaling, autophagy, senescence, SASP,
 methylation) and predicts combination effects -- including
 interactions that single-compound testing cannot reveal.
 
-## Links
+## LLM-Readable Content
 
-- **[Interactive slide deck](https://silmonbiggs.github.io/extensible-longevity-model/deck.html)**
-  -- model architecture, calibration, validation, and predictions
-  with interactive network diagrams, equations, and figures.
+For AI-assisted review, point your LLM at one of these plain-text
+files directly:
+
 - **[llms.txt](https://silmonbiggs.github.io/extensible-longevity-model/llms.txt)**
-  -- brief LLM-readable summary.
+  -- brief summary (model, key results, experimental design).
 - **[llms-full.txt](https://silmonbiggs.github.io/extensible-longevity-model/llms-full.txt)**
   -- complete slide-by-slide transcript with supplementary analyses.
+
+## Interactive Slide Deck
+
+**[View the deck](https://silmonbiggs.github.io/extensible-longevity-model/deck.html)**
+-- model architecture, calibration, validation, and predictions
+with interactive network diagrams, equations, and figures.
 
 ## Key Results
 
