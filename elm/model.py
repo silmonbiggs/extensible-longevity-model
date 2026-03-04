@@ -789,7 +789,8 @@ def simulate(
     sex: str = 'M',
     t_max: float = 2.5,
     dt: float = 0.001,
-    verbose: bool = False
+    verbose: bool = False,
+    seed: int = 42
 ) -> SimulationResult:
     """
     Run ELM longevity simulation.
@@ -801,6 +802,7 @@ def simulate(
         t_max: Maximum simulation time (normalized; 1.0 = baseline lifespan)
         dt: Time step
         verbose: Print progress
+        seed: Random seed for cancer stochastic events (default 42)
 
     Returns:
         SimulationResult with trajectories and lifespan extension
@@ -809,6 +811,7 @@ def simulate(
         >>> result = simulate(compound='rapamycin', sex='M')
         >>> print(f"Extension: {result.extension_percent:.1f}%")
     """
+    rng = np.random.default_rng(seed)
     # Build time array
     t_array = np.arange(0, t_max, dt)
     n = len(t_array)
@@ -1148,7 +1151,7 @@ def simulate(
         Mutations[i] = max(0, Mutations[i-1] + dMut * dt)
         Cancer_prob[i] = calculate_cancer_probability(Mutations[i], CANCER_PARAMS)
 
-        if not cancer_occurred and np.random.random() < Cancer_prob[i] * dt:
+        if not cancer_occurred and rng.random() < Cancer_prob[i] * dt:
             cancer_occurred = True
             cancer_time = t
 
