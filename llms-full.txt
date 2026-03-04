@@ -20,7 +20,12 @@ evaluated -- consists of:
   - 4 sex-difference mechanisms (AMPK saturation, PK, testosterone, estrogen)
   - Dose-response Hill curves (3 fitted, 3 estimated)
   - BioAge composite -> death threshold
-  - Combination prediction engine (additive pathway merging + saturation)
+  - Combination prediction engine: compound pathway injections are
+    summed at the INPUT level, but the ODE dynamics produce nonlinear
+    interactions through Hill-function saturation, Michaelis-Menten
+    substrate dependence, and cross-pathway feedback. This is how the
+    model predicts super- and sub-additive combinations from single-
+    compound calibration alone.
 
 The codebase also contains two modules that are INACTIVE in all current
 predictions and should not factor into evaluation:
