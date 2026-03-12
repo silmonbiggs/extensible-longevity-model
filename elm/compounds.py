@@ -31,29 +31,28 @@ COMPOUNDS: Dict[str, Dict[str, float]] = {
     # ITP-VALIDATED COMPOUNDS (calibrated to match ITP data)
     # -------------------------------------------------------------------------
     'rapamycin': {
-        'mtorc1_drug_inhibition': 0.4424,
-        'ampk': 0.2949,
+        'mtorc1_drug_inhibition': 0.4190,
+        'ampk': 0.2792,
     },
     'acarbose': {
-        'ampk': 0.1941,
-        'gut_microbiome': 0.1412,
+        'ampk': 0.1690,
+        'gut_microbiome': 0.1690,
     },
     'canagliflozin': {
-        'ampk': 0.0781,         # AMPK component (female-saturated)
-        'antioxidant': 0.4584,  # FGF21/ketone component (sex-independent)
+        'ampk': 0.1618,
     },
     '17_alpha_estradiol': {
-        'ampk': 0.174,
-        'antioxidant': 0.1907,
+        'ampk': 0.1764,
+        'antioxidant': 0.1764,
     },
     'aspirin': {
-        'antioxidant': 0.095,
-        'ampk': 0.0569,
-        'antiinflam': 0.0427,
+        'antioxidant': 0.0985,
+        'ampk': 0.0591,
+        'antiinflam': 0.0394,
     },
     'glycine': {
-        'antioxidant': 0.3092,
-        'ampk': 0.023,
+        'antioxidant': 0.2842,
+        'ampk': 0.0316,
     },
 
     # -------------------------------------------------------------------------
@@ -383,13 +382,13 @@ def get_sex_ratio(compound: str) -> Optional[float]:
 # ITP unisex (4): rapamycin, acarbose, canagliflozin, glycine
 # Novel targets (4): NMN, CD38 inhibitor, dasatinib+quercetin, urolithin A
 #
-# Hill-limit audit confirmed: no clip-bound violations, pairwise interactions
-# overwhelmingly additive (mean ratio 1.02), +168% M / +140% F.
+# Pairwise interactions near-additive. Full stack: +134% M / +115% F (9-month start).
+# Mitophagy continuous (daily UroA), senolytic pulsed (3d on / 11d off, biweekly).
 TAGUCHI_8_STACK: Dict[str, Dict[str, float]] = {
-    'Rapamycin': {'mtorc1_drug_inhibition': 0.4424, 'ampk': 0.2949},
-    'Acarbose': {'ampk': 0.1941, 'gut_microbiome': 0.1412},
-    'Canagliflozin': {'ampk': 0.0781, 'antioxidant': 0.4584},
-    'Glycine': {'antioxidant': 0.3092, 'ampk': 0.023},
+    'Rapamycin': {'mtorc1_drug_inhibition': 0.4190, 'ampk': 0.2792},
+    'Acarbose': {'ampk': 0.1690, 'gut_microbiome': 0.1690},
+    'Canagliflozin': {'ampk': 0.1618},
+    'Glycine': {'antioxidant': 0.2842, 'ampk': 0.0316},
     'NMN': {'nmn': 0.50},
     'CD38_Inhibitor': {'cd38_inhibitor': 0.50},
     'Dasatinib_Quercetin': {'senolytic': 0.40},

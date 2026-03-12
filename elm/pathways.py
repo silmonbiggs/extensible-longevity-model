@@ -28,7 +28,7 @@ NAD_PARAMS: Dict[str, float] = {
     'k_tryptophan': 0.05,          # De novo synthesis contribution
 
     # Consumption
-    'k_consumption_basal': 0.40,   # Baseline NAD+ turnover
+    'k_consumption_basal': 0.40,   # Set within plausible range 0.25-0.55
     'k_cd38_base': 0.35,           # Basal CD38 consumption
     'k_cd38_age': 0.50,            # Age-related CD38 increase
     'k_cd38_sasp': 0.60,           # SASP-induced CD38
@@ -70,7 +70,7 @@ CD38_SATURATION_PARAMS: Dict[str, float] = {
 # =============================================================================
 
 AMPK_PARAMS: Dict[str, float] = {
-    'Km_ampk': 0.40,               # Saturation constant
+    'Km_ampk': 0.40,               # Set at midpoint of plausible range 0.2-0.8
     'Vmax_ampk': 1.0,              # Maximum AMPK activity
     'k_gut_ampk': 0.20,            # Gut microbiome contribution
 }
@@ -92,8 +92,8 @@ MTORC1_PARAMS: Dict[str, float] = {
 # =============================================================================
 
 SIRTUIN_PARAMS: Dict[str, float] = {
-    'Km_nad_sirt1': 0.4,           # NAD+ affinity for SIRT1
-    'n_hill_sirt1': 2.0,           # Hill coefficient (cooperativity)
+    'Km_nad_sirt1': 0.4,           # Set for NAD+ operating range; plausible range 0.3-0.6
+    'n_hill_sirt1': 2.0,           # Standard Hill coefficient; plausible range 1.0-3.0
     'k_sirt1_direct_boost': 0.5,   # Direct SIRT1 activator effect
     'foxo3_basal': 0.2,            # Basal FOXO3 activity
     'k_sirt1_foxo3': 0.8,          # SIRT1 -> FOXO3 activation
@@ -105,9 +105,9 @@ SIRTUIN_PARAMS: Dict[str, float] = {
 
 AUTOPHAGY_PARAMS: Dict[str, float] = {
     'Vmax_autophagy': 1.0,         # Maximum autophagy rate
-    'Km_autophagy': 0.35,          # Half-max activation
-    'w_ampk_autophagy': 0.45,      # AMPK contribution weight
-    'w_foxo3_autophagy': 0.35,     # FOXO3 contribution weight
+    'Km_autophagy': 0.35,          # Set at midpoint of plausible range 0.2-0.5
+    'w_ampk_autophagy': 0.45,      # Set within plausible range 0.3-0.6
+    'w_foxo3_autophagy': 0.35,     # Set within plausible range 0.2-0.5
     'w_gut_autophagy': 0.40,       # Gut microbiome contribution
     'k_autophagy_damage_clear': 0.30,  # Autophagy damage clearance
 }
@@ -118,14 +118,14 @@ AUTOPHAGY_PARAMS: Dict[str, float] = {
 
 DNA_REPAIR_PARAMS: Dict[str, float] = {
     # Damage sources
-    'k_damage_ros': 0.60,          # ROS-induced damage
-    'k_damage_replication': 0.12,  # Replication errors
+    'k_damage_ros': 0.60,          # Calibrated to control lifespan; plausible range 0.40-0.80; SVD rank 1
+    'k_damage_replication': 0.12,  # Set within plausible range 0.05-0.25; minor contributor
     'k_damage_spontaneous': 0.18,  # Spontaneous damage
     'k_damage_sasp': 0.25,         # SASP-induced damage
 
     # Repair pathways
-    'k_ber_base': 0.35,            # Base excision repair
-    'k_ber_nad_dependence': 0.7,   # BER NAD+ dependence
+    'k_ber_base': 0.35,            # Calibrated to damage-repair balance; plausible range 0.20-0.50; SVD rank 2
+    'k_ber_nad_dependence': 0.7,   # Set within plausible range 0.4-1.0
     'k_ner_base': 0.18,            # Nucleotide excision repair
     'k_ner_nad_dependence': 0.4,   # NER NAD+ dependence
     'k_hr_base': 0.10,             # Homologous recombination
@@ -133,12 +133,12 @@ DNA_REPAIR_PARAMS: Dict[str, float] = {
 
     # Downstream effects
     'k_damage_to_mutation': 0.02,  # Damage -> mutation conversion
-    'k_damage_to_senescence': 0.15,  # Damage -> senescence
+    'k_damage_to_senescence': 0.15,  # Set within plausible range 0.05-0.30
     'damage_senescence_threshold': 0.3,  # Midpoint for senescence sigmoid
     'damage_senescence_width': 0.05,     # Sigmoid transition width (smooth over D±2w)
 
     # Interventions
-    'k_antioxidant_ros_reduction': 0.55,  # Antioxidant effect
+    'k_antioxidant_ros_reduction': 0.55,  # Calibrated to control ROS dynamics; plausible range 0.35-0.75
     'k_ampk_damage_reduction': 0.50,      # AMPK protective effect
 
     # Bounds
@@ -151,11 +151,11 @@ DNA_REPAIR_PARAMS: Dict[str, float] = {
 
 METHYLATION_PARAMS: Dict[str, float] = {
     # Writers
-    'k_ezh2_base': 1.85,           # Basal EZH2 activity
-    'k_ezh2_sirt1_inhibition': 0.5,  # SIRT1 inhibition of EZH2
+    'k_ezh2_base': 1.85,           # Calibrated to control methylation trajectory; plausible range 1.5-2.2
+    'k_ezh2_sirt1_inhibition': 0.5,  # Set within plausible range 0.3-0.8
     'k_ezh2_ampk_inhibition': 0.70,  # AMPK inhibition of EZH2
-    'k_dnmt_base': 0.28,           # Basal DNMT activity
-    'k_sasp_methylation': 0.42,    # SASP-induced methylation drift
+    'k_dnmt_base': 0.28,           # Set within plausible range 0.15-0.40
+    'k_sasp_methylation': 0.42,    # Set within plausible range 0.2-0.6
 
     # Erasers
     'k_tet_base': 0.02,            # Basal TET activity
@@ -184,14 +184,14 @@ HETEROPLASMY_PARAMS: Dict[str, float] = {
     # Dynamics (Kowald-Kirkwood model)
     'Neff': 100,                   # Effective population size
     'transcription_advantage': 0.20,  # Mutant mtDNA advantage
-    'k_selection_base': 0.001,     # Baseline selection
-    'k_selection_foxo3': 0.10,     # FOXO3 selection boost
-    'k_selection_mitophagy': 0.60, # Mitophagy selection boost
-    'time_scale': 12.0,            # Time scaling factor
+    'k_selection_base': 0.001,     # Negligible placeholder; plausible range 0-0.01
+    'k_selection_foxo3': 0.10,     # Set within plausible range 0.05-0.20
+    'k_selection_mitophagy': 0.08, # Calibrated: full PINK1/Parkin reduces H to 40% of untreated at midlife (Pickrell 2015)
+    'time_scale': 12.0,            # Calibrated to control heteroplasmy; plausible range 8-18
 
-    # Mitophagy intervention
+    # Mitophagy intervention — continuous (daily oral supplement, not pulsed)
     'mitophagy_pulse_interval': 0.00329,
-    'mitophagy_pulse_duration': 0.000252,
+    'mitophagy_pulse_duration': 0.00329,  # duration=interval → 100% duty cycle
 
 }
 
@@ -220,18 +220,18 @@ UPRMT_PARAMS: Dict[str, float] = {
 SENESCENCE_PARAMS: Dict[str, float] = {
     # Entry
     'k_sen_from_damage': 0.40,     # Damage-induced senescence
-    'k_sen_from_telomere': 0.12,   # Replicative senescence
+    'k_sen_from_telomere': 0.12,   # Set within plausible range 0.05-0.20
     'k_sen_from_oncogene': 0.08,   # Oncogene-induced senescence
     'k_sen_from_sasp': 0.20,       # SASP-induced (paracrine) senescence
 
     # Clearance
     'k_sen_natural_clear': 0.02,   # Natural immune clearance
-    'k_sen_autophagy_clear': 0.70, # Autophagy-mediated clearance
+    'k_sen_autophagy_clear': 0.70, # Set within plausible range 0.40-1.00
     'k_senolytic_clear': 0.55,     # Senolytic drug clearance
 
     # Senolytic intervention (biweekly pulsing — Baker 2016, PMID 26840489)
     'senolytic_pulse_interval': 0.0154,   # ~14 days normalized (biweekly)
-    'senolytic_pulse_duration': 0.000072,
+    'senolytic_pulse_duration': 0.00333,   # ~3 days normalized (Xu 2018: 3 consecutive days of D+Q)
     'k_senolytic_kill_fraction': 0.30,    # Fraction killed per pulse (Zhu 2015, PMID 25754370)
 
     # Dynamics
@@ -239,7 +239,7 @@ SENESCENCE_PARAMS: Dict[str, float] = {
     'sen_min_residual': 0.015,     # Minimum residual burden
 
     # Modifiers
-    'k_ampk_sen_reduction': 0.45,  # AMPK protective effect
+    'k_ampk_sen_reduction': 0.45,  # Set within plausible range 0.30-0.60
     'k_gut_sen_reduction': 0.40,   # Gut microbiome effect
 
 }
@@ -254,7 +254,7 @@ SASP_PARAMS: Dict[str, float] = {
     'k_sasp_delay': 0.02,          # Delay in SASP onset
 
     # Clearance
-    'k_sasp_decay': 0.60,          # SASP decay rate
+    'k_sasp_decay': 0.60,          # Set within plausible range 0.30-1.00
     'k_sasp_liver_clear': 0.35,    # Liver-mediated clearance
 
     # Effects
@@ -312,7 +312,7 @@ TSC2_PARAMS: Dict[str, float] = {
     'TSC2_min': 0.10,              # Minimum residual TSC2 activity
     'k_ampk_tsc2_max': 0.70,      # Maximum AMPK-induced TSC2 activation
     'Km_ampk_tsc2': 0.35,         # Half-max AMPK for TSC2 activation
-    'n_hill_ampk_tsc2': 1.5,      # Hill coefficient (AMPK/GSK3 cooperativity)
+    'n_hill_ampk_tsc2': 1.5,      # Set at midpoint of plausible range 1.0-2.0
 
     # TSC2 inhibition of mTORC1 via Rheb inactivation
     # TSC2 GAP converts Rheb-GTP to Rheb-GDP (Huang & Manning 2008, PMID 18466115)
@@ -327,11 +327,11 @@ TSC2_PARAMS: Dict[str, float] = {
 # =============================================================================
 
 BIOAGE_PARAMS: Dict[str, float] = {
-    # Component weights (sum to 1.0)
-    'w_meth': 0.30,                # Methylation weight
-    'w_damage': 0.30,              # DNA damage weight
-    'w_hetero': 0.25,              # Heteroplasmy weight (coupled with damage via PARP/NAD)
-    'w_sen': 0.15,                 # Senescence weight
+    # Component weights (sum to 1.0) — equal prior, not fitted
+    'w_meth': 0.25,                # Methylation weight
+    'w_damage': 0.25,              # DNA damage weight
+    'w_hetero': 0.25,              # Heteroplasmy weight
+    'w_sen': 0.25,                 # Senescence weight
     'w_sasp': 0.00,                # SASP weight (currently 0, captured via senescence)
 
     # Death threshold
@@ -341,11 +341,11 @@ BIOAGE_PARAMS: Dict[str, float] = {
     # so that BioAge(t=1.0) = 1.0 by construction. ODE dynamics are
     # independent of these norms (no circularity).
     # Derivation: model.derive_normalization_constants()
-    'meth_norm': 1.093528,         # Methylation at t=1.0 in control
-    'damage_norm': 0.665621,       # DNA damage at t=1.0 in control
-    'H_norm': 0.179975,            # Heteroplasmy at t=1.0 in control
-    'sen_norm': 0.217642,          # SenCells at t=1.0 in control
-    'SASP_norm': 0.038512,         # SASP at t=1.0 in control (w_sasp=0)
+    'meth_norm': 1.092501,         # Methylation at t=1.0 in control
+    'damage_norm': 0.665330,       # DNA damage at t=1.0 in control
+    'H_norm': 0.180017,            # Heteroplasmy at t=1.0 in control
+    'sen_norm': 0.214275,          # SenCells at t=1.0 in control
+    'SASP_norm': 0.037314,         # SASP at t=1.0 in control (w_sasp=0)
 }
 
 # =============================================================================

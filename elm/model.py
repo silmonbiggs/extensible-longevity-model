@@ -1168,11 +1168,24 @@ def simulate(
             cancer_occurred = True
             cancer_time = t
 
-    # Find death time
+    # Find death time (with linear interpolation for sub-dt resolution)
     death_idx = np.argmax(BioAge >= BIOAGE_PARAMS['death_threshold'])
     if death_idx == 0 and BioAge[0] < BIOAGE_PARAMS['death_threshold']:
         death_idx = n - 1
-    t_death = t_array[death_idx]
+    if death_idx > 0 and death_idx < n:
+        # Linear interpolation between bracketing time steps
+        b0 = BioAge[death_idx - 1]
+        b1 = BioAge[death_idx]
+        t0 = t_array[death_idx - 1]
+        t1 = t_array[death_idx]
+        threshold = BIOAGE_PARAMS['death_threshold']
+        if b1 != b0:
+            frac = (threshold - b0) / (b1 - b0)
+            t_death = t0 + frac * (t1 - t0)
+        else:
+            t_death = t_array[death_idx]
+    else:
+        t_death = t_array[death_idx]
 
     # Survival curve
     sigma = 0.12

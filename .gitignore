@@ -7,4 +7,6 @@ __pycache__/
 dist/
 build/
 .claude/
-HILL_LIMIT_AUDIT_PLAN.md
+node_modules/
+package-lock.json
+calibration_options/

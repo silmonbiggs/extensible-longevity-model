@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """
-Recalibrate compound pathway injections for correct ITP start times.
+Calibrate compound pathway injections to male ITP targets (Option A).
 
-Each ITP compound was previously calibrated assuming start_time=0.56.
-Now that we use the actual ITP protocol start times, the injection
-values need to be re-tuned to match the observed lifespan extensions.
+Strategy: For each of the 6 ITP compounds, a single uniform scale factor
+is found via Brent's root-finding method (brentq) so that the male
+lifespan extension matches the ITP target exactly. Female extensions are
+then predicted — not fitted — using literature sex mechanisms.
 
-Strategy: For each compound, uniformly scale all pathway injection values
-by a single multiplier until the male extension matches the ITP target.
-Then verify the female prediction (sex mechanisms should still work).
+Free parameters: 6 (one scale factor per compound)
+Calibration targets: 6 (male extensions)
+Predictions: 6 female extensions + rapa+acarbose combination
 """
 
 import sys

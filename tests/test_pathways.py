@@ -357,8 +357,8 @@ def test_summarize_uncertainty():
 def test_attribution_sums_approximately():
     """Greedy subtraction contributions should roughly sum to full stack."""
     components = {
-        'Rapamycin': {'mtorc1_drug_inhibition': 0.4424, 'ampk': 0.2949},
-        'Acarbose': {'ampk': 0.1941, 'gut_microbiome': 0.1412},
+        'Rapamycin': {'mtorc1_drug_inhibition': 0.4190, 'ampk': 0.2792},
+        'Acarbose': {'ampk': 0.1690, 'gut_microbiome': 0.1690},
     }
     attr = compute_attribution(components, sex='M', verbose=False)
     total = sum(attr.contributions.values())

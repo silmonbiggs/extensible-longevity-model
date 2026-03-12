@@ -11,6 +11,9 @@ dependencies = [
     "matplotlib>=3.7,<4",
 ]
 
+[tool.setuptools.packages.find]
+include = ["elm*"]
+
 [project.urls]
 Homepage = "https://github.com/silmonbiggs/extensible-longevity-model"
 Documentation = "https://silmonbiggs.github.io/extensible-longevity-model/deck.html"

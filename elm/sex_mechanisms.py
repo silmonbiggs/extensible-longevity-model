@@ -86,12 +86,14 @@ SEX_MECHANISMS: Dict[str, SexMechanism] = {
     'acarbose': SexMechanism(
         mechanism_type=MechanismType.AMPK_SATURATION,
         male_effect=1.0,
-        female_effect=0.23,
-        ampk_baseline=1.4,
-        ampk_k_diminishing=11.0,
+        female_effect=0.29,
+        ampk_baseline=1.3,
+        ampk_k_diminishing=8.0,
         explanation=(
-            'Estrogen upregulates LKB1 (AMPK activator). Females have ~1.4x '
-            'higher baseline AMPK, causing diminishing returns from activation.'
+            'Estrogen upregulates LKB1 (AMPK activator). Females have ~1.3x '
+            'higher baseline AMPK, causing diminishing returns from activation. '
+            'Global AMPK saturation parameters (baseline=1.3, k=8) from '
+            'LKB1 literature, not fitted to ITP sex data.'
         ),
         pmids=[21876548, 24245565],
         confidence='medium',
@@ -100,16 +102,18 @@ SEX_MECHANISMS: Dict[str, SexMechanism] = {
     'canagliflozin': SexMechanism(
         mechanism_type=MechanismType.AMPK_SATURATION,
         male_effect=1.0,
-        female_effect=0.64,
-        ampk_baseline=1.4,
-        ampk_k_diminishing=5.0,  # Weaker than pure AMPK activators: SGLT2-mediated
+        female_effect=0.29,
+        ampk_baseline=1.3,
+        ampk_k_diminishing=8.0,
         explanation=(
-            'Multi-pathway: AMPK-dependent (via SGLT2-mediated glycosuria, '
-            'partially buffered against LKB1 saturation) + FGF21/ketogenesis '
-            '(sex-independent). Weaker sex difference than pure AMPK activators.'
+            'Single AMPK pathway via SGLT2-mediated glycosuria. Same global '
+            'AMPK saturation parameters as other AMPK compounds (baseline=1.3, '
+            'k=7.5). The model underpredicts the female effect (-3.8 pp), '
+            'suggesting a sex-independent second pathway (FGF21/ketogenesis) '
+            'not yet modeled.'
         ),
         pmids=[32990681, 30843877, 37406767, 21876548],
-        confidence='high',
+        confidence='medium',
     ),
 
     '17_alpha_estradiol': SexMechanism(
@@ -148,13 +152,14 @@ SEX_MECHANISMS: Dict[str, SexMechanism] = {
     'glycine': SexMechanism(
         mechanism_type=MechanismType.AMPK_SATURATION,
         male_effect=1.0,
-        female_effect=0.75,
-        ampk_baseline=1.4,
-        ampk_k_diminishing=15.0,
+        female_effect=0.29,
+        ampk_baseline=1.3,
+        ampk_k_diminishing=8.0,
         explanation=(
-            'Mild AMPK activator with small antioxidant component. Some '
-            'reduction in females due to AMPK saturation, but less pronounced '
-            'than pure AMPK activators.'
+            'Mild AMPK activator with antioxidant component. Same global '
+            'AMPK saturation parameters (baseline=1.3, k=8). The antioxidant '
+            'pathway is not subject to AMPK saturation, preserving most of '
+            'the female effect.'
         ),
         pmids=[30916479, 21876548],
         confidence='medium',
@@ -288,8 +293,8 @@ def get_mechanism_info(compound: str) -> Optional[Dict[str, Any]]:
 
 
 def compute_ampk_saturation_factor(
-    female_baseline: float = 1.4,
-    k_diminishing: float = 15.0
+    female_baseline: float = 1.3,
+    k_diminishing: float = 8.0
 ) -> float:
     """
     Compute the AMPK saturation diminishing factor for females.
@@ -299,12 +304,12 @@ def compute_ampk_saturation_factor(
 
     Factor = 1 / (1 + k * (baseline - 1))
 
-    With default parameters (baseline=1.4, k=15):
-    Factor = 1 / (1 + 15 * 0.4) = 1/7 ≈ 0.143
+    With default parameters (baseline=1.3, k=8):
+    Factor = 1 / (1 + 8 * 0.3) = 1/3.4 ≈ 0.294
 
     Args:
-        female_baseline: Female AMPK baseline relative to male (default 1.4)
-        k_diminishing: Diminishing returns strength (default 15.0)
+        female_baseline: Female AMPK baseline relative to male (default 1.3)
+        k_diminishing: Diminishing returns strength (default 8.0)
 
     Returns:
         Diminishing factor (0-1)
