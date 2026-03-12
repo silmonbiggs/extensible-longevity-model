@@ -1,97 +1,93 @@
 # Extensible Longevity Model (ELM)
 
-> **LLM access:** For a complete machine-readable summary of this
-> project, read [llms-full.txt](llms-full.txt) in this repository.
-> A shorter summary is in [llms.txt](llms.txt).
-
-A mechanistic ODE model of aging interventions, calibrated to the
-NIA Interventions Testing Program (ITP) data. The model captures
-8 interconnected aging subsystems (heteroplasmy, NAD+ metabolism,
-DNA damage, AMPK/mTORC1 signaling, autophagy, senescence, SASP,
-methylation) and predicts combination effects -- including
-interactions that single-compound testing cannot reveal.
-
-## Interactive Slide Deck
-
-**[View the deck](https://silmonbiggs.github.io/extensible-longevity-model/deck.html)**
--- model architecture, calibration, validation, and predictions
-with interactive network diagrams, equations, and figures.
+A mechanistic ODE model of mouse aging calibrated to the NIA
+Interventions Testing Program (ITP). Five state variables track
+four kinds of biological damage — mitochondrial heteroplasmy,
+DNA damage, epigenetic drift, and senescent cell accumulation —
+coupled through NAD+ metabolism and SASP signaling. Six free
+parameters (one scale factor per ITP compound) are fitted to male
+lifespan data. Female predictions use four sex-specific mechanisms
+from prior literature with no additional fitting.
 
 ## Key Results
 
-- **Calibration:** 12 ITP targets (6 compounds x 2 sexes). Mean
-  absolute error 0.08 percentage points in predicted vs. observed
-  median lifespan extension (max single-target error 0.20 pp).
-  10 effective degrees of freedom from 12 data points, determined
-  by Jacobian SVD rank (see Slide A1 in the deck).
-- **Out-of-sample validation:** Rapamycin + Acarbose -- predicted
-  +33%, ITP observed +34%. Not fit -- predicted from single-compound
-  calibration only.
-- **Testable prediction:** Rapamycin + NMN should be superadditive
-  (+31.8% M / +36.0% F vs. additive floor of +26.4% / +29.6%).
-- **Full-stack prediction:** 8 Taguchi compounds at 1x calibrated
-  dose: +168% M / +140% F. Under full-stack conditions, all tracked
-  variables (NAD+, heteroplasmy, DNA damage, senescent cells,
-  methylation, SASP) stay within the ranges the model was calibrated
-  on. Details: Slide A17.
-- **Experimental design:** Taguchi L18 orthogonal array for 8
-  longevity compounds in turquoise killifish (N. furzeri) -- $200K,
-  ~8 months, 1,000 fish (20 groups x 50). Primary endpoint: median
-  lifespan by Cox proportional hazards. Screens main effects,
-  dose-response, and dominant interaction signals from one
-  experiment. Compare: a single ITP mouse study costs ~$1.5M
-  over 3+ years.
+- **Sex difference predictions:** 1.3 percentage point mean absolute
+  error across all six female ITP outcomes, using zero female-fitted
+  parameters. Four independently motivated sex mechanisms (AMPK
+  saturation, CYP3A pharmacokinetics, testosterone dependency,
+  COX-2/prostacyclin interference) are sufficient.
+- **Combination validation:** Rapamycin + acarbose predicted +33.5%,
+  ITP observed +34%. Not fitted — predicted from single-compound
+  calibration alone. The model correctly identifies sub-additivity
+  from shared pathway saturation.
+- **Sensitivity:** One-at-a-time perturbation of 141 frozen parameters
+  (±10%) shifts no prediction by more than 0.65 pp. Results are
+  dominated by model structure, not individual parameter values.
 
-## What Is Validated vs. Predicted
+## How It Works
 
-| Status | Claim |
-|--------|-------|
-| Validated | 12 single-compound ITP lifespan extensions |
-| Validated | Rapa+Acarb combination: +33% predicted, +34% observed |
-| Predicted (calibrated) | All ITP pairwise/higher-order combinations |
-| Predicted (novel) | NMN, CD38i, D+Q, Urolithin A -- literature-estimated, not calibrated to lifespan data |
-| Predicted (full stack) | +168% M / +140% F from 8 compounds at 1x dose |
+The model tracks five state variables across the mouse lifespan:
+
+| Variable | What it tracks |
+|----------|---------------|
+| Heteroplasmy (*H*) | Fraction of mutant mitochondrial DNA |
+| NAD+ level (*N*) | Cellular energy currency, normalized to young adult |
+| DNA damage (*D*) | Double-strand break equivalents |
+| Senescent cells (*S*) | p16-positive cell burden |
+| Methylation drift (*M*) | Deviation from youthful CpG set points |
+
+These feed into BioAge, a weighted composite. The mouse dies when
+BioAge crosses a threshold. Longevity compounds work by perturbing
+rate constants in the ODEs — rapamycin inhibits mTORC1, acarbose
+activates AMPK, and so on.
+
+Each compound has one free parameter: a scale factor found by
+root-finding so that the predicted male lifespan extension matches
+the ITP observation exactly. All other parameters (162 of 168) are
+frozen priors set before calibration from published measurements,
+biologically plausible ranges, or structural constants.
+
+## Papers
+
+- **Paper 1:** Four Biological Mechanisms Predict ITP Sex Differences
+  from Male Data Alone
+  ([source](docs/paper/ITPSexDiff/paper1_sex_differences.tex),
+  [PDF](docs/paper/ITPSexDiff/paper1_sex_differences.pdf))
+- **Supplementary Material:**
+  Full parameter tables with provenance for all 168 parameters,
+  identifiability analysis, and sensitivity results
+  ([source](docs/paper/ITPSexDiff/supplementary.tex),
+  [PDF](docs/paper/ITPSexDiff/supplementary.pdf))
 
 ## Project Structure
 
 ```
-elm/                  # Python model package (ODE engine, pathways, compounds)
-docs/                 # Interactive slide deck + figures (GitHub Pages)
-scripts/              # Figure generation, calibration, analyses
-  clock_pca/          # Methylation weight constraint analysis (7 PMIDs)
-tests/                # Smoke tests (12 ITP targets within +/-1%)
+elm/                  # Core model package
+  model.py            #   ODE engine, simulation, lifespan calculation
+  compounds.py        #   Compound definitions and ITP targets
+  pathways.py         #   Pathway parameters (NAD+, AMPK, mTORC1, etc.)
+  sex_mechanisms.py   #   Sex-specific modifiers
+docs/
+  paper/              #   LaTeX sources and PDFs
+  figures/            #   All generated figures
+  deck.html           #   Interactive slide deck
+scripts/
+  generate_figures.py #   Regenerate all figures
+  oat_sensitivity.py  #   One-at-a-time sensitivity analysis
+  sweep_ampk_k.py     #   AMPK saturation parameter sweep
+tests/
+  smoke_test.py       #   Validates 12 ITP targets within ±1%
+  test_pathways.py    #   Pathway unit tests
 ```
 
 ## Reproducibility
 
-Requires Python 3.10+. Install dependencies:
+Python 3.10+.
 
 ```bash
 pip install -r requirements.txt
-```
-
-Verify calibration (all 12 ITP targets within +/-1%):
-
-```bash
-python tests/smoke_test.py
-```
-
-Regenerate all figures used in the slide deck:
-
-```bash
-python scripts/generate_figures.py
-```
-
-Regenerate a single figure set:
-
-```bash
-python scripts/generate_figures.py stage_16
-```
-
-Regenerate the LLM-readable text files from the slide deck:
-
-```bash
-python scripts/generate_llms_txt.py
+python tests/smoke_test.py          # verify calibration
+python scripts/generate_figures.py  # regenerate all figures
 ```
 
 ## Quick Start
@@ -99,16 +95,17 @@ python scripts/generate_llms_txt.py
 ```python
 from elm.model import run_control, simulate, calculate_lifespan_extension
 
-# Run a control simulation
 control = run_control(sex='M')
-
-# Simulate rapamycin treatment
 treated = simulate(compound='rapamycin', sex='M')
-
-# Calculate lifespan extension
 ext = calculate_lifespan_extension(treated, control)
 print(f"Rapamycin male extension: {ext:.1f}%")  # -> 23.0%
 ```
+
+## Interactive Deck
+
+**[View the deck](https://silmonbiggs.github.io/extensible-longevity-model/deck.html)**
+— model architecture, calibration, validation, and combination
+predictions with interactive figures.
 
 ## License
 

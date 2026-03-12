@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "Extensible Longevity Model (ELM)"
+authors:
+  - family-names: Biggs
+    given-names: Silmon James
+    email: james@longrun.bio
+    affiliation: Longrun Bio
+version: 0.43.0
+date-released: 2026-03-11
+license: MIT
+repository-code: https://github.com/silmonbiggs/extensible-longevity-model
+keywords:
+  - aging
+  - longevity
+  - ITP
+  - ODE model
+  - sex differences
+  - drug combinations
+abstract: >-
+  A mechanistic ODE model of mouse aging calibrated to the NIA
+  Interventions Testing Program. Six free parameters predict all
+  twelve ITP sex-compound outcomes (1.3 pp female MAE) and the
+  rapamycin + acarbose combination (+33.5% vs +34% observed)
+  using four literature-derived sex mechanisms with no female fitting.
