@@ -10,3 +10,12 @@ build/
 node_modules/
 package-lock.json
 calibration_options/
+*.aux
+*.log
+*.out
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.docx

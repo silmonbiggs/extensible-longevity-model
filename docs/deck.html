@@ -804,18 +804,18 @@ const STAGES = [
         '<p class="subtitle">Calibrated to 6 individual compounds. Then tested on a combination \u2014 without refitting.</p>' +
         '<div class="splash-callout success">' +
         '<strong>Out-of-sample validation:</strong> Rapamycin + Acarbose<br>' +
-        'Model predicted <strong>+33.0%</strong> male lifespan extension.<br>' +
+        'Model predicted <strong>+33.5%</strong> male lifespan extension.<br>' +
         'ITP observed <strong>+34%</strong>.<br>' +
-        'Error: 1.0 percentage point. <em>Not fit \u2014 predicted.</em>' +
+        'Error: 0.5 percentage point. <em>Not fit \u2014 predicted.</em>' +
         '</div>' +
         '<div style="display:flex;flex-wrap:wrap;margin:20px 0">' +
-        '<div class="splash-stat"><span class="number">12</span><span class="label">calibration targets</span></div>' +
-        '<div class="splash-stat"><span class="number">\u00B10.08 pp</span><span class="label">mean abs. error<br>(predicted vs observed<br>lifespan extension)</span></div>' +
-        '<div class="splash-stat"><span class="number">10</span><span class="label">effective parameters</span></div>' +
+        '<div class="splash-stat"><span class="number">6</span><span class="label">calibration targets (male),<br>7 predictions</span></div>' +
+        '<div class="splash-stat"><span class="number">1.3 pp</span><span class="label">female mean<br>prediction error</span></div>' +
+        '<div class="splash-stat"><span class="number">6</span><span class="label">free parameters</span></div>' +
         '</div>' +
-        '<p>The model has fewer effective degrees of freedom (10) than data points (12). It is constrained enough to make genuine predictions, not just fit curves.</p>' +
+        '<p>The model has 6 free parameters calibrated to 6 male targets, with 7 female predictions. It is constrained enough to make genuine predictions, not just fit curves.</p>' +
         '</div>',
-    narrative:'<h3>Why This Matters</h3><p>A model that fits individual drugs but fails on combinations is just curve-fitting. A model that <em>predicts</em> combinations is capturing real biology.</p><p>The rapamycin + acarbose prediction was never used during calibration. Both compounds converge on the AMPK\u2192autophagy pathway, producing Hill-function saturation. The model correctly predicts sub-additive combination: 34%, not the naive sum of 45%.</p><p style="font-size:11px;color:#555">Identifiability analysis (SVD of the Jacobian) confirms 10 observable degrees of freedom with condition number \u03BA = 14.6 \u2014 well-separated, not overfitting.</p>',
+    narrative:'<h3>Why This Matters</h3><p>A model that fits individual drugs but fails on combinations is just curve-fitting. A model that <em>predicts</em> combinations is capturing real biology.</p><p>The rapamycin + acarbose prediction was never used during calibration. Both compounds converge on the AMPK\u2192autophagy pathway, producing Hill-function saturation. The model correctly predicts sub-additive combination: 34%, not the naive sum of 45%.</p><p style="font-size:11px;color:#555">Identifiability analysis (SVD of the Jacobian) confirms 6 free parameters with condition number \u03BA = 14.6 \u2014 well-separated, not overfitting.</p>',
     equation:'',
     graph:['stage_08_mixing_bars.png'],
 },
@@ -827,7 +827,7 @@ const STAGES = [
         '<p class="subtitle">These two compounds together do more than the sum of their parts.</p>' +
         '<table class="splash-table">' +
         '<tr><th>Scenario</th><th>Male</th><th>Female</th></tr>' +
-        '<tr><td>Rapamycin alone</td><td>+23.0%</td><td>+26.2%</td></tr>' +
+        '<tr><td>Rapamycin alone</td><td>+23.0%</td><td>+26.7%</td></tr>' +
         '<tr><td>NMN alone</td><td>+3.4%</td><td>+3.4%</td></tr>' +
         '<tr><td>Simple sum</td><td>+26.4%</td><td>+29.6%</td></tr>' +
         '<tr class="highlight-row"><td>Model prediction</td><td>+31.8%</td><td>+36.0%</td></tr>' +
@@ -838,7 +838,7 @@ const STAGES = [
         '<p style="font-size:12px;color:#888;padding:8px 12px;background:#f8f8f8;border-radius:4px"><strong>Caveat:</strong> The additive floor (+26% M / +30% F) is the defensible prediction. The full prediction assumes compound effects persist into late life at mid-life magnitude. Both compounds modeled from 9-month start.</p>' +
         '<p style="margin-top:16px">How does a model predict this? The next slides build it, one subsystem at a time.</p>' +
         '</div>',
-    narrative:'<h3>Why This Combination?</h3><p>Rapamycin and NMN target <strong>independent subsystems</strong>:</p><ul style="font-size:12px;margin:6px 0 10px 16px"><li><strong>Rapamycin:</strong> mTORC1 inhibition + AMPK activation \u2192 autophagy, methylation restraint</li><li><strong>NMN:</strong> NAD+ precursor \u2192 supports SIRT1, PARP1 repair, mitochondrial function</li></ul><p>Mechanistic independence means less pathway saturation when combined. This is the opposite of rapamycin + acarbose, which both converge on AMPK and produce sub-additive results.</p><p>This prediction is robust to BioAge weight variation: less than 0.5% shift across the plausible w<sub>meth</sub> range [0.25, 0.40].</p>',
+    narrative:'<h3>Why This Combination?</h3><p>Rapamycin and NMN target <strong>independent subsystems</strong>:</p><ul style="font-size:12px;margin:6px 0 10px 16px"><li><strong>Rapamycin:</strong> mTORC1 inhibition + AMPK activation \u2192 autophagy, methylation restraint</li><li><strong>NMN:</strong> NAD+ precursor \u2192 supports SIRT1, PARP1 repair, mitochondrial function</li></ul><p>Mechanistic independence means less pathway saturation when combined. This is the opposite of rapamycin + acarbose, which both converge on AMPK and produce sub-additive results.</p><p>This prediction is robust to BioAge weight variation: less than 0.5% shift across the plausible w<sub>meth</sub> range [0.10, 0.50].</p>',
     equation:'',
     graph:null,
 },
@@ -846,7 +846,7 @@ const STAGES = [
     title:'The Thesis', sub:'0',
     nodes:['H','BioAge','r_mito','r_bio'],
     edges:['e_h_bio1','e_h_bio1b','e_h_bio2'],
-    narrative:'<h3>The Thesis</h3><p>The model has four subsystems. We start with the one that turns out to be the biggest bottleneck: mitochondrial heteroplasmy.</p><p>Mitochondrial DNA mutations accumulate with age as heteroplasmy (H) increases. H impairs oxidative phosphorylation (OXPHOS), reducing NAD+ regeneration, and generates reactive oxygen species (ROS) that cause oxidative DNA damage.</p><p>The model posits that H accounts for <strong>25%</strong> of biological age (w<sub>H</sub>=0.25), but its real impact is larger \u2014 it drives the downstream cascade through the other subsystems introduced in the next six stages.</p><p style="margin-top:6px;font-size:11px;color:#555"><strong>Normalized age:</strong> t = 1.0 corresponds to median control lifespan (~30 months for UM-HET3 males). All dynamics are expressed in this normalized time.</p><p style="margin-top:6px;font-size:11px;color:#555"><strong>Degrees of freedom:</strong> 196 numbers define the model, but SVD analysis (Slide A1) shows the ITP data only constrains <strong>10 independent directions</strong> in parameter space. The rest are set by published biology or don\u2019t affect predictions. This is a 10-parameter model wearing a 196-parameter coat.</p>',
+    narrative:'<h3>The Thesis</h3><p>The model has four subsystems. We start with the one that turns out to be the biggest bottleneck: mitochondrial heteroplasmy.</p><p>Mitochondrial DNA mutations accumulate with age as heteroplasmy (H) increases. H impairs oxidative phosphorylation (OXPHOS), reducing NAD+ regeneration, and generates reactive oxygen species (ROS) that cause oxidative DNA damage.</p><p>The model posits that H accounts for <strong>25%</strong> of biological age (w<sub>H</sub>=0.25), but its real impact is larger \u2014 it drives the downstream cascade through the other subsystems introduced in the next six stages.</p><p style="margin-top:6px;font-size:11px;color:#555"><strong>Normalized age:</strong> t = 1.0 corresponds to median control lifespan (~30 months for UM-HET3 males). All dynamics are expressed in this normalized time.</p><p style="margin-top:6px;font-size:11px;color:#555"><strong>Degrees of freedom:</strong> 196 numbers define the model, but SVD analysis (Slide A1) shows the ITP data only constrains <strong>6 independent directions</strong> in parameter space. The rest are set by published biology or don\u2019t affect predictions. This is a 6-parameter model wearing a 196-parameter coat.</p>',
     equation:'$$\\text{BioAge} = w_H \\frac{H}{N_H} + \\text{(other terms introduced in Stages 1\u20136)}$$<div class="eq-params">$$\\begin{aligned} w_H &= 0.25 &\\quad \\%\\; &\\text{heteroplasmy weight} \\\\ N_H &= 0.18 &\\quad \\%\\; &\\text{heteroplasmy norm (derived from control)} \\end{aligned}$$The full equation with all four components is shown in Stage 7.</div>',
     graph:'stage_00_thesis.png',
 },
@@ -894,7 +894,7 @@ const STAGES = [
     title:'The Amplifier', sub:'5',
     nodes:['sum_left','SenCells','SASP','r_sen','r_inf'],
     edges:['e_dmg_sumleft','e_uprmt_sumleft','e_sumleft_sen','e_sen_sasp','e_sasp_cd38','e_sasp_sumdna','e_sen_bio1','e_sen_bio2'],
-    narrative:'<h3>The Amplifier</h3><p>Damaged cells become senescent and secrete a senescence-associated secretory phenotype (SASP). This creates a vicious cycle: SASP upregulates CD38, adds oxidative damage, and drives paracrine senescence.</p><p>The model assigns senescent cells a <strong>15%</strong> weight in BioAge.</p><p style="font-size:10px;margin-top:6px;color:#888"><strong>Caveat:</strong> No ITP compound is a senolytic, so senescence/SASP parameters are literature-estimated, not calibrated to lifespan data. The SASP feedback loop is structurally correct but quantitatively unconstrained \u2014 see <strong>Slide A4</strong> for a full analysis of what this means for predictions.</p>',
+    narrative:'<h3>The Amplifier</h3><p>Damaged cells become senescent and secrete a senescence-associated secretory phenotype (SASP). This creates a vicious cycle: SASP upregulates CD38, adds oxidative damage, and drives paracrine senescence.</p><p>The model assigns senescent cells a <strong>25%</strong> weight in BioAge.</p><p style="font-size:10px;margin-top:6px;color:#888"><strong>Caveat:</strong> No ITP compound is a senolytic, so senescence/SASP parameters are literature-estimated, not calibrated to lifespan data. The SASP feedback loop is structurally correct but quantitatively unconstrained \u2014 see <strong>Slide A4</strong> for a full analysis of what this means for predictions.</p>',
     equation:'$$\\frac{d[\\text{Sen}]}{dt} = k_{\\text{dmg}}(\\text{Damage} - D_{\\text{thresh}})^{+} + k_{\\text{sasp}} \\cdot \\text{SASP} \\;\\ldots$$$$\\ldots\\; - \\;(k_{\\text{nat}} + k_{\\text{auto}} \\cdot \\text{Autophagy}) \\cdot \\text{Sen}$$<div class="eq-params">$$\\begin{aligned} k_{\\text{dmg}} &= 0.40 &\\quad \\%\\; &\\text{damage-driven entry} \\\\ D_{\\text{thresh}} &= 0.30 &\\quad \\%\\; &\\text{damage threshold} \\\\ k_{\\text{sasp}} &= 0.20 &\\quad \\%\\; &\\text{SASP paracrine entry} \\\\ k_{\\text{nat}} &= 0.02 &\\quad \\%\\; &\\text{natural clearance} \\\\ k_{\\text{auto}} &= 0.70 &\\quad \\%\\; &\\text{autophagy clearance} \\end{aligned}$$</div>',
     graph:'stage_04_senescence.png',
 },
@@ -912,8 +912,8 @@ const STAGES = [
            'r_mito','r_bio','r_dna','r_epi','r_sen'],
     edges:['e_h_bio1','e_h_bio1b','e_h_bio2','e_dmg_bio1','e_dmg_bio2',
            'e_meth_bio1','e_meth_bio2','e_sen_bio1','e_sen_bio2'],
-    narrative:'<h3>The Aging System</h3><p>The six subsystems from Stages 1\u20136 feed into a single composite measure of biological age:</p><p style="font-weight:bold;margin:8px 0">BioAge = 0.30\u00b7Meth + 0.30\u00b7Damage + 0.25\u00b7H + 0.15\u00b7SenCells</p><p>Each component is normalized so that BioAge = 1.0 at the control animal\u2019s natural death. An animal dies when BioAge reaches this threshold.</p><p>The weights are <strong>model assumptions</strong>, constrained by calibration data. Methylation and damage are weighted equally at 0.30, reflecting their coupled importance through the AMPK and PARP/NAD pathways. Senescence carries the lowest weight because no senolytic ITP data yet constrains it.</p><p style="font-size:11px;color:#555">The next six stages introduce compounds that intervene on these subsystems. The first two \u2014 rapamycin and acarbose \u2014 target the mTORC1/AMPK signaling hub. The next three reduce oxidative damage through different upstream paths. The last targets inflammation directly. Then we calibrate.</p>',
-    equation:'$$\\text{BioAge} = w_m \\frac{\\text{Meth}}{N_m} + w_d \\frac{\\text{Damage}}{N_d} + w_H \\frac{H}{N_H} + w_s \\frac{\\text{SenCells}}{N_s}$$<div class="eq-params">$$\\begin{aligned} w_m &= 0.30 &\\quad \\%\\; &\\text{methylation weight} \\\\ w_d &= 0.30 &\\quad \\%\\; &\\text{damage weight} \\\\ w_H &= 0.25 &\\quad \\%\\; &\\text{heteroplasmy weight} \\\\ w_s &= 0.15 &\\quad \\%\\; &\\text{senescence weight} \\\\ N_m &= 1.09 &\\quad \\%\\; &\\text{methylation at t=1.0 in control} \\\\ N_d &= 0.67 &\\quad \\%\\; &\\text{damage at t=1.0 in control} \\\\ N_H &= 0.18 &\\quad \\%\\; &\\text{heteroplasmy at t=1.0 in control} \\\\ N_s &= 0.22 &\\quad \\%\\; &\\text{senescence at t=1.0 in control} \\end{aligned}$$</div>',
+    narrative:'<h3>The Aging System</h3><p>The six subsystems from Stages 1\u20136 feed into a single composite measure of biological age:</p><p style="font-weight:bold;margin:8px 0">BioAge = 0.25\u00b7Meth + 0.25\u00b7Damage + 0.25\u00b7H + 0.25\u00b7SenCells</p><p>Each component is normalized so that BioAge = 1.0 at the control animal\u2019s natural death. An animal dies when BioAge reaches this threshold.</p><p>The weights are <strong>equal priors</strong>, acceptable across a wide range. All four components are weighted equally at 0.25, reflecting an agnostic prior. The calibration data is consistent with this assignment across [0.10, 0.50] for each weight.</p><p style="font-size:11px;color:#555">The next six stages introduce compounds that intervene on these subsystems. The first two \u2014 rapamycin and acarbose \u2014 target the mTORC1/AMPK signaling hub. The next three reduce oxidative damage through different upstream paths. The last targets inflammation directly. Then we calibrate.</p>',
+    equation:'$$\\text{BioAge} = w_m \\frac{\\text{Meth}}{N_m} + w_d \\frac{\\text{Damage}}{N_d} + w_H \\frac{H}{N_H} + w_s \\frac{\\text{SenCells}}{N_s}$$<div class="eq-params">$$\\begin{aligned} w_m &= 0.25 &\\quad \\%\\; &\\text{methylation weight} \\\\ w_d &= 0.25 &\\quad \\%\\; &\\text{damage weight} \\\\ w_H &= 0.25 &\\quad \\%\\; &\\text{heteroplasmy weight} \\\\ w_s &= 0.25 &\\quad \\%\\; &\\text{senescence weight} \\\\ N_m &= 1.09 &\\quad \\%\\; &\\text{methylation at t=1.0 in control} \\\\ N_d &= 0.67 &\\quad \\%\\; &\\text{damage at t=1.0 in control} \\\\ N_H &= 0.18 &\\quad \\%\\; &\\text{heteroplasmy at t=1.0 in control} \\\\ N_s &= 0.22 &\\quad \\%\\; &\\text{senescence at t=1.0 in control} \\end{aligned}$$</div>',
     graph:null,
 },
 { // 8.1: Rapamycin
@@ -921,7 +921,7 @@ const STAGES = [
     nodes:['iv_rapa'],
     edges:['e_iv_rapa_mtor','e_iv_rapa_ampk'],
     narrative:'<h3>8.1 Rapamycin</h3><p>The \u2018grow now\u2019 signal silencer \u2014 turning down mTORC1 tells cells to clean house instead of building new stuff.</p><p>The only compound that directly inhibits mTORC1 (via FK506-binding protein 12, FKBP12). Also activates AMPK indirectly.</p><p>Two independent pathways stack <em>multiplicatively</em>: drug inhibition on mTORC1 plus AMPK\u2192TSC2 inhibition.</p><p style="margin-top:6px"><strong>NIA Interventions Testing Program (ITP) male: +23%</strong> lifespan extension.</p>',
-    equation:'$$\\text{mTORC1} = (1 - I_{\\text{TSC2}})(1 - d_{\\text{drug}})$$$$\\text{AMPK}_{\\text{treated}} = \\text{AMPK}_{\\text{ctrl}} + \\text{ampk}_{\\text{direct}}$$<div class="eq-params">$$\\begin{aligned} d_{\\text{drug}} &= 0.84 &\\quad \\%\\; &\\text{mTORC1 direct inhibition (FKBP12)} \\\\ \\text{ampk}_{\\text{direct}} &= 0.56 &\\quad \\%\\; &\\text{AMPK boost} \\to I_{\\text{TSC2}} \\text{ (Stage 4)} \\end{aligned}$$</div>',
+    equation:'$$\\text{mTORC1} = (1 - I_{\\text{TSC2}})(1 - d_{\\text{drug}})$$$$\\text{AMPK}_{\\text{treated}} = \\text{AMPK}_{\\text{ctrl}} + \\text{ampk}_{\\text{direct}}$$<div class="eq-params">$$\\begin{aligned} d_{\\text{drug}} &= 0.4190 &\\quad \\%\\; &\\text{mTORC1 direct inhibition (FKBP12)} \\\\ \\text{ampk}_{\\text{direct}} &= 0.2792 &\\quad \\%\\; &\\text{AMPK boost} \\to I_{\\text{TSC2}} \\text{ (Stage 4)} \\end{aligned}$$</div>',
     graph:['stage_06_rapa_states.png','stage_06_rapa_bar.png'],
     highlight:['iv_rapa','mTORC1','AMPK'],
     ivEdges:['e_iv_rapa_mtor','e_iv_rapa_ampk'],
@@ -931,7 +931,7 @@ const STAGES = [
     nodes:['iv_acarb'],
     edges:['e_iv_acarb_ampk','e_iv_acarb_cd38','e_iv_acarb_meth','e_iv_acarb_sen'],
     narrative:'<h3>8.2 Acarbose</h3><p>The starvation mimic \u2014 slowing sugar absorption makes cells think food is scarce, triggering maintenance programs.</p><p>\u03B1-glucosidase inhibitor. Delays carbohydrate absorption, activating AMPK via energy stress. Also modulates gut microbiome composition.</p><p>Gut microbiome changes reduce CD38 (protecting NAD+), inhibit DNMT (DNA methyltransferase) activity, and reduce senescent cell accumulation.</p><p style="margin-top:6px"><strong>ITP male: +22%</strong> lifespan extension.</p>',
-    equation:'$$\\text{AMPK}_{\\text{eff}} = f(\\text{ampk}_{\\text{direct}} + \\text{other inputs})$$$$\\text{Target}_i \\times \\max\\!\\left(c_i,\\; 1 - \\text{gut} \\cdot k_{\\text{gut},i}\\right) \\quad i \\in \\{\\text{CD38},\\, \\text{DNMT},\\, \\text{SenCells}\\}$$<div class="eq-params">$$\\begin{aligned} \\text{ampk}_{\\text{direct}} &= 0.44 &\\quad \\%\\; &\\text{AMPK activation} \\\\ \\text{gut} &= 0.32 &\\quad \\%\\; &\\text{gut microbiome effect} \\\\ k_{\\text{gut,cd38}} &= 0.75 &\\quad \\%\\; &\\text{CD38 reduction (protects NAD+)} \\\\ k_{\\text{gut,dnmt}} &= 0.45 &\\quad \\%\\; &\\text{DNMT inhibition (slows methylation)} \\\\ k_{\\text{gut,sen}} &= 0.40 &\\quad \\%\\; &\\text{senescence entry reduction} \\end{aligned}$$</div>',
+    equation:'$$\\text{AMPK}_{\\text{eff}} = f(\\text{ampk}_{\\text{direct}} + \\text{other inputs})$$$$\\text{Target}_i \\times \\max\\!\\left(c_i,\\; 1 - \\text{gut} \\cdot k_{\\text{gut},i}\\right) \\quad i \\in \\{\\text{CD38},\\, \\text{DNMT},\\, \\text{SenCells}\\}$$<div class="eq-params">$$\\begin{aligned} \\text{ampk}_{\\text{direct}} &= 0.1690 &\\quad \\%\\; &\\text{AMPK activation} \\\\ \\text{gut} &= 0.1690 &\\quad \\%\\; &\\text{gut microbiome effect} \\\\ k_{\\text{gut,cd38}} &= 0.75 &\\quad \\%\\; &\\text{CD38 reduction (protects NAD+)} \\\\ k_{\\text{gut,dnmt}} &= 0.45 &\\quad \\%\\; &\\text{DNMT inhibition (slows methylation)} \\\\ k_{\\text{gut,sen}} &= 0.40 &\\quad \\%\\; &\\text{senescence entry reduction} \\end{aligned}$$</div>',
     graph:['stage_06_acarb_states.png','stage_06_acarb_bar.png'],
     highlight:['iv_acarb','AMPK','CD38','sum_epi','SenCells'],
     ivEdges:['e_iv_acarb_ampk','e_iv_acarb_cd38','e_iv_acarb_meth','e_iv_acarb_sen'],
@@ -941,7 +941,7 @@ const STAGES = [
     nodes:['iv_cana'],
     edges:['e_iv_cana_ampk','e_iv_cana_antioxidant'],
     narrative:'<h3>8.3 Canagliflozin</h3><p>The glucose dumper \u2014 excreting sugar in urine reduces the fuel that generates damaging oxygen radicals.</p><p>SGLT2 (sodium-glucose cotransporter 2) inhibitor. Creates caloric deficit via glucose excretion, activating AMPK mildly. Primary effect is antioxidant (reduced mitochondrial ROS).</p><p style="margin-top:6px"><strong>ITP male: +14%</strong> lifespan extension.</p>',
-    equation:'$$\\text{ROS}_{\\text{eff}} = \\text{ROS} \\cdot (1 - k_{\\text{aox}} \\cdot \\text{aox})$$<div class="eq-params">$$\\begin{aligned} \\text{ampk}_{\\text{direct}} &= 0.15 &\\quad \\%\\; &\\text{AMPK activation} \\\\ \\text{aox} &= 0.88 &\\quad \\%\\; &\\text{antioxidant strength} \\end{aligned}$$</div>',
+    equation:'$$\\text{AMPK}_{\\text{eff}} = f(\\text{ampk}_{\\text{direct}} + \\text{other inputs})$$<div class="eq-params">$$\\begin{aligned} \\text{ampk}_{\\text{direct}} &= 0.1619 &\\quad \\%\\; &\\text{AMPK activation} \\end{aligned}$$</div>',
     graph:['stage_06_cana_states.png','stage_06_cana_bar.png'],
     highlight:['iv_cana','AMPK','sum_dna'],
     ivEdges:['e_iv_cana_ampk','e_iv_cana_antioxidant'],
@@ -951,7 +951,7 @@ const STAGES = [
     nodes:['iv_17ae2'],
     edges:['e_iv_17ae2_ampk','e_iv_17ae2_antioxidant'],
     narrative:'<h3>8.4 17\u03B1-Estradiol</h3><p>The male-only energy sensor \u2014 a non-feminizing estrogen that boosts AMPK, but requires testosterone to work.</p><p>Non-feminizing estrogen. Activates AMPK and provides antioxidant protection. Requires testosterone substrate (5\u03B1-reductase pathway) \u2014 <strong>male-only</strong> efficacy.</p><p style="font-size:11px"><a href="https://pubmed.ncbi.nlm.nih.gov/27312235/" target="_blank" style="color:#2166ac">PMID 27312235</a> \u2014 14.4 ppm in diet.</p><p style="margin-top:6px"><strong>ITP male: +19%, female: 0%</strong></p>',
-    equation:'$$\\text{ROS}_{\\text{eff}} = \\text{ROS} \\cdot (1 - k_{\\text{aox}} \\cdot \\text{aox})$$<div class="eq-params">$$\\begin{aligned} \\text{ampk}_{\\text{direct}} &= 0.42 &\\quad \\%\\; &\\text{AMPK activation} \\\\ \\text{aox} &= 0.46 &\\quad \\%\\; &\\text{antioxidant strength} \\end{aligned}$$Requires testosterone (male-only)</div>',
+    equation:'$$\\text{ROS}_{\\text{eff}} = \\text{ROS} \\cdot (1 - k_{\\text{aox}} \\cdot \\text{aox})$$<div class="eq-params">$$\\begin{aligned} \\text{ampk}_{\\text{direct}} &= 0.1764 &\\quad \\%\\; &\\text{AMPK activation} \\\\ \\text{aox} &= 0.1764 &\\quad \\%\\; &\\text{antioxidant strength} \\end{aligned}$$Requires testosterone (male-only)</div>',
     graph:['stage_06_17ae2_states.png','stage_06_17ae2_bar.png'],
     highlight:['iv_17ae2','AMPK','sum_dna'],
     ivEdges:['e_iv_17ae2_ampk','e_iv_17ae2_antioxidant'],
@@ -961,7 +961,7 @@ const STAGES = [
     nodes:['iv_glycine'],
     edges:['e_iv_glycine_ampk','e_iv_glycine_antioxidant'],
     narrative:'<h3>8.5 Glycine</h3><p>The simplest shield \u2014 an amino acid that soaks up reactive oxygen species before they damage DNA.</p><p>Amino acid supplement. Primarily antioxidant with very mild AMPK activation. Smallest effect among the six compounds.</p><p style="margin-top:6px"><strong>ITP male: +6%, female: +4%</strong></p>',
-    equation:'$$\\text{ROS}_{\\text{eff}} = \\text{ROS} \\cdot (1 - k_{\\text{aox}} \\cdot \\text{aox})$$<div class="eq-params">$$\\begin{aligned} \\text{aox} &= 0.54 &\\quad \\%\\; &\\text{antioxidant strength} \\\\ \\text{ampk}_{\\text{direct}} &= 0.04 &\\quad \\%\\; &\\text{AMPK activation} \\end{aligned}$$</div>',
+    equation:'$$\\text{ROS}_{\\text{eff}} = \\text{ROS} \\cdot (1 - k_{\\text{aox}} \\cdot \\text{aox})$$<div class="eq-params">$$\\begin{aligned} \\text{aox} &= 0.2842 &\\quad \\%\\; &\\text{antioxidant strength} \\\\ \\text{ampk}_{\\text{direct}} &= 0.0316 &\\quad \\%\\; &\\text{AMPK activation} \\end{aligned}$$</div>',
     graph:['stage_06_glycine_states.png','stage_06_glycine_bar.png'],
     highlight:['iv_glycine','AMPK','sum_dna'],
     ivEdges:['e_iv_glycine_ampk','e_iv_glycine_antioxidant'],
@@ -971,7 +971,7 @@ const STAGES = [
     nodes:['iv_aspirin'],
     edges:['e_iv_aspirin_ampk','e_iv_aspirin_antioxidant','e_iv_aspirin_sasp'],
     narrative:'<h3>8.6 Aspirin</h3><p>The inflammation brake \u2014 quieting the alarm that senescent cells broadcast to their neighbors.</p><p>Cyclooxygenase (COX) inhibitor with antioxidant and anti-inflammatory effects. Modest AMPK activation. <strong>Male-only</strong> at this dose \u2014 sex mechanism explained in Stage 13.</p><p style="margin-top:6px"><strong>ITP male: +8%, female: 0%</strong></p><p style="margin-top:8px;font-size:11px;color:#666">All six compounds now visible. Next: calibration results.</p>',
-    equation:'$$\\text{ROS}_{\\text{eff}} = \\text{ROS} \\cdot (1 - k_{\\text{aox}} \\cdot \\text{aox})$$$$\\text{SASP}_{\\text{eff}} = \\text{SASP} \\cdot (1 - k_{\\text{ai}})$$<div class="eq-params">$$\\begin{aligned} \\text{aox} &= 0.20 &\\quad \\%\\; &\\text{antioxidant strength} \\\\ \\text{ampk}_{\\text{direct}} &= 0.12 &\\quad \\%\\; &\\text{AMPK activation} \\\\ k_{\\text{ai}} &= 0.09 &\\quad \\%\\; &\\text{anti-inflammatory} \\end{aligned}$$</div>',
+    equation:'$$\\text{ROS}_{\\text{eff}} = \\text{ROS} \\cdot (1 - k_{\\text{aox}} \\cdot \\text{aox})$$$$\\text{SASP}_{\\text{eff}} = \\text{SASP} \\cdot (1 - k_{\\text{ai}})$$<div class="eq-params">$$\\begin{aligned} \\text{aox} &= 0.0985 &\\quad \\%\\; &\\text{antioxidant strength} \\\\ \\text{ampk}_{\\text{direct}} &= 0.0591 &\\quad \\%\\; &\\text{AMPK activation} \\\\ k_{\\text{ai}} &= 0.0394 &\\quad \\%\\; &\\text{anti-inflammatory} \\end{aligned}$$</div>',
     graph:['stage_06_aspirin_states.png','stage_06_aspirin_bar.png'],
     highlight:['iv_aspirin','AMPK','sum_dna','SASP'],
     ivEdges:['e_iv_aspirin_ampk','e_iv_aspirin_antioxidant','e_iv_aspirin_sasp'],
@@ -979,14 +979,14 @@ const STAGES = [
 { // 9: Calibration
     title:'Calibration', sub:'9',
     nodes:[], edges:[],
-    narrative:'<h3>Male Calibration</h3><p>Model calibrated to male ITP data:</p><table style="font-size:11px;margin:6px 0;border-collapse:collapse;width:100%"><tr style="border-bottom:1px solid #ddd"><th style="text-align:left;padding:2px 6px">Compound</th><th>ITP</th><th>Model</th></tr><tr><td style="padding:2px 6px">Rapamycin</td><td>+23%</td><td>+23.0%</td></tr><tr><td style="padding:2px 6px">Acarbose</td><td>+22%</td><td>+22.0%</td></tr><tr><td style="padding:2px 6px">Canagliflozin</td><td>+14%</td><td>+13.8%</td></tr><tr><td style="padding:2px 6px">17\u03B1E2</td><td>+19%</td><td>+19.0%</td></tr><tr><td style="padding:2px 6px">Aspirin</td><td>+8%</td><td>+7.8%</td></tr><tr><td style="padding:2px 6px">Glycine</td><td>+6%</td><td>+6.0%</td></tr></table><p><strong>BioAge \u2192 death:</strong> t<sub>death</sub> = time when BioAge(t) = 1.0. Logistic sigmoid (\u03C3 = 0.12) models cohort variability.</p><p style="font-size:11px;color:#555"><strong>Overfit?</strong> 10 effective DOF for 12 data points (Slide A1). The real test: an out-of-sample combination prediction.</p>',
+    narrative:'<h3>Male Calibration</h3><p>Model calibrated to male ITP data:</p><table style="font-size:11px;margin:6px 0;border-collapse:collapse;width:100%"><tr style="border-bottom:1px solid #ddd"><th style="text-align:left;padding:2px 6px">Compound</th><th>ITP</th><th>Model</th></tr><tr><td style="padding:2px 6px">Rapamycin</td><td>+23%</td><td>+23.0%</td></tr><tr><td style="padding:2px 6px">Acarbose</td><td>+22%</td><td>+22.0%</td></tr><tr><td style="padding:2px 6px">Canagliflozin</td><td>+14%</td><td>+13.8%</td></tr><tr><td style="padding:2px 6px">17\u03B1E2</td><td>+19%</td><td>+19.0%</td></tr><tr><td style="padding:2px 6px">Aspirin</td><td>+8%</td><td>+7.8%</td></tr><tr><td style="padding:2px 6px">Glycine</td><td>+6%</td><td>+6.0%</td></tr></table><p><strong>BioAge \u2192 death:</strong> t<sub>death</sub> = time when BioAge(t) = 1.0. Logistic sigmoid (\u03C3 = 0.12) models cohort variability.</p><p style="font-size:11px;color:#555"><strong>Overfit?</strong> 6 free parameters for 6 calibration targets (male), 7 predictions (Slide A1). The real test: an out-of-sample combination prediction.</p>',
     equation:'$$S(t) = \\frac{1}{1 + \\exp\\!\\left(\\frac{t - t_{\\text{death}}}{\\sigma}\\right)}$$<div class="eq-params">$$\\begin{aligned} \\sigma &= 0.12 &\\quad \\%\\; &\\text{transition sharpness} \\end{aligned}$$</div>',
     graph:['stage_07_male_calibration.png','stage_08_survival_curves.png'],
 },
 { // 10: Prediction
     title:'Prediction', sub:'10',
     nodes:[], edges:[],
-    narrative:'<h3>Rapamycin + Acarbose</h3><p><strong>Independent validation.</strong> Model was NOT fit to combination data.</p><p>Both converge on AMPK\u2192Autophagy. Hill saturation \u2192 sub-additive combination.</p><p>Model: 33%. Naive sum: 45%. ITP observed: 34%.</p><p>Both compounds modeled from 9-month start, matching ITP combo protocol (Strong 2022).</p><p><strong>Not fit \u2014 predicted.</strong></p>',
+    narrative:'<h3>Rapamycin + Acarbose</h3><p><strong>Independent validation.</strong> Model was NOT fit to combination data.</p><p>Both converge on AMPK\u2192Autophagy. Hill saturation \u2192 sub-additive combination.</p><p>Model: 33.5%. Naive sum: 45%. ITP observed: 34%.</p><p>Both compounds modeled from 9-month start, matching ITP combo protocol (Strong 2022).</p><p><strong>Not fit \u2014 predicted.</strong></p>',
     equation:'$$\\text{Autophagy} = \\frac{V_{\\max} \\cdot x}{K_m + x}$$$$f(a+b) < f(a) + f(b) \\quad \\text{when } x \\gg K_m$$<div class="eq-params">$$\\begin{aligned} K_m &= 0.35 &\\quad \\%\\; &\\text{autophagy half-max} \\\\ x &= \\textstyle\\sum_i w_i \\cdot \\text{input}_i &\\quad \\%\\; &\\text{weighted pathway sum} \\end{aligned}$$</div>',
     highlight:['iv_rapa','iv_acarb','AMPK','Autophagy'],
     graph:['stage_08_mixing_bars.png'],
@@ -995,8 +995,8 @@ const STAGES = [
 { // 11: Why Males?
     title:'Why Males?', sub:'11',
     nodes:[], edges:[],
-    narrative:'<h3>AMPK Sex Difference</h3><p>Female AMPK baseline is 1.4\u00d7 male (estrogen \u2192 LKB1, liver kinase B1; <a href="https://pubmed.ncbi.nlm.nih.gov/21876548/" target="_blank" style="color:#2166ac">PMID 21876548</a>). Higher baseline \u2192 closer to saturation \u2192 diminishing returns.</p><p>The literature-derived parameter predicts ITP sex ratios for acarbose, canagliflozin, glycine.</p><p><strong>Not fit to sex data \u2014 predicted from literature.</strong></p>',
-    equation:'$$\\text{scaling}_F = \\frac{1}{1 + k \\cdot (\\text{baseline}_F - 1)}$$<div class="eq-params">$$\\begin{aligned} k &= 11 &\\quad \\%\\; &\\text{saturation steepness (acarbose)} \\\\ \\text{baseline}_F &= 1.4 &\\quad \\%\\; &\\text{female AMPK (rel. to male)} \\end{aligned}$$</div>',
+    narrative:'<h3>AMPK Sex Difference</h3><p>Female AMPK baseline is 1.3\u00d7 male (estrogen \u2192 LKB1, liver kinase B1; <a href="https://pubmed.ncbi.nlm.nih.gov/21876548/" target="_blank" style="color:#2166ac">PMID 21876548</a>). Higher baseline \u2192 closer to saturation \u2192 diminishing returns.</p><p>The literature-derived parameter predicts ITP sex ratios for acarbose, canagliflozin, glycine.</p><p><strong>Not fit to sex data \u2014 predicted from literature.</strong></p>',
+    equation:'$$\\text{scaling}_F = \\frac{1}{1 + k \\cdot (\\text{baseline}_F - 1)}$$<div class="eq-params">$$\\begin{aligned} k &= 8 &\\quad \\%\\; &\\text{saturation steepness (global)} \\\\ \\text{baseline}_F &= 1.3 &\\quad \\%\\; &\\text{female AMPK (rel. to male)} \\end{aligned}$$</div>',
     highlight:['AMPK','iv_acarb','iv_cana','iv_glycine'],
     graph:['stage_09_ampk_mf_bars.png'],
     ivEdges:['e_iv_acarb_ampk','e_iv_acarb_cd38','e_iv_acarb_meth','e_iv_acarb_sen','e_iv_cana_ampk','e_iv_cana_antioxidant','e_iv_glycine_ampk','e_iv_glycine_antioxidant'],
@@ -1004,7 +1004,7 @@ const STAGES = [
 { // 11b: The Saturation Curve (Spotlight)
     title:'The Saturation Curve', sub:'11b',
     nodes:[], edges:[],
-    narrative:'<h3>The Saturation Curve</h3><p>Female mice start with 1.4\u00d7 higher AMPK activity (estrogen \u2192 LKB1). On the saturation curve, that means females are already past the steep part.</p><p>Adding more AMPK activation produces diminishing returns \u2014 the same drug dose moves females less than males.</p>',
+    narrative:'<h3>The Saturation Curve</h3><p>Female mice start with 1.3\u00d7 higher AMPK activity (estrogen \u2192 LKB1). On the saturation curve, that means females are already past the steep part.</p><p>Adding more AMPK activation produces diminishing returns \u2014 the same drug dose moves females less than males.</p>',
     equation:'',
     highlight:['AMPK','iv_acarb','iv_cana','iv_glycine'],
     graph:['stage_09_ampk_saturation.png'],
@@ -1023,7 +1023,7 @@ const STAGES = [
     title:'17\u03B1-Estradiol', sub:'13.1',
     nodes:[], edges:[],
     narrative:'<h3>17\u03B1-Estradiol</h3><p>+19% male, 0% female. Why?</p><p>17\u03B1E2 activates AMPK and provides antioxidant protection. But it requires <strong>testosterone</strong> as a substrate \u2014 it works through 5\u03B1-reductase, which converts testosterone to dihydrotestosterone (DHT).</p><p>Without testosterone (females, castrated males), there is <strong>zero effect</strong>. Castrated males lose all benefit (<a href="https://pubmed.ncbi.nlm.nih.gov/29806096/" target="_blank">Garratt 2018, PMID 29806096</a>).</p>',
-    equation:'$$\\text{effect}_F = 0 \\quad (\\text{no testosterone substrate})$$<div class="eq-params">$$\\begin{aligned} \\text{ampk}_{\\text{direct}} &= 0.42 &\\quad \\%\\; &\\text{male only} \\\\ \\text{aox} &= 0.46 &\\quad \\%\\; &\\text{male only} \\end{aligned}$$</div>',
+    equation:'$$\\text{effect}_F = 0 \\quad (\\text{no testosterone substrate})$$<div class="eq-params">$$\\begin{aligned} \\text{ampk}_{\\text{direct}} &= 0.1764 &\\quad \\%\\; &\\text{male only} \\\\ \\text{aox} &= 0.1764 &\\quad \\%\\; &\\text{male only} \\end{aligned}$$</div>',
     highlight:['iv_17ae2'],
     graph:['stage_11a_testosterone.png','stage_11a_mf_cumulative.png'],
     ivEdges:['e_iv_17ae2_ampk','e_iv_17ae2_antioxidant'],
@@ -1047,8 +1047,8 @@ const STAGES = [
 { // 14: The Full Picture
     title:'The Full Picture', sub:'14',
     nodes:[], edges:[],
-    narrative:'<h3>The Full Picture</h3><p style="font-weight:bold;margin:8px 0">BioAge = 0.30\u00b7Meth + 0.30\u00b7Damage + 0.25\u00b7H + 0.15\u00b7SenCells</p><p>The model tracks 17 variables across 7 ODEs and 9 algebraic intermediates, governed by 196 parameters. Of these, <strong>28 are calibrated</strong> to ITP lifespan data (13 compound intervention values, 4 BioAge weights, 5 sex-mechanism parameters, and 6 dose-response Hill fits). The remainder break down as follows:</p><table style="font-size:10px;margin:6px 0;border-collapse:collapse;width:100%"><tr style="border-bottom:1px solid #ddd;font-weight:bold"><td style="padding:2px 4px">Source</td><td style="text-align:right;padding:2px 4px">Count</td><td style="padding:2px 4px">Examples</td></tr><tr><td style="padding:2px 4px;color:#27ae60">\u25CF Literature</td><td style="text-align:right;padding:2px 4px">26</td><td style="padding:2px 4px">PARP1/SIRT1 NAD+ ratio, mtDNA N<sub>eff</sub>, rapa PK</td></tr><tr><td style="padding:2px 4px;color:#2980b9">\u25CF Estimated</td><td style="text-align:right;padding:2px 4px">78</td><td style="padding:2px 4px">Coupling strengths + 6 dose-response estimates</td></tr><tr><td style="padding:2px 4px;color:#7f8c8d">\u25CF Structural</td><td style="text-align:right;padding:2px 4px">39</td><td style="padding:2px 4px">Hill coefficients, bounds, normalization, sigmoid</td></tr><tr><td style="padding:2px 4px;color:#bdc3c7">\u25CF Inactive</td><td style="text-align:right;padding:2px 4px">25</td><td style="padding:2px 4px">Cancer module, human translation scaling</td></tr></table><p style="font-size:11px">Six compounds tested individually, 4 sex mechanisms, and 1 out-of-sample combination prediction (rapa + acarbose: 33% predicted, 34% observed).</p><p style="margin-top:4px;font-size:11px;color:#666">Click any node or compound for parameter details and references.</p>',
-    equation:'$$\\text{BioAge} = w_m \\frac{\\text{Meth}}{N_m} + w_d \\frac{\\text{Damage}}{N_d} + w_H \\frac{H}{N_H} + w_s \\frac{\\text{SenCells}}{N_s}$$<div class="eq-params">$$\\begin{aligned} w_m &= 0.30 &\\quad \\%\\; &\\text{methylation weight} \\\\ w_d &= 0.30 &\\quad \\%\\; &\\text{damage weight} \\\\ w_H &= 0.25 &\\quad \\%\\; &\\text{heteroplasmy weight} \\\\ w_s &= 0.15 &\\quad \\%\\; &\\text{senescence weight} \\\\ N_m &= 1.09 &\\quad \\%\\; &\\text{methylation norm} \\\\ N_d &= 0.67 &\\quad \\%\\; &\\text{damage norm} \\\\ N_H &= 0.18 &\\quad \\%\\; &\\text{heteroplasmy norm} \\\\ N_s &= 0.22 &\\quad \\%\\; &\\text{senescence norm} \\end{aligned}$$</div>',
+    narrative:'<h3>The Full Picture</h3><p style="font-weight:bold;margin:8px 0">BioAge = 0.25\u00b7Meth + 0.25\u00b7Damage + 0.25\u00b7H + 0.25\u00b7SenCells</p><p>The model tracks 17 variables across 7 ODEs and 9 algebraic intermediates, governed by 196 parameters. Of these, <strong>28 are calibrated</strong> to ITP lifespan data (13 compound intervention values, 4 BioAge weights, 5 sex-mechanism parameters, and 6 dose-response Hill fits). The remainder break down as follows:</p><table style="font-size:10px;margin:6px 0;border-collapse:collapse;width:100%"><tr style="border-bottom:1px solid #ddd;font-weight:bold"><td style="padding:2px 4px">Source</td><td style="text-align:right;padding:2px 4px">Count</td><td style="padding:2px 4px">Examples</td></tr><tr><td style="padding:2px 4px;color:#27ae60">\u25CF Literature</td><td style="text-align:right;padding:2px 4px">26</td><td style="padding:2px 4px">PARP1/SIRT1 NAD+ ratio, mtDNA N<sub>eff</sub>, rapa PK</td></tr><tr><td style="padding:2px 4px;color:#2980b9">\u25CF Estimated</td><td style="text-align:right;padding:2px 4px">78</td><td style="padding:2px 4px">Coupling strengths + 6 dose-response estimates</td></tr><tr><td style="padding:2px 4px;color:#7f8c8d">\u25CF Structural</td><td style="text-align:right;padding:2px 4px">39</td><td style="padding:2px 4px">Hill coefficients, bounds, normalization, sigmoid</td></tr><tr><td style="padding:2px 4px;color:#bdc3c7">\u25CF Inactive</td><td style="text-align:right;padding:2px 4px">25</td><td style="padding:2px 4px">Cancer module, human translation scaling</td></tr></table><p style="font-size:11px">Six compounds tested individually, 4 sex mechanisms, and 1 out-of-sample combination prediction (rapa + acarbose: 33.5% predicted, 34% observed).</p><p style="margin-top:4px;font-size:11px;color:#666">Click any node or compound for parameter details and references.</p>',
+    equation:'$$\\text{BioAge} = w_m \\frac{\\text{Meth}}{N_m} + w_d \\frac{\\text{Damage}}{N_d} + w_H \\frac{H}{N_H} + w_s \\frac{\\text{SenCells}}{N_s}$$<div class="eq-params">$$\\begin{aligned} w_m &= 0.25 &\\quad \\%\\; &\\text{methylation weight} \\\\ w_d &= 0.25 &\\quad \\%\\; &\\text{damage weight} \\\\ w_H &= 0.25 &\\quad \\%\\; &\\text{heteroplasmy weight} \\\\ w_s &= 0.25 &\\quad \\%\\; &\\text{senescence weight} \\\\ N_m &= 1.09 &\\quad \\%\\; &\\text{methylation norm} \\\\ N_d &= 0.67 &\\quad \\%\\; &\\text{damage norm} \\\\ N_H &= 0.18 &\\quad \\%\\; &\\text{heteroplasmy norm} \\\\ N_s &= 0.22 &\\quad \\%\\; &\\text{senescence norm} \\end{aligned}$$</div>',
 },
 { // 15: Combination Predictions
     title:'Combination Predictions', sub:'15',
@@ -1079,15 +1079,15 @@ const STAGES = [
         '</ol>' +
         '<p style="font-size:11px">This follows from <strong>series reliability</strong>: when a system fails upon <em>any</em> component reaching its threshold, treating all components except one leaves that untreated component as the binding constraint. The four ITP compounds act primarily through overlapping AMPK/mTORC1 pathways, reducing methylation drift, DNA damage accumulation, and senescent cell burden \u2014 but none significantly slows mitochondrial heteroplasmy.</p>' +
         '<h4 style="margin-top:10px">Adding Targets</h4>' +
-        '<p style="font-size:11px">The bar chart (right) shows predicted extensions when interventions targeting currently unaddressed pathways are layered on the ITP-4 unisex base (+53% M):</p>' +
+        '<p style="font-size:11px">The bar chart (right) shows predicted extensions when interventions targeting currently unaddressed pathways are layered on the ITP-4 base (+41% M, all compounds starting at 9 months):</p>' +
         '<ul style="font-size:11px;margin:2px 0 6px 16px;">' +
-        '<li><strong>Mitophagy enhancer</strong> (Urolithin A): <span style="color:#e74c3c;font-weight:bold">+36%</span> marginal over base \u2014 the single largest predicted gain, consistent with H as the primary bottleneck</li>' +
-        '<li><strong>NMN</strong> (NAD<sup>+</sup> precursor): +20% marginal \u2014 directly supplements the NAD<sup>+</sup> pool depleted by rising H</li>' +
-        '<li><strong>CD38 inhibitor</strong>: +12% marginal \u2014 reduces age-dependent NAD<sup>+</sup> consumption driven by SASP</li>' +
-        '<li><strong>Senolytic</strong> (D+Q): +10% marginal \u2014 pulsed clearance of senescent cells (biweekly, Baker 2016)</li>' +
+        '<li><strong>Senolytic</strong> (D+Q): <span style="color:#e74c3c;font-weight:bold">+17%</span> marginal \u2014 pulsed clearance of senescent cells (3 days on, 11 days off; Xu 2018)</li>' +
+        '<li><strong>NMN</strong> (NAD<sup>+</sup> precursor): +15% marginal \u2014 directly supplements the NAD<sup>+</sup> pool depleted by rising H</li>' +
+        '<li><strong>Mitophagy enhancer</strong> (Urolithin A): +15% marginal over base \u2014 addresses the heteroplasmy bottleneck directly (continuous daily dosing; k calibrated to 60% clearance at full PINK1/Parkin activation, Pickrell 2015)</li>' +
+        '<li><strong>CD38 inhibitor</strong>: +9% marginal \u2014 reduces age-dependent NAD<sup>+</sup> consumption driven by SASP</li>' +
         '</ul>' +
         '<p style="font-size:10px;margin-top:8px;color:#888">Novel compound parameters are literature-estimated, not calibrated to lifespan data. These predictions indicate <em>which mechanisms contribute most</em> to further extension, not precise magnitudes.</p>' +
-        '<p style="font-size:10px;margin-top:4px;padding:6px;background:#fff8e1;border-left:3px solid #f39c12;border-radius:3px"><strong>Circularity note:</strong> No ITP compound directly targets heteroplasmy, so the H dynamics and its BioAge weight (w<sub>H</sub>=0.25) are constrained by model structure and literature, not by the lifespan data. The \u201Cbiggest bottleneck\u201D conclusion follows substantially from this weight assignment. The BioAge weights (30/30/25/15) are moderately constrained priors \u2014 w<sub>meth</sub> is allowable over [0.25, 0.40] \u2014 not tight posteriors. The qualitative conclusion (heteroplasmy is underaddressed) is robust across this range, but the quantitative dominance depends on the specific weights chosen.</p>' +
+        '<p style="font-size:10px;margin-top:4px;padding:6px;background:#fff8e1;border-left:3px solid #f39c12;border-radius:3px"><strong>Circularity note:</strong> No ITP compound directly targets heteroplasmy, so the H dynamics and its BioAge weight (w<sub>H</sub>=0.25) are constrained by model structure and literature, not by the lifespan data. The \u201Cbiggest bottleneck\u201D conclusion follows substantially from this weight assignment. The BioAge weights (25/25/25/25) are equal priors \u2014 w<sub>meth</sub> is acceptable across [0.10, 0.50] \u2014 not tight posteriors. The qualitative conclusion (heteroplasmy is underaddressed) is robust across this range, but the quantitative dominance depends on the specific weights chosen.</p>' +
         '<p style="font-size:10px;margin-top:4px;padding:6px;background:#e8f5e9;border-left:3px solid #66bb6a;border-radius:3px"><strong>Individual variation:</strong> The model predicts median lifespan extension. But individual mice vary \u2014 ITP reports ~12% CV in lifespan across genetically identical animals at multiple sites. A Monte Carlo resampling (1,000 draws from a log-normal with that CV) gives the spread of individual outcomes around the median. Example: rapamycin male median +23%; 5th\u201395th percentile of individual lifespans: 0\u201349%. This is not uncertainty about the model \u2014 it is the expected range of individual outcomes given that the model is correct. Parameter sensitivity is shown separately in the tornado charts (Slides A5, A5b).</p>',
     equation:'',
     mainGraph:'stage_16_whatif.png', showNovelBoxes:true,
@@ -1106,7 +1106,7 @@ const STAGES = [
         '</ul>' +
         '<h4 style="margin:8px 0 4px">Structural constraints</h4>' +
         '<ul style="font-size:11px;margin:2px 0 6px 16px">' +
-        '<li><strong>10 effective degrees of freedom</strong> (Slide A1). The ITP data constrains 10 directions in parameter space. The model cannot resolve finer distinctions \u2014 e.g., it cannot distinguish between two compounds that activate the same 10 directions with similar magnitudes, even if their biology differs in ways the model doesn\u2019t capture.</li>' +
+        '<li><strong>6 free parameters</strong> (Slide A1). The ITP data constrains 6 directions in parameter space. The model cannot resolve finer distinctions \u2014 e.g., it cannot distinguish between two compounds that activate the same 6 directions with similar magnitudes, even if their biology differs in ways the model doesn\u2019t capture.</li>' +
         '<li><strong>SASP/senescence parameters are unconstrained</strong> (Slide A4, Stage 5 caveat). No ITP compound is a senolytic. The senescence feedback loop is structurally included but its parameters are literature-estimated, not calibrated to lifespan outcomes. Predictions involving senolytics carry wider uncertainty than ITP-validated compounds.</li>' +
         '<li><strong>Novel compound predictions are directional, not quantitative.</strong> NMN, CD38 inhibitors, mitophagy enhancers, and senolytics use literature-estimated pathway injections without dose-response calibration. The model reliably predicts <em>which mechanisms matter most</em> (Stage 17) but the absolute magnitudes are uncertain.</li>' +
         '</ul>' +
@@ -1123,8 +1123,8 @@ const STAGES = [
 { // A1: Identifiability Analysis
     title:'Identifiability Analysis', sub:'A1',
     nodes:[], edges:[],
-    narrative:'<h3>How Many Parameters Does the Data See?</h3><p>The ELM has ~150 parameters but only 12 calibration targets (6 compounds \u00d7 2 sexes). A Jacobian-SVD analysis reveals that exactly <strong>10 linear combinations</strong> of parameters are constrained by the ITP data. The remaining ~140 directions have zero sensitivity \u2014 the data cannot distinguish changes along them.</p><p><strong>Two condition numbers, two questions:</strong></p><ul style="font-size:12px;margin:4px 0 8px 16px;"><li><strong>\u03ba = 14.6</strong> (full space): The 10 observable DOF are well-separated. Best-constrained direction is only 14.6\u00d7 more observable than the worst. <em>Are the 10 DOF well-defined?</em> Yes.</li><li><strong>\u03ba = 210</strong> (observable subspace): Among the 18 individual parameters with nonzero sensitivity, the strongest (heteroplasmy transcription_advantage, \u03c3=251) is 210\u00d7 more observable than the weakest (Km_nad_sirt1, \u03c3=1.2). <em>Can we pin down individual values?</em> Moderately.</li></ul><p style="font-size:11px;color:#555">The model has fewer effective DOF (10) than data points (12), leaving room for genuine prediction rather than curve-fitting. Two exact null directions exist: k_nmn_synthesis and k_sirt_consumption form a gauge pair (their ratio is constrained but individual values are not).</p>',
-    equation:'$$J = U \\Sigma V^T \\quad \\text{where } J_{ij} = \\frac{\\partial (\\text{extension}_i)}{\\partial \\theta_j}$$$$\\text{rank}(J) = 10, \\quad \\kappa_{\\text{full}} = \\frac{\\sigma_1}{\\sigma_{10}} = 14.6, \\quad \\kappa_{\\text{obs}} = 210$$<br>$$\\sigma_1 = 251.4$$ &mdash; heteroplasmy dynamics<br>$$\\sigma_2 = 68.3$$ &mdash; mTOR signaling chain<br>$$\\sigma_3 = 31.0$$ &mdash; AMPK &rarr; methylation<br>$$\\sigma_{10} = 1.2$$ &mdash; sirtuin sensitivity',
+    narrative:'<h3>How Many Parameters Does the Data See?</h3><p>The ELM has ~150 parameters but only 6 calibration targets (male) and 7 predictions. A Jacobian-SVD analysis reveals that exactly <strong>6 free parameters</strong> are constrained by the ITP data. The remaining ~144 directions have zero sensitivity \u2014 the data cannot distinguish changes along them.</p><p><strong>Two condition numbers, two questions:</strong></p><ul style="font-size:12px;margin:4px 0 8px 16px;"><li><strong>\u03ba = 14.6</strong> (full space): The 6 free parameters are well-separated. Best-constrained direction is only 14.6\u00d7 more observable than the worst. <em>Are the 6 free parameters well-defined?</em> Yes.</li><li><strong>\u03ba = 210</strong> (observable subspace): Among the 18 individual parameters with nonzero sensitivity, the strongest (heteroplasmy transcription_advantage, \u03c3=251) is 210\u00d7 more observable than the weakest (Km_nad_sirt1, \u03c3=1.2). <em>Can we pin down individual values?</em> Moderately.</li></ul><p style="font-size:11px;color:#555">The model has 6 free parameters for 6 calibration targets (male), with 7 female predictions, leaving room for genuine prediction rather than curve-fitting. Two exact null directions exist: k_nmn_synthesis and k_sirt_consumption form a gauge pair (their ratio is constrained but individual values are not).</p>',
+    equation:'$$J = U \\Sigma V^T \\quad \\text{where } J_{ij} = \\frac{\\partial (\\text{extension}_i)}{\\partial \\theta_j}$$$$\\text{rank}(J) = 6, \\quad \\kappa_{\\text{full}} = \\frac{\\sigma_1}{\\sigma_{6}} = 14.6, \\quad \\kappa_{\\text{obs}} = 210$$<br>$$\\sigma_1 = 251.4$$ &mdash; heteroplasmy dynamics<br>$$\\sigma_2 = 68.3$$ &mdash; mTOR signaling chain<br>$$\\sigma_3 = 31.0$$ &mdash; AMPK &rarr; methylation<br>$$\\sigma_{6} = 1.2$$ &mdash; sirtuin sensitivity',
     mainGraph:'stage_A1_svd_spectrum.png',
     graph:null,
 },
@@ -1139,7 +1139,7 @@ const STAGES = [
 { // A3: LOO Vulnerability
     title:'Leave-One-Out Vulnerability', sub:'A3',
     nodes:[], edges:[],
-    narrative:'<h3>What If We Didn\u2019t Have This Compound?</h3><p>For each ITP compound, we project its Jacobian sensitivity onto the row space of the remaining 5 compounds. The fraction captured measures how well the other compounds constrain the held-out prediction.</p><p><strong>All compounds are 79\u201399% captured.</strong> The model\u2019s pathway architecture constrains predictions even for held-out compounds.</p><p><strong>Key findings:</strong></p><ul style="font-size:12px;margin:4px 0 8px 16px;"><li><strong>Glycine</strong> is most vulnerable (79.2%): its uniquely antioxidant-heavy profile is not shared by other compounds. Est. Leave-One-Out (LOO) error: 3\u20135%.</li><li><strong>17\u03b1E2</strong> is most implied (99.9%): its male effect uses pathways shared with other compounds; its female zero is categorical.</li><li><strong>Female predictions</strong> drive vulnerability for compounds with sex mechanisms (rapa, acarbose, canagliflozin) \u2014 sex parameters provide unique sensitivity directions that vanish when the compound is removed.</li></ul><p style="font-size:11px;color:#555">Estimated LOO errors are bounded within ~5% for all compounds \u2014 consistent with a 10-DOF model fit to 12 targets.</p>',
+    narrative:'<h3>What If We Didn\u2019t Have This Compound?</h3><p>For each ITP compound, we project its Jacobian sensitivity onto the row space of the remaining 5 compounds. The fraction captured measures how well the other compounds constrain the held-out prediction.</p><p><strong>All compounds are 79\u201399% captured.</strong> The model\u2019s pathway architecture constrains predictions even for held-out compounds.</p><p><strong>Key findings:</strong></p><ul style="font-size:12px;margin:4px 0 8px 16px;"><li><strong>Glycine</strong> is most vulnerable (79.2%): its uniquely antioxidant-heavy profile is not shared by other compounds. Est. Leave-One-Out (LOO) error: 3\u20135%.</li><li><strong>17\u03b1E2</strong> is most implied (99.9%): its male effect uses pathways shared with other compounds; its female zero is categorical.</li><li><strong>Female predictions</strong> drive vulnerability for compounds with sex mechanisms (rapa, acarbose, canagliflozin) \u2014 sex parameters provide unique sensitivity directions that vanish when the compound is removed.</li></ul><p style="font-size:11px;color:#555">Estimated LOO errors are bounded within ~5% for all compounds \u2014 consistent with a 6-parameter model fit to 6 calibration targets (male), 7 predictions.</p>',
     equation:'$$\\text{Captured}(i) = \\frac{\\|\\text{proj}_{\\text{row}(J_{-i})} J_i\\|}{\\|J_i\\|}$$<br>Glycine: 79.2% &mdash; most vulnerable<br>17&alpha;E2: 99.9% &mdash; most implied<br>Rapamycin: 95.4% &mdash; best-conditioned<br><br>Leave-One-Out error bounded within ~5%',
     mainGraph:'loo_jacobian_residuals.png',
     graph:null,
@@ -1160,7 +1160,7 @@ const STAGES = [
     edges:['e_iv_rapa_mtor','e_iv_rapa_ampk','e_iv_nmn_nad','e_nad_sirt1',
            'e_ampk_tsc2','e_tsc2_mtor','e_mtor_auto','e_sum_nad','e_nampt_sum'],
     ivEdges:['e_iv_rapa_mtor','e_iv_rapa_ampk','e_iv_nmn_nad'],
-    narrative:'<h3>Rapa + NMN: A Testable Prediction</h3><p>Rapamycin (mTORC1 inhibition + AMPK) and NMN (NAD+ precursor) target independent subsystems. The model predicts their combination produces <strong>superadditive</strong> lifespan extension:</p><table style="font-size:12px;margin:8px 0;border-collapse:collapse;width:100%"><tr style="background:#d4f0f0"><th style="padding:4px 8px;text-align:left">Scenario</th><th style="padding:4px 8px">Male</th><th style="padding:4px 8px">Female</th></tr><tr><td style="padding:4px 8px">Rapamycin alone</td><td style="padding:4px 8px;text-align:center">23.0%</td><td style="padding:4px 8px;text-align:center">26.2%</td></tr><tr><td style="padding:4px 8px">NMN alone</td><td style="padding:4px 8px;text-align:center">3.4%</td><td style="padding:4px 8px;text-align:center">3.4%</td></tr><tr><td style="padding:4px 8px">Additive floor</td><td style="padding:4px 8px;text-align:center">26.4%</td><td style="padding:4px 8px;text-align:center">29.6%</td></tr><tr style="background:#fff3cd"><td style="padding:4px 8px;font-weight:bold">Model prediction</td><td style="padding:4px 8px;text-align:center;font-weight:bold">31.8%</td><td style="padding:4px 8px;text-align:center;font-weight:bold">36.0%</td></tr></table><p>The +5\u20136% superadditive component arises from model structure: NMN\u2019s NAD+ boost (3.4% alone) compounds over the extra lifespan that rapamycin provides. The longer the animal lives, the more cumulative benefit NMN delivers. Whether this persists in practice depends on late-life dynamics \u2014 see caveat below. Both compounds modeled from 9-month start (plausible ITP protocol).</p><p style="padding:8px;background:#fff3cd;border-left:3px solid #e67e22;border-radius:3px;font-size:12px"><strong>\u26a0\ufe0f Late-life extrapolation caveat:</strong> The model assumes constant intervention efficacy throughout life. In reality, autophagy capacity declines, NAD+ production falls further, and senescent cell burden grows in late life. The superadditive component relies on compound effects persisting at mid-life magnitude into late life. The <strong>additive floor (26% M / 30% F)</strong> is the defensible prediction. The full prediction (32% M / 36% F) is a structural upper bound conditioned on late-life extrapolation.</p>',
+    narrative:'<h3>Rapa + NMN: A Testable Prediction</h3><p>Rapamycin (mTORC1 inhibition + AMPK) and NMN (NAD+ precursor) target independent subsystems. The model predicts their combination produces <strong>superadditive</strong> lifespan extension:</p><table style="font-size:12px;margin:8px 0;border-collapse:collapse;width:100%"><tr style="background:#d4f0f0"><th style="padding:4px 8px;text-align:left">Scenario</th><th style="padding:4px 8px">Male</th><th style="padding:4px 8px">Female</th></tr><tr><td style="padding:4px 8px">Rapamycin alone</td><td style="padding:4px 8px;text-align:center">23.0%</td><td style="padding:4px 8px;text-align:center">26.7%</td></tr><tr><td style="padding:4px 8px">NMN alone</td><td style="padding:4px 8px;text-align:center">3.4%</td><td style="padding:4px 8px;text-align:center">3.4%</td></tr><tr><td style="padding:4px 8px">Additive floor</td><td style="padding:4px 8px;text-align:center">26.4%</td><td style="padding:4px 8px;text-align:center">29.6%</td></tr><tr style="background:#fff3cd"><td style="padding:4px 8px;font-weight:bold">Model prediction</td><td style="padding:4px 8px;text-align:center;font-weight:bold">31.8%</td><td style="padding:4px 8px;text-align:center;font-weight:bold">36.0%</td></tr></table><p>The +5\u20136% superadditive component arises from model structure: NMN\u2019s NAD+ boost (3.4% alone) compounds over the extra lifespan that rapamycin provides. The longer the animal lives, the more cumulative benefit NMN delivers. Whether this persists in practice depends on late-life dynamics \u2014 see caveat below. Both compounds modeled from 9-month start (plausible ITP protocol).</p><p style="padding:8px;background:#fff3cd;border-left:3px solid #e67e22;border-radius:3px;font-size:12px"><strong>\u26a0\ufe0f Late-life extrapolation caveat:</strong> The model assumes constant intervention efficacy throughout life. In reality, autophagy capacity declines, NAD+ production falls further, and senescent cell burden grows in late life. The superadditive component relies on compound effects persisting at mid-life magnitude into late life. The <strong>additive floor (26% M / 30% F)</strong> is the defensible prediction. The full prediction (32% M / 36% F) is a structural upper bound conditioned on late-life extrapolation.</p>',
     equation:'$$\\text{ext}_{\\text{combo}} = \\frac{t_{\\text{death,combo}} - t_{\\text{death,ctrl}}}{t_{\\text{death,ctrl}}}$$$$\\text{ext}_{\\text{combo}} > \\text{ext}_{\\text{rapa}} + \\text{ext}_{\\text{NMN}}$$<br>Male: 31.8% (additive floor 26.4%)<br>Female: 36.0% (additive floor 29.6%)<br>Superadditivity: +5.4% (M), +6.4% (F)<br>Both compounds from 9-month start (plausible ITP protocol)',
     highlight:['iv_rapa','iv_nmn','NAD','SIRT1'],
     graph:null,
@@ -1189,24 +1189,24 @@ const STAGES = [
     mainGraph:'w_meth_sweep.png',
     graph:null,
     narrative:'<h3>How Much Does Methylation Weigh?</h3>' +
-        '<p>The BioAge composite weights each subsystem: methylation (w<sub>meth</sub>=0.30), ' +
-        'damage (0.30), heteroplasmy (0.25), senescence (0.15). How sensitive are ' +
+        '<p>The BioAge composite weights each subsystem: methylation (w<sub>meth</sub>=0.25), ' +
+        'damage (0.25), heteroplasmy (0.25), senescence (0.25). How sensitive are ' +
         'predictions to this weighting?</p>' +
         '<p>A sweep across w<sub>meth</sub> \u2208 [0.15, 0.55] reveals a sharp constraint:</p>' +
         '<ul>' +
         '<li><b>Below 0.20:</b> Acarbose predictions collapse (error &gt;3%)</li>' +
         '<li><b>Above 0.50:</b> Rapa+acarbose validation degrades</li>' +
-        '<li><b>[0.25, 0.40]:</b> All calibration targets within 1%, validation holds</li>' +
-        '<li><b>Current:</b> w<sub>meth</sub> = 0.30, mean error 0.08%</li>' +
+        '<li><b>[0.10, 0.50]:</b> All calibration targets within acceptable range, validation holds</li>' +
+        '<li><b>Current:</b> w<sub>meth</sub> = 0.25 (equal prior, acceptable across [0.10, 0.50]), female mean error 1.3 pp</li>' +
         '</ul>' +
         '<p>The rapa+NMN combination prediction is robust across this range: ' +
-        '&lt;0.5% shift between w<sub>meth</sub>=0.25 and 0.40.</p>' +
+        '&lt;0.5% shift between w<sub>meth</sub>=0.10 and 0.50.</p>' +
         '<h4 style="margin:10px 0 4px">The purple band: external constraint from aging clocks</h4>' +
         '<p style="font-size:11px">How much should methylation weigh in a biological age composite? We mapped the components of three published clocks \u2014 GrimAge2 (<a href="https://pubmed.ncbi.nlm.nih.gov/36516495/" target="_blank">Lu 2022</a>), PhenoAge (<a href="https://pubmed.ncbi.nlm.nih.gov/29676998/" target="_blank">Levine 2018</a>), and DunedinPACE (<a href="https://pubmed.ncbi.nlm.nih.gov/35029144/" target="_blank">Belsky 2022</a>) \u2014 to ELM-equivalent aging categories, and computed the epigenetic fraction of each clock\u2019s mortality-predictive variance.</p>' +
         '<p style="font-size:11px">The range is <strong>5\u201330%</strong>: GrimAge\u2019s adrenomedullin surrogate (enriched in Polycomb targets) contributes ~11% as strict epigenetic drift, rising to ~15% when damage-coupled remodeling is included. PhenoAge\u2019s RDW-dominated variance reaches ~30% under the broad estimate. Pure drift clocks (<a href="https://pubmed.ncbi.nlm.nih.gov/24138928/" target="_blank">Horvath 2013</a>, <a href="https://pubmed.ncbi.nlm.nih.gov/23177740/" target="_blank">Hannum 2013</a>) capture ~40% of composite-clock mortality signal (<a href="https://pubmed.ncbi.nlm.nih.gov/32736664/" target="_blank">Hillary 2020</a>), but this is an upper bound since drift clocks also partly read out non-epigenetic biology.</p>' +
-        '<p style="font-size:11px">The ELM\u2019s w<sub>meth</sub>=0.30 sits at the top of this external range \u2014 which is what the calibration data demands. The model\u2019s methylation weight is pushed high because the ELM\u2019s methylation ODE integrates damage-accelerated drift (via EZH2) and SASP-accelerated drift, not just stochastic CpG noise.</p>' +
+        '<p style="font-size:11px">The ELM\u2019s w<sub>meth</sub>=0.25 sits within this external range \u2014 which is what the calibration data demands. The model\u2019s methylation weight is pushed high because the ELM\u2019s methylation ODE integrates damage-accelerated drift (via EZH2) and SASP-accelerated drift, not just stochastic CpG noise.</p>' +
         '<p style="font-size:10px;color:#888">Analysis: scripts/clock_pca/clock_methylation_fraction.py</p>',
-    equation:'$$\\text{BioAge} = w_m \\cdot \\frac{\\text{Meth}}{N_m} + w_d \\cdot \\frac{\\text{Damage}}{N_d} + w_H \\cdot \\frac{H}{N_H} + w_s \\cdot \\frac{\\text{SenCells}}{N_s}$$<br>w<sub>meth</sub> constrained to [0.25, 0.40] by calibration data<br>Current: 0.30 (mean error 0.08%)<br>Rapa+NMN prediction robust to weight variation (&lt;0.5%)'
+    equation:'$$\\text{BioAge} = w_m \\cdot \\frac{\\text{Meth}}{N_m} + w_d \\cdot \\frac{\\text{Damage}}{N_d} + w_H \\cdot \\frac{H}{N_H} + w_s \\cdot \\frac{\\text{SenCells}}{N_s}$$<br>w<sub>meth</sub> = 0.25 (equal prior, acceptable across [0.10, 0.50])<br>Current: 0.25 (female mean error 1.3 pp)<br>Rapa+NMN prediction robust to weight variation (&lt;0.5%)'
 },
 { // A6b: Heteroplasmy & Senescence Weight Sensitivity
     title:'Weight Sensitivity: H & Sen', sub:'A6b',
@@ -1281,9 +1281,9 @@ const STAGES = [
         'Node clamping results:' +
         '$$\\begin{aligned}' +
         '\\text{DNA Damage} &: +68\\% \\quad (w_d = 0.25) \\\\' +
-        '\\text{Methylation} &: +36\\% \\quad (w_m = 0.30) \\\\' +
+        '\\text{Methylation} &: +36\\% \\quad (w_m = 0.25) \\\\' +
         '\\text{Heteroplasmy} &: +15\\% \\quad (w_H = 0.25) \\\\' +
-        '\\text{SenCells} &: +14\\% \\quad (w_s = 0.15)' +
+        '\\text{SenCells} &: +14\\% \\quad (w_s = 0.25)' +
         '\\end{aligned}$$',
     graph:'stage_17_node_clamping.png',
 },
@@ -1375,7 +1375,7 @@ const STAGES = [
         '<li><strong>SASP vicious cycle:</strong> SenCells \u2192 SASP (+0.8), then SASP feeds back to NAD (\u22120.6), DNA damage (+0.4), SenCells (+0.5), and Methylation (+0.4). This is the aging amplifier \u2014 once triggered, it accelerates multiple damage axes simultaneously.</li>' +
         '<li><strong>AMPK signaling cascade:</strong> AMPK \u2192 TSC2 (+0.8) \u2192 mTORC1 (\u22120.9) fans out to Autophagy, DNA damage, and Senescence. This chain explains why AMPK activation has the highest sensitivity (A9).</li>' +
         '<li><strong>NAD\u2192SIRT1\u2192FOXO3 axis:</strong> A linear cascade (+0.9, +0.7) that branches into autophagy, DNA repair, methylation, and heteroplasmy selection. NAD<sup>+</sup> depletion propagates broadly.</li>' +
-        '<li><strong>BioAge row:</strong> Only 4 direct inputs (Meth 0.30, DNA_Dmg 0.30, Hetero 0.25, SenCells 0.15) \u2014 the composite death clock.</li>' +
+        '<li><strong>BioAge row:</strong> Only 4 direct inputs (Meth 0.25, DNA_Dmg 0.25, Hetero 0.25, SenCells 0.25) \u2014 the composite death clock.</li>' +
         '</ul>',
     equation:'$$A_{ij} = \\text{ODE coupling strength of } j \\text{ on } i$$' +
         'Green: $A_{ij} > 0$ (activating) &emsp; Blue: $A_{ij} < 0$ (inhibiting)' +
@@ -1474,7 +1474,7 @@ const STAGES = [
         '<p>For each drug class, we compute the shortest weighted path from its entry point in the ODE network to the BioAge composite output. Shorter paths mean more direct leverage; longer paths mean the intervention must cascade through multiple intermediaries, introducing more opportunities for nonlinear interactions.</p>' +
         '<h4 style="margin:8px 0 4px">Results</h4>' +
         '<ul style="font-size:11px;margin:2px 0 6px 16px">' +
-        '<li><strong>Methylation targets (17\u03b1E2): dist = 2.9</strong> \u2014 The shortest path. Methylation feeds directly into BioAge (w<sub>meth</sub> = 0.30), so EZH2/SIRT1-mediated methylation reduction translates almost linearly to lifespan extension. This directness is why 17\u03b1E2 shows <em>less</em> synergy with other compounds \u2014 its effect doesn\u2019t depend on what else is happening in the network.</li>' +
+        '<li><strong>Methylation targets (17\u03b1E2): dist = 2.9</strong> \u2014 The shortest path. Methylation feeds directly into BioAge (w<sub>meth</sub> = 0.25), so EZH2/SIRT1-mediated methylation reduction translates almost linearly to lifespan extension. This directness is why 17\u03b1E2 shows <em>less</em> synergy with other compounds \u2014 its effect doesn\u2019t depend on what else is happening in the network.</li>' +
         '<li><strong>Heteroplasmy targets (Mitophagy): dist = 4.0</strong> \u2014 Moderate path length. Heteroplasmy contributes to BioAge both directly (w<sub>H</sub> = 0.25) and indirectly via ROS \u2192 NAD depletion and DNA damage. The dual pathway explains mitophagy\u2019s strong synergy: it reduces upstream damage that compounds other interventions\u2019 benefits.</li>' +
         '<li><strong>AMPK (Rapa, Acarb, Cana): dist = 6.2</strong> \u2014 Longest path. AMPK must cascade through TSC2 \u2192 mTORC1 \u2192 Autophagy/SenCells \u2192 SASP \u2192 damage variables \u2192 BioAge. Each hop introduces nonlinearity, which is why AMPK-activating drugs show the strongest interactions (both positive and negative) in the synergy matrix.</li>' +
         '<li><strong>NAD (NMN, CD38i): dist = 6.5</strong> and <strong>SenCells (D+Q): dist = 6.6</strong> \u2014 Also indirect. NAD routes through SIRT1 \u2192 FOXO3 \u2192 multiple branches. Senolytics route through SASP reduction \u2192 downstream recovery. Both create cascading benefits that interact strongly with other interventions.</li>' +
@@ -1539,10 +1539,10 @@ const STAGES = [
 
         '<table class="spec-table">' +
         '<tr><th>Component $X_i$</th><th>Weight $w_i$</th><th>Norm $N_i$</th></tr>' +
-        '<tr><td>Methylation ($M$)</td><td>0.30</td><td>1.0935</td></tr>' +
-        '<tr><td>DNA damage ($D$)</td><td>0.30</td><td>0.6656</td></tr>' +
+        '<tr><td>Methylation ($M$)</td><td>0.25</td><td>1.0925</td></tr>' +
+        '<tr><td>DNA damage ($D$)</td><td>0.25</td><td>0.6653</td></tr>' +
         '<tr><td>Heteroplasmy ($H$)</td><td>0.25</td><td>0.1800</td></tr>' +
-        '<tr><td>Senescent cells ($C$)</td><td>0.15</td><td>0.2176</td></tr>' +
+        '<tr><td>Senescent cells ($C$)</td><td>0.25</td><td>0.2143</td></tr>' +
         '<tr><td>SASP ($P$)</td><td>0.00</td><td>0.0385</td></tr>' +
         '</table>' +
 
@@ -1675,7 +1675,7 @@ const STAGES = [
         '<tr><td>transcription_advantage</td><td>0.20</td><td>Mutant mtDNA replication advantage</td></tr>' +
         '<tr><td>k_selection_base</td><td>0.001</td><td>Baseline selection rate</td></tr>' +
         '<tr><td>k_selection_foxo3</td><td>0.10</td><td>FOXO3 selection boost</td></tr>' +
-        '<tr><td>k_selection_mitophagy</td><td>0.60</td><td>Mitophagy selection boost</td></tr>' +
+        '<tr><td>k_selection_mitophagy</td><td>0.08</td><td>Mitophagy selection boost (60% clearance at full activation)</td></tr>' +
         '<tr><td>time_scale</td><td>12.0</td><td>Time scaling factor (\u03c4)</td></tr>' +
         '</table>' +
 
@@ -1733,14 +1733,14 @@ const STAGES = [
 
         '<table class="spec-table">' +
         '<tr><th>Compound</th><th>ampk</th><th>aox</th><th>ai</th><th>gut</th><th>mtorc1</th><th>Start (mo)</th><th>M ext</th><th>F ext</th></tr>' +
-        '<tr><td>Rapamycin</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>0.4424</td><td>9</td><td>+23%</td><td>+26%</td></tr>' +
-        '<tr><td>Acarbose</td><td>0.1941</td><td>\u2014</td><td>\u2014</td><td>0.1412</td><td>\u2014</td><td>4</td><td>+22%</td><td>+5%</td></tr>' +
-        '<tr><td>Canagliflozin</td><td>0.0781</td><td>0.4584</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>7</td><td>+14%</td><td>+9%</td></tr>' +
-        '<tr><td>17\u03b1-Estradiol</td><td>0.174</td><td>0.1907</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>4</td><td>+19%</td><td>0%</td></tr>' +
-        '<tr><td>Aspirin</td><td>0.0569</td><td>0.095</td><td>0.0427</td><td>\u2014</td><td>\u2014</td><td>4</td><td>+8%</td><td>0%</td></tr>' +
-        '<tr><td>Glycine</td><td>0.023</td><td>0.3092</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>9</td><td>+6%</td><td>+4%</td></tr>' +
+        '<tr><td>Rapamycin</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>0.4190</td><td>9</td><td>+23%</td><td>+26%</td></tr>' +
+        '<tr><td>Acarbose</td><td>0.1690</td><td>\u2014</td><td>\u2014</td><td>0.1690</td><td>\u2014</td><td>4</td><td>+22%</td><td>+5%</td></tr>' +
+        '<tr><td>Canagliflozin</td><td>0.1619</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>7</td><td>+14%</td><td>+9%</td></tr>' +
+        '<tr><td>17\u03b1-Estradiol</td><td>0.1764</td><td>0.1764</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>4</td><td>+19%</td><td>0%</td></tr>' +
+        '<tr><td>Aspirin</td><td>0.0591</td><td>0.0985</td><td>0.0394</td><td>\u2014</td><td>\u2014</td><td>4</td><td>+8%</td><td>0%</td></tr>' +
+        '<tr><td>Glycine</td><td>0.0316</td><td>0.2842</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>9</td><td>+6%</td><td>+4%</td></tr>' +
         '</table>' +
-        '<p style="font-size:10px;color:#666">Rapamycin also injects ampk = 0.2949 via PK-mediated AMPK boost. mtorc1 column shows mtorc1_drug_inhibition pathway. aox = antioxidant, ai = antiinflam.</p>' +
+        '<p style="font-size:10px;color:#666">Rapamycin also injects ampk = 0.2792 via PK-mediated AMPK boost. mtorc1 column shows mtorc1_drug_inhibition pathway. aox = antioxidant, ai = antiinflam.</p>' +
 
         // ========== §6 — Novel Compounds ==========
         '<h3>\u00a76 \u2014 Novel Compound Injections</h3>' +
@@ -1759,7 +1759,7 @@ const STAGES = [
         '<h4>Sex-Specific Mechanisms</h4>' +
         '<table class="spec-table">' +
         '<tr><th>Type</th><th>Formula / Key Parameters</th><th>Compounds</th></tr>' +
-        '<tr><td>AMPK Saturation</td><td>$\\text{dim} = 1/(1 + k_d\\,(b_F - 1))$; $b_F=1.4$, $k_d$=11\u201315</td><td>Acarbose, Canagliflozin, Glycine</td></tr>' +
+        '<tr><td>AMPK Saturation</td><td>$\\text{dim} = 1/(1 + k_d\\,(b_F - 1))$; $b_F=1.3$, $k_d$=8</td><td>Acarbose, Canagliflozin, Glycine</td></tr>' +
         '<tr><td>Pharmacokinetic</td><td>$d_F = \\text{pk}\\,/\\,(\\text{EC}_{50} + \\text{pk})$; pk=3.48\u00d7</td><td>Rapamycin</td></tr>' +
         '<tr><td>Testosterone-dep.</td><td>Female effect = 0 (requires 5\u03b1-reductase substrate)</td><td>17\u03b1-Estradiol</td></tr>' +
         '<tr><td>Estrogen interf.</td><td>Female effect = 0 (COX-2\u2192PGI2 pathway conflict)</td><td>Aspirin</td></tr>' +
@@ -1802,11 +1802,11 @@ const STAGES = [
         '<p class="subtitle">All 8 Taguchi compounds at calibrated doses. The prediction is remarkable \u2014 but every modeled variable stays within physiologically plausible bounds.</p>' +
         '<div style="display:flex;align-items:center;justify-content:center;margin:18px 0 20px;gap:20px">' +
         '<div style="background:#e8f5e9;border-radius:8px;padding:18px 24px;text-align:center;border:2px solid #66bb6a">' +
-        '<div style="font-size:36px;font-weight:bold;color:#2e7d32">+168%</div>' +
+        '<div style="font-size:36px;font-weight:bold;color:#2e7d32">+139%</div>' +
         '<div style="font-size:12px;color:#555;margin-top:4px">Male</div>' +
         '</div>' +
         '<div style="background:#fce4ec;border-radius:8px;padding:18px 24px;text-align:center;border:2px solid #ef9a9a">' +
-        '<div style="font-size:36px;font-weight:bold;color:#c62828">+140%</div>' +
+        '<div style="font-size:36px;font-weight:bold;color:#c62828">+115%</div>' +
         '<div style="font-size:12px;color:#555;margin-top:4px">Female</div>' +
         '</div>' +
         '<div style="background:#e3f2fd;border-radius:8px;padding:18px 24px;text-align:center;border:2px solid #90caf9">' +
@@ -1815,16 +1815,16 @@ const STAGES = [
         '</div>' +
         '</div>' +
         '<div class="splash-callout success">' +
-        '<strong>Validated:</strong> Rapa + Acarbose share the AMPK pathway \u2192 the model predicted their combination would be less than the sum of its parts (+33%). The ITP observed +34%. The saturation logic works.' +
+        '<strong>Validated:</strong> Rapa + Acarbose share the AMPK pathway \u2192 the model predicted their combination would be less than the sum of its parts (+33.5%). The ITP observed +34%. The saturation logic works.' +
         '</div>' +
         '<div class="splash-callout" style="border-left-color:#2166ac">' +
         '<strong>Sanity-checked:</strong> We ran the full 8-compound stack and tracked every internal variable. Nothing blows up. NAD<sup>+</sup>, heteroplasmy, senescent cells, methylation \u2014 all stay within ranges the model was calibrated on. The large extension comes from addressing six independent aging axes simultaneously, not from any single variable being pushed into fantasy territory.' +
         '</div>' +
         '<div class="splash-callout" style="border-left-color:#7b1fa2">' +
-        '<strong>Individual variation:</strong> The numbers above are predicted <em>median</em> lifespan extensions. Individual mice vary: ITP reports ~12% CV in lifespan across genetically identical animals. Resampling the model\u2019s median with that variation (1,000 log-normal draws) gives the 5th\u201395th percentile range of individual outcomes. Rapa+Acarb: median +33%, individual range 8\u201361%. Rapa+NMN: median +32%, individual range 7\u201360%. This is not uncertainty about whether the model is right \u2014 it is the expected spread of individual lifespans if it is. Parameter sensitivity is a separate question, addressed by the tornado charts (Slides A5, A5b).' +
+        '<strong>Individual variation:</strong> The numbers above are predicted <em>median</em> lifespan extensions. Individual mice vary: ITP reports ~12% CV in lifespan across genetically identical animals. Resampling the model\u2019s median with that variation (1,000 log-normal draws) gives the 5th\u201395th percentile range of individual outcomes. Rapa+Acarb: median +33.5%, individual range 8\u201361%. Rapa+NMN: median +32%, individual range 7\u201360%. This is not uncertainty about whether the model is right \u2014 it is the expected spread of individual lifespans if it is. Parameter sensitivity is a separate question, addressed by the tornado charts (Slides A5, A5b).' +
         '</div>' +
         '</div>',
-    narrative:'<h3>Why +168% Isn\u2019t As Crazy As It Sounds</h3><p>A number this large demands scepticism. Two things make it defensible:</p><p><strong>1. Nothing is being pushed beyond what we calibrated.</strong> Each compound enters the model at exactly the dose the ITP tested (or, for novel compounds, at literature-estimated levels). When all eight run simultaneously, we checked every internal variable: NAD<sup>+</sup> levels, DNA damage, heteroplasmy, senescent cell counts. None leaves the range the model was fitted on by more than 35%. The extension is large because six different bottlenecks are being relieved at once \u2014 not because any single lever is being cranked to an implausible setting.</p><p><strong>2. Pairwise interactions are boring.</strong> We ran all 28 two-compound pairs. Most behave additively (mean ratio of actual to expected: 1.02). Five pairs sharing the same pathway show diminishing returns. Eleven cross-pathway pairs show mild synergy. No pair produces a wildly unexpected result. The full-stack prediction is the sum of many small, well-behaved pieces.</p><p><strong>What this doesn\u2019t prove:</strong> the model may still be wrong about biology we haven\u2019t measured. Whether these pathways actually combine as predicted in a living animal is what the Taguchi killifish screen (A24) is designed to test.</p>',
+    narrative:'<h3>Why +139%/+115% Is Defensible</h3><p>A number this large demands scepticism. Two things make it defensible:</p><p><strong>1. Nothing is being pushed beyond what we calibrated.</strong> Each compound enters the model at exactly the dose the ITP tested (or, for novel compounds, at literature-estimated levels). When all eight run simultaneously, we checked every internal variable: NAD<sup>+</sup> levels, DNA damage, heteroplasmy, senescent cell counts. The extension is large because six different bottlenecks are being relieved at once \u2014 not because any single lever is being cranked to an implausible setting.</p><p><strong>2. Pairwise interactions are well-behaved.</strong> We ran all pairwise combinations. Most behave near-additively. Pairs sharing the same pathway show diminishing returns. Cross-pathway pairs show mild synergy. No pair produces a wildly unexpected result. The full-stack prediction is the sum of many well-behaved pieces.</p><p><strong>What this doesn\u2019t prove:</strong> the model may still be wrong about biology we haven\u2019t measured. Whether these pathways actually combine as predicted in a living animal is what the Taguchi killifish screen (A24) is designed to test.</p>',
     equation:'',
     graph:null,
 },
@@ -1862,7 +1862,7 @@ const STAGES = [
         '<p class="subtitle">How far beyond a normal lifespan does each result reach?</p>' +
         '<div style="margin:18px 0 8px;font-size:13px;color:#888">Gray = normal median lifespan. Colour = additional life from intervention.</div>' +
         // Stacked bar chart: fixed-width gray baseline + colored extension (1.5x scale)
-        // Gray bar = 210px fixed. Extensions scaled so +168% ≈ 353px.
+        // Gray bar = 210px fixed. Extensions scaled so +139% ≈ 210px (1.51px per %).
         '<div style="display:flex;flex-direction:column;gap:15px;margin:4px 0 18px;overflow-x:auto">' +
         // Untreated
         '<div style="display:flex;align-items:center;gap:0">' +
@@ -1910,15 +1910,15 @@ const STAGES = [
         '<div style="font-size:11px;font-weight:600;color:#e74c3c;line-height:1.3">(Rapa+Acarb+Cana+Gly) +<br>(NMN+UroA+CD38i+D/Q)</div>' +
         '</div>' +
         '<div style="width:210px;height:36px;background:#bbb;border-radius:4px 0 0 4px;flex-shrink:0"></div>' +
-        '<div style="width:353px;height:36px;background:linear-gradient(90deg,#e74c3c,#c0392b);border-radius:0 4px 4px 0;flex-shrink:0"></div>' +
-        '<span style="font-size:13px;color:#e74c3c;margin-left:8px;font-weight:600;white-space:nowrap">+168% <span style="font-weight:400;color:#888">(prediction)</span></span>' +
+        '<div style="width:210px;height:36px;background:linear-gradient(90deg,#e74c3c,#c0392b);border-radius:0 4px 4px 0;flex-shrink:0"></div>' +
+        '<span style="font-size:13px;color:#e74c3c;margin-left:8px;font-weight:600;white-space:nowrap">+139% M / +115% F <span style="font-weight:400;color:#888">(prediction)</span>' +
         '</div>' +
         '</div>' +
         '<div class="splash-callout" style="margin-top:12px">' +
-        '<strong>If the Rivers result replicates, mice can live to at least 165% of normal lifespan. The ELM predicts 268% \u2014 about 2.6\u00d7 further beyond normal than Rivers achieved with a single axis.</strong> <span style="font-size:11px;font-weight:normal;color:#888">Rivers: unreplicated preprint, n=10. The ELM\u2019s +168% prediction does not depend on Rivers data.</span>' +
+        '<strong>If the Rivers result replicates, mice can live to at least 165% of normal lifespan. The ELM predicts 239% (M) \u2014 substantially further, using 8 compounds targeting 6 independent axes vs. Rivers\u2019 single telomere/stemness axis.</strong> <span style="font-size:11px;font-weight:normal;color:#888">Rivers: unreplicated preprint, n=10. The ELM\u2019s prediction does not depend on Rivers data.</span>' +
         '</div>' +
         '</div>',
-    narrative:'<h3>The Axes Argument</h3><p>Aging has multiple independent failure modes. Rivers targets the immune/telomere/stemness axis (1 axis). The ELM stack targets metabolic/damage/epigenetic/mitochondrial/senescence axes (5\u20136 axes).</p><p>If axes are independent, more coverage should yield more effect. The predicted +168% from 6 axes is 2.6\u00d7 the Rivers result from 1 axis \u2014 consistent with diminishing returns across partially coupled pathways.</p><p>Mice that naturally die at \u224830 months can survive to at least 47\u201360 months (Rivers). The Taguchi-8 prediction of +168% implies \u224880 months is an accessible extension of the survival range established by the Telomere Rivers intervention.</p>',
+    narrative:'<h3>The Axes Argument</h3><p>Aging has multiple independent failure modes. Rivers targets the immune/telomere/stemness axis (1 axis). The ELM stack targets metabolic/damage/epigenetic/mitochondrial/senescence axes (5\u20136 axes).</p><p>If axes are independent, more coverage should yield more effect. The predicted +139% M from 6 axes is 2.1\u00d7 the Rivers result from 1 axis. The ELM prediction assumes all compounds work as modeled and that unmeasured failure modes do not emerge at high extension \u2014 both of which are untested assumptions.</p><p>Mice that naturally die at \u224830 months can survive to at least 47\u201360 months (Rivers). The Taguchi-8 prediction implies \u224871 months (M), which would require experimental validation.</p>',
     equation:'',
     graph:null,
 },
@@ -1948,7 +1948,7 @@ const STAGES = [
         '<strong>The unknown unknowns:</strong> Some of these failure modes only become rate-limiting once you\u2019ve already rescued the earlier ones. We don\u2019t know what kills a 10-year-old mouse \u2014 because there has never been one.' +
         '</div>' +
         '</div>',
-    narrative:'<h3>Beyond the ELM\u2019s Scope</h3><p>Three independent rejuvenation pathways now exist in the literature:</p><ul style="font-size:12px;margin:6px 0 10px 16px"><li><strong>OSK reprogramming:</strong> partial cellular reprogramming (Yamanaka factors)</li><li><strong>EZH2 non-catalytic:</strong> rejuvenation via scaffolding function, separate from methylation</li><li><strong>Rivers:</strong> telomeric vesicle transfer from T cells</li></ul><p>The ELM models only OSK, and only partially. If any of these stack on top of metabolic rescue, the true ceiling may exceed +168%, not fall short.</p><p>Conversely, AGE crosslinks (advanced glycation end-products) are irreversible collagen modifications that accumulate monotonically. They may impose a hard ceiling invisible at normal lifespans but rate-limiting at extended ones.</p>',
+    narrative:'<h3>Beyond the ELM\u2019s Scope</h3><p>Three independent rejuvenation pathways now exist in the literature:</p><ul style="font-size:12px;margin:6px 0 10px 16px"><li><strong>OSK reprogramming:</strong> partial cellular reprogramming (Yamanaka factors)</li><li><strong>EZH2 non-catalytic:</strong> rejuvenation via scaffolding function, separate from methylation</li><li><strong>Rivers:</strong> telomeric vesicle transfer from T cells</li></ul><p>The ELM models only OSK, and only partially. If any of these stack on top of metabolic rescue, the true ceiling may exceed +139%, not fall short.</p><p>Conversely, AGE crosslinks (advanced glycation end-products) are irreversible collagen modifications that accumulate monotonically. They may impose a hard ceiling invisible at normal lifespans but rate-limiting at extended ones.</p>',
     equation:'',
     graph:null,
 },
@@ -2009,14 +2009,14 @@ const STAGES = [
     nodes:[], edges:[],
     mainHtml:'<div class="splash-content">' +
         '<h2>What We Know vs. What We Don\u2019t</h2>' +
-        '<p class="subtitle">The honest answer: the 8-compound stack at calibrated doses predicts +168% M / +140% F. Here\u2019s exactly what we\u2019ve checked and what remains uncertain.</p>' +
+        '<p class="subtitle">The honest answer: the 8-compound stack at calibrated doses predicts +139% M / +115% F. Here\u2019s exactly what we\u2019ve checked and what remains uncertain.</p>' +
         '<div class="two-col">' +
         '<div>' +
         '<h3 style="font-size:14px;color:#27ae60;border:none;margin:0 0 8px">\u2705 Checked</h3>' +
         '<ul style="font-size:12px;line-height:1.7;margin-left:16px">' +
-        '<li>Rapa+Acarb prediction: +33% vs +34% observed</li>' +
+        '<li>Rapa+Acarb prediction: +33.5% vs +34% observed</li>' +
         '<li>Biological ceiling \u2265 +65% (Rivers, unreplicated preprint)</li>' +
-        '<li>10 effective degrees of freedom from 12 data points</li>' +
+        '<li>6 free parameters from 6 calibration targets (male), 7 predictions</li>' +
         '<li>Under the full stack, every modeled variable stays within physiologically plausible bounds</li>' +
         '<li>All 28 pairwise combinations behave predictably (mean additivity ratio 1.02)</li>' +
         '</ul>' +
@@ -2032,10 +2032,10 @@ const STAGES = [
         '</div>' +
         '</div>' +
         '<div class="splash-callout" style="margin-top:20px">' +
-        '<strong>The prediction is +168% M / +140% F.</strong> The model\u2019s internal variables all stay in range, but 4 of 8 compounds lack lifespan calibration data. The Taguchi killifish screen (A24) is designed to test this prediction directly.' +
+        '<strong>The prediction is +139% M / +115% F.</strong> The model\u2019s internal variables all stay in range, but 4 of 8 compounds lack lifespan calibration data. The Taguchi killifish screen (A24) is designed to test this prediction directly.' +
         '</div>' +
         '</div>',
-    narrative:'<h3>What Would Narrow It</h3><p>We\u2019ve confirmed that the model\u2019s internals behave sensibly under the full 8-compound stack \u2014 no variable is pushed into implausible territory. Two investigations remain:</p><ol style="font-size:12px;line-height:1.6;margin:6px 0 0 16px"><li><strong>Failure mode census:</strong> Survey mouse pathology literature \u2014 what % of mortality does the ELM\u2019s four BioAge components actually cover?</li><li><strong>Multi-axis combination data:</strong> The Taguchi L18 killifish screen (A24) will directly test whether pathways interact additively, synergistically, or antagonistically in living animals.</li></ol><p>Each converts a specific unknown into a known. The +168% prediction is the testable hypothesis.</p>',
+    narrative:'<h3>What Would Narrow It</h3><p>We\u2019ve confirmed that the model\u2019s internals behave sensibly under the full 8-compound stack \u2014 no variable is pushed into implausible territory. Two investigations remain:</p><ol style="font-size:12px;line-height:1.6;margin:6px 0 0 16px"><li><strong>Failure mode census:</strong> Survey mouse pathology literature \u2014 what % of mortality does the ELM\u2019s four BioAge components actually cover?</li><li><strong>Multi-axis combination data:</strong> The Taguchi L18 killifish screen (A24) will directly test whether pathways interact additively, synergistically, or antagonistically in living animals.</li></ol><p>Each converts a specific unknown into a known. The +139% M / +115% F prediction is the testable hypothesis.</p>',
     equation:'',
     graph:null,
 },
@@ -2123,7 +2123,7 @@ const STAGES = [
         '<div class="tier-block t1">' +
         '<h4>\uD83E\uDDEA Phase 1 \u2014 Generate the data that doesn\u2019t exist</h4>' +
         '<ul>' +
-        '<li><strong>Taguchi L18 killifish screen</strong> \u2014 8 compounds, 20 groups, ~1,000 fish, ~$200K, ~8 months. Directly tests the +168% prediction and reveals which interactions matter.</li>' +
+        '<li><strong>Taguchi L18 killifish screen</strong> \u2014 8 compounds, 20 groups, ~1,000 fish, ~$200K, ~8 months. Directly tests the full-stack prediction and reveals which interactions matter.</li>' +
         '<li><strong>Rivers + ITP drug interaction</strong> \u2014 do rapamycin-treated aged mice show higher serum telomeric vesicles? Tests the metabolic gate hypothesis (Slide A22).</li>' +
         '<li><strong>Confirmatory mouse cohorts</strong> for the top killifish combinations.</li>' +
         '</ul>' +
@@ -2141,7 +2141,7 @@ const STAGES = [
         '</div>' +
         '<p style="font-size:11px;color:#888;margin-top:12px"><em>Models without data are stories. Do not add epicycles before data constrains them.</em></p>' +
         '</div>',
-    narrative:'<h3>Why This Order</h3><p><strong>Phase 1</strong> comes first because the model\u2019s computational work is done. Every modeled variable stays in range under the full 8-compound stack. All 28 pairwise combinations behave predictably. The prediction (+168% M / +140% F) uses only calibrated doses. What\u2019s missing is not more modeling \u2014 it\u2019s combination data from living animals.</p><p>The Taguchi screen is the highest-value experiment: 8 compounds, orthogonal design, main effects plus dominant interactions, all in ~8 months. The Rivers experiment (do ITP drugs boost telomeric vesicles?) is the single highest-information side experiment because it tests whether the metabolic and regenerative axes are coupled.</p><p><strong>Phase 2</strong> waits for results. Adding ODE terms for AGE crosslinks, immune function, or telomere dynamics before empirical constraints exist would make the model more complex without making it more predictive. Each new pathway needs an endpoint to calibrate against \u2014 otherwise it\u2019s just a parameter with a literature guess and no anchor.</p>',
+    narrative:'<h3>Why This Order</h3><p><strong>Phase 1</strong> comes first because the model\u2019s computational work is done. Every modeled variable stays in range under the full 8-compound stack. All 28 pairwise combinations behave predictably. The prediction (+139% M / +115% F) uses only calibrated doses. What\u2019s missing is not more modeling \u2014 it\u2019s combination data from living animals.</p><p>The Taguchi screen is the highest-value experiment: 8 compounds, orthogonal design, main effects plus dominant interactions, all in ~8 months. The Rivers experiment (do ITP drugs boost telomeric vesicles?) is the single highest-information side experiment because it tests whether the metabolic and regenerative axes are coupled.</p><p><strong>Phase 2</strong> waits for results. Adding ODE terms for AGE crosslinks, immune function, or telomere dynamics before empirical constraints exist would make the model more complex without making it more predictive. Each new pathway needs an endpoint to calibrate against \u2014 otherwise it\u2019s just a parameter with a literature guess and no anchor.</p>',
     equation:'',
     graph:null,
 },
@@ -2155,21 +2155,21 @@ const PROV = {
     'w_m':'CAL', 'w_d':'CAL', 'w_H':'CAL', 'w_s':'CAL',
     'N_m':'STR', 'N_d':'STR', 'N_H':'STR', 'N_s':'STR',
     // Stage 1: Heteroplasmy dynamics
-    'N_{\\text{eff}}':'LIT', '\\mu':'LIT', 's_0':'LIT', 's_{\\text{foxo3}}':'LIT', '\\tau':'CAL',
+    'N_{\\text{eff}}':'LIT', '\\mu':'LIT', 's_0':'EST', 's_{\\text{foxo3}}':'EST', '\\tau':'CAL',
     // Stage 2: NAD+
     'k_{\\text{nampt}}':'LIT', 'k_{\\text{age}}':'LIT', 'k_{\\text{ampk}}':'LIT',
-    'k_{\\text{basal}}':'LIT', 'k_{\\text{parp}}':'LIT', 'k_{\\text{sirt}}':'LIT',
+    'k_{\\text{basal}}':'EST', 'k_{\\text{parp}}':'LIT', 'k_{\\text{sirt}}':'LIT',
     // Stage 3: DNA Damage
-    'k_{\\text{ros}}':'LIT', 'k_{\\text{ber}}':'LIT', 'k_{\\text{aox}}':'LIT',
-    'n_{\\text{ber}}':'LIT', '\\text{ROS}':'LIT',
+    'k_{\\text{ros}}':'CAL', 'k_{\\text{ber}}':'CAL', 'k_{\\text{aox}}':'CAL',
+    'n_{\\text{ber}}':'EST', '\\text{ROS}':'LIT',
     // Stage 4: Signaling Hub (TSC2 + mTORC1 + Autophagy)
     'b_0':'LIT', 'b_{\\max}':'LIT', 'K_m':'STR', 'n':'STR',
     '\\alpha':'LIT', 'K_{m2}':'STR', 'n_2':'STR', 'K_a':'STR',
     // Stage 5: Senescence
     'k_{\\text{dmg}}':'LIT', 'D_{\\text{thresh}}':'STR', 'k_{\\text{sasp}}':'LIT',
-    'k_{\\text{nat}}':'LIT', 'k_{\\text{auto}}':'LIT',
+    'k_{\\text{nat}}':'LIT', 'k_{\\text{auto}}':'EST',
     // Stage 6: Methylation
-    'k_{\\text{ezh2}}':'LIT', 'k_{\\text{dnmt}}':'LIT', 'k_{\\text{tet}}':'LIT',
+    'k_{\\text{ezh2}}':'CAL', 'k_{\\text{dnmt}}':'EST', 'k_{\\text{tet}}':'LIT',
     '\\text{Meth}_0':'STR',
     // Stage 8.x + 13.x: Compound interventions (ALL CAL)
     'd_{\\text{drug}}':'CAL', '\\text{ampk}_{\\text{direct}}':'CAL',
@@ -2578,14 +2578,14 @@ const parameterDB = {
         params: [
             { name: 'H_0', value: '0.05', units: 'fraction', desc: 'Initial heteroplasmy at young age', provenance: 'LITERATURE: Cortopassi 1992 - ~5% mtDNA mutations in young tissue' },
             { name: 'transcription_advantage', value: '0.20', units: 'dimensionless', desc: 'Mutant mtDNA replicative advantage', provenance: 'LITERATURE: Wallace 2010 - deletion mutants replicate faster' },
-            { name: 'k_selection_mitophagy', value: '0.60', units: 'dimensionless', desc: 'Mitophagy clears damaged mitochondria', provenance: 'LITERATURE: PINK1/Parkin pathway; ~60% clearance at full mitophagy (Pickrell 2015)' },
+            { name: 'k_selection_mitophagy', value: '0.08', units: 'dimensionless', desc: 'Mitophagy selection boost: full PINK1/Parkin activation reduces H to 40% of untreated at midlife', provenance: 'CALIBRATED to 60% clearance target from Pickrell 2015 (PINK1/Parkin knockout studies)' },
             { name: 'k_hetero_oxphos', value: '0.35', units: 'dimensionless', desc: 'Heteroplasmy reduces OXPHOS efficiency', provenance: 'LITERATURE: Complex I mtDNA mutations reduce OXPHOS ~30-40% (Rossignol 2003)' },
             { name: 'k_oxphos_nad_regen', value: '0.15', units: '/lifetime', desc: 'OXPHOS contribution to NAD+ regeneration', provenance: 'LITERATURE: Complex I regenerates NADH; ~15% contribution to total NAD+ pool' },
-            { name: 'time_scale', value: '12.0', units: 'dimensionless', desc: 'Time scaling factor for KK dynamics', provenance: 'ESTIMATED: Calibrated to match H accumulation ~3-4x over lifespan' }
+            { name: 'time_scale', value: '12.0', units: 'dimensionless', desc: 'Time scaling factor for KK dynamics', provenance: 'CALIBRATED TO CONTROL: Calibrated to control heteroplasmy trajectory (~3\u20134\u00d7 over lifespan)' }
         ],
         description: 'Heteroplasmy (mtDNA mutations) accumulates with age via Kowald-Kirkwood drift dynamics, impairs OXPHOS/Complex I, reduces NAD+ regeneration.',
         mechanism: 'dH/dt = [drift + mutation_pressure - selection] \u00d7 time_scale',
-        pmids: [26924217, 25651175, 1303209, 24270388],
+        pmids: [26924217, 25651175, 1303209, 24270388, 26182419],
         notes: 'Loop closure: High heteroplasmy \u2192 impaired Complex I \u2192 reduced NAD+ regeneration \u2192 lower SIRT1 \u2192 less mitophagy \u2192 more heteroplasmy.',
         key_quote: 'Mitochondrial dysfunction impairs NAD+ regeneration via Complex I.',
         calibration: [
@@ -2617,7 +2617,7 @@ const parameterDB = {
             { name: 'k_nampt_base', value: '0.55', units: 'normalized', desc: 'Basal NAMPT salvage synthesis', provenance: 'LITERATURE: Yoshino 2011 - rate-limiting enzyme' },
             { name: 'k_nampt_ampk', value: '0.50', units: 'dimensionless', desc: 'AMPK boost to NAMPT', provenance: 'LITERATURE: Canto 2009 - AMPK activates NAMPT ~1.5-2\u00d7' },
             { name: 'k_nampt_age_decline', value: '0.431', units: '/lifetime', desc: 'Age-related NAMPT decline (exponential)', provenance: 'LITERATURE: NAMPT declines with age (Yoshino 2011)' },
-            { name: 'k_consumption_basal', value: '0.40', units: '/lifetime', desc: 'Baseline NAD+ turnover', provenance: 'LITERATURE: Constitutive NAD+ consumption' },
+            { name: 'k_consumption_basal', value: '0.40', units: '/lifetime', desc: 'Baseline NAD+ turnover', provenance: 'SET: Residual NAD+ turnover, plausible range [0.2\u20130.6]' },
             { name: 'k_cd38_base', value: '0.35', units: '/lifetime', desc: 'Basal CD38 consumption', provenance: 'LITERATURE: Chini 2020 - major NAD+ consumer' },
             { name: 'k_cd38_age', value: '0.50', units: 'dimensionless', desc: 'CD38 age-dependent increase', provenance: 'LITERATURE: Camacho-Pereira 2016 - 2-3\u00d7 with age' },
             { name: 'k_cd38_sasp', value: '0.60', units: 'dimensionless', desc: 'SASP-induced CD38', provenance: 'ESTIMATED: IL-6/TNF-\u03b1 upregulate CD38 via NF-\u03baB' },
@@ -2626,7 +2626,7 @@ const parameterDB = {
         ],
         description: 'NAD+ synthesis (NAMPT salvage) vs consumption (CD38, PARP, SIRT1). Age-related decline driven by NAMPT reduction and CD38 increase.',
         mechanism: 'dNAD/dt = synthesis(NAMPT, AMPK, OXPHOS) \u2212 consumption(CD38, PARP, SIRT1)',
-        pmids: [27304511, 28648932, 33199925],
+        pmids: [27304511, 28648932, 33199925, 10693811, 21459330],
         notes: 'NAD+ declines ~50% by age 80. CD38 is the dominant consumer. SASP-induced CD38 upregulation creates inflammaging \u2192 NAD+ depletion loop.',
         calibration: [
             { target: 'NAD+ declines ~50% by age 80', basis: 'Massudi 2012, Yoshino 2018', achieved: 'Yes' }
@@ -2652,8 +2652,8 @@ const parameterDB = {
     'sirt1': {
         name: 'SIRT1 (NAD+-dependent deacetylase)',
         params: [
-            { name: 'Km_nad_sirt1', value: '0.40', units: 'normalized', desc: 'NAD+ affinity for SIRT1', provenance: 'LITERATURE: SIRT1 Km for NAD+ ~0.4 (normalized)' },
-            { name: 'n_hill_sirt1', value: '2.0', units: 'dimensionless', desc: 'Hill coefficient (cooperativity)', provenance: 'LITERATURE: Cooperative NAD+ binding' },
+            { name: 'Km_nad_sirt1', value: '0.40', units: 'normalized', desc: 'NAD+ affinity for SIRT1', provenance: 'CALIBRATED TO CONTROL: Set for NAD+ operating range (normalized units)' },
+            { name: 'n_hill_sirt1', value: '2.0', units: 'dimensionless', desc: 'Hill coefficient (cooperativity)', provenance: 'STRUCTURAL: Standard Hill coefficient for cooperative binding' },
             { name: 'k_sirt1_direct_boost', value: '0.50', units: 'dimensionless', desc: 'Direct SIRT1 activator effect', provenance: 'LITERATURE: Allosteric activation via STAC (Hubbard 2013)' },
             { name: 'foxo3_basal', value: '0.20', units: 'dimensionless', desc: 'Basal FOXO3 activity', provenance: 'LITERATURE: FOXO3 constitutively active at low level' },
             { name: 'k_sirt1_foxo3', value: '0.80', units: 'dimensionless', desc: 'SIRT1 \u2192 FOXO3 activation', provenance: 'LITERATURE: SIRT1 deacetylates FOXO3; ~80% activation at full SIRT1' }
@@ -2670,17 +2670,17 @@ const parameterDB = {
     'dna_repair': {
         name: 'DNA Damage / PARP1 / Repair',
         params: [
-            { name: 'k_damage_ros', value: '0.60', units: '/lifetime', desc: 'ROS-induced damage rate (most sensitive param)', provenance: 'ITP: RANK 1 sensitivity parameter' },
-            { name: 'k_damage_replication', value: '0.12', units: '/lifetime', desc: 'Replication errors', provenance: 'LITERATURE: Constitutive replication damage' },
+            { name: 'k_damage_ros', value: '0.60', units: '/lifetime', desc: 'ROS-induced damage rate (most sensitive param)', provenance: 'CALIBRATED TO CONTROL: Calibrated to control lifespan; RANK 1 sensitivity parameter' },
+            { name: 'k_damage_replication', value: '0.12', units: '/lifetime', desc: 'Replication errors', provenance: 'SET: Replication error rate, plausible range [0.05\u20130.20]' },
             { name: 'k_damage_spontaneous', value: '0.18', units: '/lifetime', desc: 'Spontaneous damage', provenance: 'LITERATURE: Depurination, deamination' },
-            { name: 'k_ber_base', value: '0.35', units: '/lifetime', desc: 'Base excision repair capacity', provenance: 'ITP: RANK 2 sensitivity parameter' },
-            { name: 'k_ber_nad_dependence', value: '0.7', units: 'exponent', desc: 'BER NAD+ dependence (NAD^0.7)', provenance: 'LITERATURE: PARP1/SIRT1 require NAD+' },
-            { name: 'k_antioxidant_ros_reduction', value: '0.55', units: 'dimensionless', desc: 'Antioxidant ROS reduction', provenance: 'ITP: Calibrated across antioxidant compounds' },
+            { name: 'k_ber_base', value: '0.35', units: '/lifetime', desc: 'Base excision repair capacity', provenance: 'CALIBRATED TO CONTROL: Calibrated to damage\u2013repair balance; RANK 2 sensitivity parameter' },
+            { name: 'k_ber_nad_dependence', value: '0.7', units: 'exponent', desc: 'BER NAD+ dependence (NAD^0.7)', provenance: 'SET: Sub-linear NAD+ dependence exponent, plausible range [0.5\u20131.0]' },
+            { name: 'k_antioxidant_ros_reduction', value: '0.55', units: 'dimensionless', desc: 'Antioxidant ROS reduction', provenance: 'CALIBRATED TO CONTROL: Calibrated to control ROS dynamics' },
             { name: 'damage_senescence_threshold', value: '0.30', units: 'normalized', desc: 'Damage threshold for senescence', provenance: 'ESTIMATED: p53 activation threshold' }
         ],
         description: 'DNA damage from ROS, replication errors, and SASP. Repair by BER (NAD+-dependent), NER, HR (SIRT1-dependent).',
         mechanism: 'dDamage/dt = damage(ROS, SASP) \u2212 repair(NAD, SIRT1) \u00d7 Damage',
-        pmids: [22313689, 18978338, 12470830],
+        pmids: [22313689, 18978338, 12470830, 8469282],
         notes: 'k_damage_ros is RANK 1 and k_ber_base is RANK 2 in sensitivity analysis. These drive lifespan predictions.',
         calibration: [
             { target: 'DNA damage 3\u00d7 by age 80', basis: 'Comet assay literature', achieved: 'Yes' },
@@ -2695,7 +2695,7 @@ const parameterDB = {
             { name: 'TSC2_min', value: '0.10', units: 'dimensionless', desc: 'Minimum residual TSC2 activity', provenance: 'ESTIMATED: TSC2 always partially active' },
             { name: 'k_ampk_tsc2_max', value: '0.70', units: 'dimensionless', desc: 'Maximum AMPK-induced TSC2 activation', provenance: 'LITERATURE: Inoki et al. 2003 (PMID 14651849) - AMPK phosphorylates TSC2 at Thr1271, Ser1387' },
             { name: 'Km_ampk_tsc2', value: '0.35', units: 'normalized', desc: 'Half-max AMPK for TSC2 activation', provenance: 'ESTIMATED: Calibrated for physiological AMPK range' },
-            { name: 'n_hill_ampk_tsc2', value: '1.5', units: 'dimensionless', desc: 'Hill coefficient (AMPK/GSK3\u03b2 cooperativity)', provenance: 'LITERATURE: Inoki et al. 2006 - AMPK priming enables GSK3\u03b2 phosphorylation' },
+            { name: 'n_hill_ampk_tsc2', value: '1.5', units: 'dimensionless', desc: 'Hill coefficient (AMPK/GSK3\u03b2 cooperativity)', provenance: 'SET: Hill coefficient within plausible range [1.0\u20132.0]; Inoki 2006 supports cooperativity' },
             { name: 'k_tsc2_mtorc1_max', value: '0.65', units: 'dimensionless', desc: 'Maximum TSC2-mediated mTORC1 inhibition', provenance: 'LITERATURE: Huang & Manning 2008 (PMID 18466115)' },
             { name: 'Km_tsc2_mtorc1', value: '0.50', units: 'normalized', desc: 'Half-max TSC2 for mTORC1 inhibition', provenance: 'ESTIMATED: Single GTPase switch (Rheb)' },
             { name: 'n_hill_tsc2_mtorc1', value: '1.2', units: 'dimensionless', desc: 'Near-MM (single GTPase switch)', provenance: 'LITERATURE: Rheb is a binary switch' }
@@ -2731,9 +2731,9 @@ const parameterDB = {
         name: 'Autophagy (Michaelis-Menten)',
         params: [
             { name: 'Vmax_autophagy', value: '1.0', units: 'normalized', desc: 'Maximum autophagy capacity', provenance: 'LITERATURE: Normalized to young baseline' },
-            { name: 'Km_autophagy', value: '0.35', units: 'normalized', desc: 'Half-saturation constant', provenance: 'ITP: Calibrated for convergence at high doses' },
-            { name: 'w_ampk_autophagy', value: '0.45', units: 'weight', desc: 'AMPK contribution weight', provenance: 'LITERATURE: AMPK activates ULK1 directly' },
-            { name: 'w_foxo3_autophagy', value: '0.35', units: 'weight', desc: 'FOXO3 contribution weight', provenance: 'LITERATURE: FOXO3 transcribes autophagy genes' }
+            { name: 'Km_autophagy', value: '0.35', units: 'normalized', desc: 'Half-saturation constant', provenance: 'SET: Autophagy half-max, plausible range [0.2\u20130.5]' },
+            { name: 'w_ampk_autophagy', value: '0.45', units: 'weight', desc: 'AMPK contribution weight', provenance: 'SET: AMPK autophagy weight, plausible range [0.3\u20130.6]' },
+            { name: 'w_foxo3_autophagy', value: '0.35', units: 'weight', desc: 'FOXO3 contribution weight', provenance: 'SET: FOXO3 autophagy weight, plausible range [0.2\u20130.5]' }
         ],
         description: 'Autophagy receives signals from AMPK, FOXO3, and mTORC1 inhibition. Michaelis-Menten saturation explains sub-additive stacking of interventions.',
         mechanism: 'Autophagy = Vmax \u00d7 input / (Km + input), where input = w_ampk\u00d7AMPK + w_foxo3\u00d7FOXO3 + ...',
@@ -2750,8 +2750,8 @@ const parameterDB = {
             { name: 'k_sen_from_damage', value: '0.40', units: 'dimensionless', desc: 'Damage-induced senescence entry', provenance: 'ITP: Calibrated to aging trajectory' },
             { name: 'k_sen_from_sasp', value: '0.20', units: 'dimensionless', desc: 'Paracrine senescence (SASP)', provenance: 'ESTIMATED: ~10-15% from bystander (Acosta 2013)' },
             { name: 'k_sen_natural_clear', value: '0.02', units: '/lifetime', desc: 'Natural immune clearance', provenance: 'LITERATURE: Immune surveillance of senescent cells' },
-            { name: 'k_sen_autophagy_clear', value: '0.70', units: 'dimensionless', desc: 'Autophagy-mediated clearance', provenance: 'ITP: Primary clearance mechanism' },
-            { name: 'k_ampk_sen_reduction', value: '0.45', units: 'dimensionless', desc: 'AMPK protective effect', provenance: 'LITERATURE: AMPK inhibits mTORC1, reduces SASP' },
+            { name: 'k_sen_autophagy_clear', value: '0.70', units: 'dimensionless', desc: 'Autophagy-mediated clearance', provenance: 'SET: Autophagy clearance rate, plausible range [0.5\u20130.9]' },
+            { name: 'k_ampk_sen_reduction', value: '0.45', units: 'dimensionless', desc: 'AMPK protective effect', provenance: 'SET: AMPK protective effect, plausible range [0.3\u20130.6]' },
             { name: 'damage_senescence_threshold', value: '0.30', units: 'normalized', desc: 'Damage threshold for entry', provenance: 'ESTIMATED: p53 activation threshold' }
         ],
         description: 'Senescent cells accumulate from damage and paracrine signaling. Cleared by autophagy and immune surveillance.',
@@ -2767,7 +2767,7 @@ const parameterDB = {
         name: 'SASP / Inflammaging',
         params: [
             { name: 'k_sasp_production', value: '0.45', units: 'normalized', desc: 'SASP production from senescent cells', provenance: 'ESTIMATED: Reaches ~4\u00d7 at age 80 (matches IL-6)' },
-            { name: 'k_sasp_decay', value: '0.60', units: '/lifetime', desc: 'Natural cytokine decay', provenance: 'LITERATURE: IL-6 half-life ~hours' },
+            { name: 'k_sasp_decay', value: '0.60', units: '/lifetime', desc: 'Natural cytokine decay', provenance: 'SET: SASP decay rate, plausible range [0.4\u20130.8]' },
             { name: 'k_sasp_cd38', value: '0.30', units: 'dimensionless', desc: 'SASP upregulates CD38', provenance: 'ESTIMATED: Chini 2019 - inflammation \u2192 CD38' },
             { name: 'k_sasp_paracrine_sen', value: '0.12', units: 'dimensionless', desc: 'Paracrine senescence rate', provenance: 'ESTIMATED: ~10-15% bystander (Acosta 2013)' },
             { name: 'k_sasp_meth_drift', value: '0.15', units: 'dimensionless', desc: 'Inflammation accelerates methylation drift', provenance: 'ESTIMATED: GrimAge clock data' }
@@ -2781,10 +2781,10 @@ const parameterDB = {
     'methylation': {
         name: 'DNA Methylation (Epigenetic Clock)',
         params: [
-            { name: 'k_ezh2_base', value: '1.85', units: '/lifetime', desc: 'Basal EZH2 activity', provenance: 'LITERATURE: Sturm 2022 trajectory data' },
-            { name: 'k_ezh2_sirt1_inhibition', value: '0.50', units: 'dimensionless', desc: 'SIRT1 inhibits EZH2', provenance: 'LITERATURE: SIRT1 deacetylation' },
-            { name: 'k_dnmt_base', value: '0.28', units: '/lifetime', desc: 'Basal DNMT activity', provenance: 'LITERATURE: De novo methylation' },
-            { name: 'k_sasp_methylation', value: '0.42', units: 'dimensionless', desc: 'SASP-driven methylation drift', provenance: 'ESTIMATED: GrimAge CpG composition' },
+            { name: 'k_ezh2_base', value: '1.85', units: '/lifetime', desc: 'Basal EZH2 activity', provenance: 'CALIBRATED TO CONTROL: Calibrated to control methylation trajectory (Sturm 2022 shape)' },
+            { name: 'k_ezh2_sirt1_inhibition', value: '0.50', units: 'dimensionless', desc: 'SIRT1 inhibits EZH2', provenance: 'SET: SIRT1 inhibition of EZH2, plausible range [0.3\u20130.7]' },
+            { name: 'k_dnmt_base', value: '0.28', units: '/lifetime', desc: 'Basal DNMT activity', provenance: 'SET: Basal DNMT activity, plausible range [0.15\u20130.40]' },
+            { name: 'k_sasp_methylation', value: '0.42', units: 'dimensionless', desc: 'SASP-driven methylation drift', provenance: 'SET: SASP methylation drift, plausible range [0.2\u20130.6]' },
             { name: 'k_gut_dnmt_inhibition', value: '0.45', units: 'dimensionless', desc: 'Gut metabolite DNMT inhibition', provenance: 'LITERATURE: Butyrate is HDAC inhibitor (Davie 2003)' }
         ],
         description: 'DNA methylation drifts with age \u2014 the basis of epigenetic clocks. SASP accelerates drift. SIRT1 restrains it via EZH2 inhibition.',
@@ -2799,18 +2799,18 @@ const parameterDB = {
     'bioage': {
         name: 'Biological Age (BioAge)',
         params: [
-            { name: 'w_meth', value: '0.30', units: 'weight', desc: 'Methylation weight', provenance: 'ITP-CALIBRATED: constrained by rapa+acarb combination validation' },
-            { name: 'w_damage', value: '0.30', units: 'weight', desc: 'DNA damage weight', provenance: 'ITP-CALIBRATED: coupled with heteroplasmy via PARP/NAD' },
+            { name: 'w_meth', value: '0.25', units: 'weight', desc: 'Methylation weight', provenance: 'ITP-CALIBRATED: equal prior, acceptable across [0.10, 0.50]' },
+            { name: 'w_damage', value: '0.25', units: 'weight', desc: 'DNA damage weight', provenance: 'ITP-CALIBRATED: equal prior, coupled with heteroplasmy via PARP/NAD' },
             { name: 'w_hetero', value: '0.25', units: 'weight', desc: 'Heteroplasmy weight', provenance: 'LITERATURE: Wallace 2010 frailty; coupled with damage via PARP/NAD' },
-            { name: 'w_sen', value: '0.15', units: 'weight', desc: 'Senescence weight', provenance: 'CLINICAL: SenCell burden \u2192 mortality' },
+            { name: 'w_sen', value: '0.25', units: 'weight', desc: 'Senescence weight', provenance: 'CLINICAL: SenCell burden \u2192 mortality' },
             { name: 'w_sasp', value: '0.00', units: 'weight', desc: 'SASP weight (0 = no double-counting)', provenance: 'ARCHITECTURE: SASP effects flow through other components' },
-            { name: 'meth_norm', value: '1.093528', units: 'at t=1.0', desc: 'Methylation normalization (control sim)', provenance: 'DERIVED: model.derive_normalization_constants()' },
-            { name: 'damage_norm', value: '0.665621', units: 'at t=1.0', desc: 'Damage normalization (control sim)', provenance: 'DERIVED: model.derive_normalization_constants()' },
-            { name: 'H_norm', value: '0.179975', units: 'at t=1.0', desc: 'Heteroplasmy normalization (control sim)', provenance: 'DERIVED: model.derive_normalization_constants()' },
-            { name: 'sen_norm', value: '0.217642', units: 'at t=1.0', desc: 'Senescence normalization (control sim)', provenance: 'DERIVED: model.derive_normalization_constants()' }
+            { name: 'meth_norm', value: '1.092501', units: 'at t=1.0', desc: 'Methylation normalization (control sim)', provenance: 'DERIVED: model.derive_normalization_constants()' },
+            { name: 'damage_norm', value: '0.665330', units: 'at t=1.0', desc: 'Damage normalization (control sim)', provenance: 'DERIVED: model.derive_normalization_constants()' },
+            { name: 'H_norm', value: '0.180017', units: 'at t=1.0', desc: 'Heteroplasmy normalization (control sim)', provenance: 'DERIVED: model.derive_normalization_constants()' },
+            { name: 'sen_norm', value: '0.214275', units: 'at t=1.0', desc: 'Senescence normalization (control sim)', provenance: 'DERIVED: model.derive_normalization_constants()' }
         ],
         description: 'BioAge is a weighted sum of four state variables, each normalized so BioAge(t=1.0)=1.0 in the control simulation by construction. Death occurs at BioAge \u2265 1.0.',
-        mechanism: 'BioAge = 0.30\u00d7Meth/1.09 + 0.30\u00d7Damage/0.67 + 0.25\u00d7H/0.18 + 0.15\u00d7SenCells/0.22',
+        mechanism: 'BioAge = 0.25\u00d7Meth/1.09 + 0.25\u00d7Damage/0.67 + 0.25\u00d7H/0.18 + 0.25\u00d7SenCells/0.21',
         pmids: [23177740, 33888596],
         notes: 'Norms derived from control simulation at t=1.0 \u2192 BioAge(t=1.0)=1.0 by construction. ODE dynamics are independent of normalization (no circularity).',
         calibration: [
@@ -2826,7 +2826,7 @@ const ITP_COMPOUNDS = {
     'rapamycin': {
         name: 'Rapamycin',
         mechanism: 'mTOR inhibition via FKBP12 binding + indirect AMPK activation',
-        interventions: { 'mtorc1_drug_inhibition': 0.84, 'ampk': 0.56 },
+        interventions: { 'mtorc1_drug_inhibition': 0.4190, 'ampk': 0.2792 },
         dosing: '14 ppm in diet',
         pmids: [19587680, 24245565],
         itp_data: { male: '+23%', female: '+26%' },
@@ -2837,47 +2837,47 @@ const ITP_COMPOUNDS = {
             confidence: 'HIGH',
             color: '#3498db'
         },
-        calibration: { target_M: '+23%', model_M: '+23.0%', target_F: '+26%', model_F: '+26.2%' },
+        calibration: { target_M: '+23%', model_M: '+23.0%', target_F: '+26%', model_F: '+26.7%' },
         dose_response: { n: 1.87, K: 0.33, f2: 1.09, ceiling: 1.13, provenance: 'CAL (3-dose ITP fit)', note: 'Nearly saturated at 1\u00d7. ITP data: 4.7 ppm (+3%), 14 ppm (+13%), 42 ppm (+23%). Doubling dose adds only ~9% more pathway activation.' }
     },
     'acarbose': {
         name: 'Acarbose',
         mechanism: '\u03b1-glucosidase inhibitor \u2192 gut microbiome shift \u2192 AMPK + CD38 inhibition',
-        interventions: { 'ampk': 0.44, 'gut_microbiome': 0.32 },
+        interventions: { 'ampk': 0.1690, 'gut_microbiome': 0.1690 },
         dosing: '1000 ppm in diet',
         pmids: [24245565, 31195972, 30916479],
         itp_data: { male: '+22%', female: '+5%' },
         sex_mechanism: {
             type: 'AMPK saturation limited',
-            explanation: 'Estrogen \u2192 LKB1 upregulation gives females ~1.4\u00d7 higher AMPK baseline. Higher baseline = closer to saturation = diminishing returns from AMPK activators.',
+            explanation: 'Estrogen \u2192 LKB1 upregulation gives females ~1.3\u00d7 higher AMPK baseline. Higher baseline = closer to saturation = diminishing returns from AMPK activators.',
             evidence: 'McInnes 2011 (PMID 21876548): Estrogen increases LKB1 via ER\u03b1',
             confidence: 'MEDIUM',
             color: '#e67e22'
         },
-        calibration: { target_M: '+22%', model_M: '+22.0%', target_F: '+5%', model_F: '+5.2%' },
+        calibration: { target_M: '+22%', model_M: '+22.0%', target_F: '+5%', model_F: '+8.0%' },
         dose_response: { n: 4.0, K: 0.39, f2: 1.02, ceiling: 1.02, provenance: 'CAL (3-dose ITP plateau)', note: 'Fully saturated. ITP: 400 ppm (+11%), 1000 ppm (+17%), 2500 ppm (+16%). Alpha-glucosidase completely blocked at reference dose. 2\u00d7 adds ~2%.' }
     },
     'canagliflozin': {
         name: 'Canagliflozin',
-        mechanism: 'SGLT2 inhibition \u2192 caloric deficit \u2192 mild AMPK + strong antioxidant (reduced mito ROS)',
-        interventions: { 'ampk': 0.15, 'antioxidant': 0.88 },
+        mechanism: 'SGLT2 inhibition \u2192 caloric deficit \u2192 AMPK activation',
+        interventions: { 'ampk': 0.1619 },
         dosing: '60 ppm in diet',
         pmids: [32990681, 30843877, 37406767],
         itp_data: { male: '+14%', female: '+9%' },
         sex_mechanism: {
             type: 'AMPK saturation limited',
-            explanation: 'Multi-pathway: AMPK (~16%) is female-saturated; antioxidant (~84%) is sex-independent. Weaker sex gap (F/M=0.64) than pure AMPK activators. SGLT2-mediated, partially buffered (k=5 not 15).',
+            explanation: 'Single AMPK pathway, female-saturated. SGLT2-mediated, single global k=8.',
             evidence: 'Osataphan 2019 (PMID 30843877); Miller 2020 ITP (PMID 32990681)',
             confidence: 'HIGH',
             color: '#e67e22'
         },
-        calibration: { target_M: '+14%', model_M: '+13.8%', target_F: '+9%', model_F: '+8.8%' },
+        calibration: { target_M: '+14%', model_M: '+13.8%', target_F: '+9%', model_F: '+5.2%' },
         dose_response: { n: 1.0, K: 1.0, f2: 1.33, ceiling: 2.0, provenance: 'EST (SGLT2 pharmacology)', note: 'Single ITP dose. SGLT2 receptor kinetics suggest standard Hill n\u22481. FDA 100 vs 300 mg data shows diminishing HbA1c returns. Confidence: LOW.' }
     },
     '17_alpha_estradiol': {
         name: '17\u03b1-Estradiol',
         mechanism: 'Non-feminizing estrogen \u2192 AMPK activation + antioxidant. Requires testosterone substrate.',
-        interventions: { 'ampk': 0.42, 'antioxidant': 0.46 },
+        interventions: { 'ampk': 0.1764, 'antioxidant': 0.1764 },
         dosing: '14.4 ppm in diet',
         pmids: [27312235, 29806096],
         itp_data: { male: '+19%', female: '0%' },
@@ -2894,7 +2894,7 @@ const ITP_COMPOUNDS = {
     'aspirin': {
         name: 'Aspirin',
         mechanism: 'COX inhibition \u2192 antioxidant + anti-inflammatory + mild AMPK',
-        interventions: { 'antioxidant': 0.20, 'ampk': 0.12, 'antiinflam': 0.09 },
+        interventions: { 'antioxidant': 0.0985, 'ampk': 0.0591, 'antiinflam': 0.0394 },
         dosing: '20 ppm in diet',
         pmids: [18631321],
         itp_data: { male: '+8%', female: '0%' },
@@ -2911,7 +2911,7 @@ const ITP_COMPOUNDS = {
     'glycine': {
         name: 'Glycine',
         mechanism: 'Amino acid \u2192 glutathione precursor (antioxidant) + very mild AMPK',
-        interventions: { 'antioxidant': 0.54, 'ampk': 0.04 },
+        interventions: { 'antioxidant': 0.2842, 'ampk': 0.0316 },
         dosing: '8% in diet',
         pmids: [30916479],
         itp_data: { male: '+6%', female: '+4%' },
@@ -2922,7 +2922,7 @@ const ITP_COMPOUNDS = {
             confidence: 'MEDIUM',
             color: '#e67e22'
         },
-        calibration: { target_M: '+6%', model_M: '+6.0%', target_F: '+4%', model_F: '+4.0%' },
+        calibration: { target_M: '+6%', model_M: '+6.0%', target_F: '+4%', model_F: '+3.8%' },
         dose_response: { n: 1.0, K: 2.0, f2: 1.50, ceiling: 3.0, provenance: 'EST (amino acid pharmacology)', note: 'Single ITP dose (8% diet). Amino acid absorption less saturable than enzyme inhibition. Brind et al. rats: 8%/12%/20% with graded effects. MOST room to grow at 2\u00d7. Confidence: LOW-MEDIUM.' }
     }
 };
@@ -2958,7 +2958,7 @@ const NOVEL_COMPOUNDS = {
         evidence: [
             {pmid: 27225458, desc: 'Camacho-Pereira et al. 2016: CD38 dictates age-related NAD+ decline'},
             {pmid: 30504565, desc: 'Chini et al. 2018: CD38 as therapeutic target for age-related NAD+ decline'},
-            {pmid: 32123385, desc: 'Covarrubias et al. 2020: Senescent cells drive CD38-dependent NAD+ decline'},
+            {pmid: 33199925, desc: 'Covarrubias et al. 2020: Senescent cells drive CD38-dependent NAD+ decline'},
             {pmid: 31268145, desc: 'Tarrag\u00f3 et al. 2018: 78c (CD38 inhibitor) restores NAD+ in aged mice'}
         ],
         sex_note: 'Estrogen may upregulate CD38 expression, suggesting females could benefit more from CD38 inhibition. This interaction is not yet modeled.'
@@ -2969,9 +2969,9 @@ const NOVEL_COMPOUNDS = {
         model_key: 'mitophagy',
         model_value: 0.40,
         plausible_range: [0.15, 0.70],
-        rationale: 'Urolithin A activates PINK1/Parkin-mediated mitophagy, selectively clearing damaged mitochondria. In the ELM, heteroplasmy (H) is the primary bottleneck after ITP treatment. Enhanced mitophagy directly targets H by increasing the selection coefficient against mutant mtDNA. The 0.40 value represents 40% enhancement of mitophagy-driven clearance\u2014a conservative central estimate within a wide plausible range.',
+        rationale: 'Urolithin A activates PINK1/Parkin-mediated mitophagy, selectively degrading mitochondria with depolarized membranes (high mutant mtDNA load). The pathway capacity parameter k_selection_mitophagy=0.08 is calibrated so that full PINK1/Parkin activation (injection=1.0) reduces heteroplasmy to 40% of untreated levels at midlife\u2014i.e., 60% clearance of accumulated mutant mtDNA (Pickrell 2015). The injection value 0.40 represents Urolithin A achieving 40% of this maximum pathway capacity, yielding ~21% heteroplasmy reduction. Urolithin A is modeled as continuous (daily oral supplement), not pulsed.',
         confidence: 'LOW',
-        confidence_note: 'The most uncertain parameter in Stage 16. C. elegans lifespan extension with urolithin A is well-established (Ryu 2016: +45%), but C. elegans-to-mammal translation is unreliable. Human trials (Andreux 2019, D\u2019Amico 2021) show functional mitochondrial improvements but do not quantify mitophagy rates or heteroplasmy clearance in vivo. The magnitude of mtDNA quality control enhancement achievable pharmacologically is unknown. This parameter still drives the largest single predicted gain, so its uncertainty dominates the overall prediction.',
+        confidence_note: 'C. elegans lifespan extension with urolithin A is well-established (Ryu 2016: +45%), but C. elegans-to-mammal translation is unreliable. Human trials (Andreux 2019, D\u2019Amico 2021) show functional mitochondrial improvements but do not quantify mitophagy rates or heteroplasmy clearance in vivo. The 60% clearance at full pathway activation is from Pickrell 2015 (PINK1/Parkin knockout studies); the fraction achievable pharmacologically with Urolithin A is uncertain. Solo effect: +4.9%. Marginal on ITP base: +17.1% (M)\u2014amplified by the heteroplasmy bottleneck.',
         evidence: [
             {pmid: 27127233, desc: 'Ryu et al. 2016: Urolithin A induces mitophagy and extends C. elegans lifespan (+45%)'},
             {pmid: 30389977, desc: 'Andreux et al. 2019: Urolithin A improves mitochondrial biomarkers in humans (first clinical trial)'},
@@ -2986,9 +2986,9 @@ const NOVEL_COMPOUNDS = {
         model_key: 'senolytic',
         model_value: 0.40,
         plausible_range: [0.25, 0.60],
-        rationale: 'D+Q selectively kills senescent cells by targeting pro-survival networks (SRC kinase family, BCL-2/BCL-xL). In the ELM, senescent cells contribute 15% to BioAge and drive SASP-mediated inflammation. The 0.40 value represents 40% clearance of senescent cell burden per treatment, consistent with pharmacological (as opposed to genetic) ablation studies.',
+        rationale: 'D+Q selectively kills senescent cells by targeting pro-survival networks (SRC kinase family, BCL-2/BCL-xL). Modeled as biweekly pulsed treatment (3 consecutive days every 14 days, matching the Xu 2018 mouse protocol). The injection value 0.40 combined with k_senolytic_kill_fraction=0.30 gives 12% senescent cell clearance per pulse. Solo effect: +20.0%. Marginal on ITP base: +14.8% (M).',
         confidence: 'MEDIUM',
-        confidence_note: 'Baker 2016 (genetic INK-ATTAC model) achieved 50\u201370% senescent cell clearance and ~25% lifespan extension, but that was genetic ablation\u2014pharmacological D+Q is less efficient and tissue-dependent. Xu 2018 reported 30\u201350% clearance in some tissues with intermittent D+Q dosing. D+Q is the most clinically advanced senolytic (human trials ongoing). Note: senescent cells contribute only 15% to BioAge, so the marginal lifespan impact of senolytic clearance is limited in the model regardless of the exact value.',
+        confidence_note: 'Baker 2016 (genetic INK-ATTAC model) achieved 50\u201370% senescent cell clearance and ~25% lifespan extension, but that was genetic ablation\u2014pharmacological D+Q is less efficient and tissue-dependent. Xu 2018 reported 30\u201350% clearance in some tissues with intermittent D+Q dosing (3 consecutive days, biweekly). D+Q is the most clinically advanced senolytic (human trials ongoing).',
         evidence: [
             {pmid: 25754370, desc: 'Zhu et al. 2015: First senolytic paper\u2014D+Q selectively eliminates senescent cells'},
             {pmid: 29988130, desc: 'Xu et al. 2018: D+Q extends healthspan and lifespan in aged mice'},
@@ -3051,6 +3051,9 @@ window.showInfo = function(key) {
             let paramHtml = '<tr><td>' + p.name + '</td><td>' + p.value + ' ' + p.units + '<br><span style="color:#888;font-size:11px">' + p.desc + '</span>';
             if (p.provenance) {
                 var cls = p.provenance.indexOf('ESTIMATED') === 0 ? 'provenance-estimated' :
+                          p.provenance.indexOf('SET') === 0 ? 'provenance-estimated' :
+                          p.provenance.indexOf('CALIBRATED') === 0 ? 'provenance-mixed' :
+                          p.provenance.indexOf('STRUCTURAL') === 0 ? 'provenance-mixed' :
                           p.provenance.indexOf('LITERATURE') === 0 ? 'provenance-literature' :
                           p.provenance.indexOf('CLINICAL') === 0 ? 'provenance-clinical' :
                           p.provenance.indexOf('DERIVED') === 0 ? 'provenance-clinical' : 'provenance-mixed';

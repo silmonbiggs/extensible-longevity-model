@@ -1,0 +1,157 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage{natbib}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{textcomp}
+
+\onehalfspacing
+
+\title{Taguchi L18 Killifish Screen for Multi-Compound Longevity Interventions:\\A Model-Guided Experimental Proposal}
+\author{Silmon James Biggs}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+% ============================================================
+\section{Summary}
+% ============================================================
+
+We propose a Taguchi L18 orthogonal array lifespan screen in the turquoise killifish (\textit{Nothobranchius furzeri}), testing eight longevity compounds at two or three dose levels across 20 treatment arms ($\sim$1,000 animals). The design is guided by quantitative predictions from the Extensible Longevity Model (ELM), a mechanistic ODE model calibrated to NIA Interventions Testing Program (ITP) single-compound data \citep{Biggs2025elm}. The screen is designed to test the model's central assumption---that aging subsystems addressed by different compound classes compound approximately independently---in approximately 8 months at an estimated cost of \$200K.
+
+% ============================================================
+\section{Background and Motivation}
+% ============================================================
+
+\subsection{The Combination Problem}
+
+The ITP has identified six compounds with reproducible lifespan extension in UM-HET3 mice: rapamycin (+23\% M), acarbose (+22\% M), 17$\alpha$-estradiol (+19\% M), canagliflozin (+14\% M), aspirin (+8\% M), and glycine (+6\% M) \citep{Miller2011rapa,Harrison2014,Stout2017,Miller2020,Strong2016,Miller2019glycine}. Each compound has been tested individually. The question of which combinations are worth pursuing remains unanswered because the combinatorial space is too large to screen exhaustively: six compounds at three dose levels produce $3^6 = 729$ combinations; adding four novel targets produces $3^{10} > 59{,}000$.
+
+The only ITP combination tested to date---rapamycin + acarbose---produced +34\% median extension in males \citep{Strong2022}, substantially below the naive additive prediction of +45\%. This sub-additivity has a mechanistic explanation: both compounds converge on the AMPK/mTORC1/autophagy axis, encountering diminishing returns near pathway saturation. The largest gains should come from combinations that address genuinely independent aging axes---but identifying those axes, and predicting which compound pairs are independent vs.\ convergent, requires a quantitative model.
+
+\subsection{The Extensible Longevity Model}
+
+The ELM \citep{Biggs2025elm} is a system of coupled ODEs describing four aging subsystems---mitochondrial heteroplasmy, DNA damage, epigenetic drift, and cellular senescence---linked through NAD$^+$ metabolism and SASP signaling. The model has 6 calibrated parameters (one compound scale factor per ITP compound, found by root-finding against male ITP targets) and $\sim$190 parameters set from published experimental measurements.
+
+Key validated predictions:
+\begin{itemize}
+\item \textbf{Sex differences:} The model predicts female ITP outcomes for all six compounds from male calibration data alone, using four independently motivated sex mechanisms (AMPK/LKB1 saturation, CYP3A pharmacokinetics, testosterone dependency, COX-2/prostacyclin interference), with 1.3~pp mean error and zero sex-specific fitting.
+\item \textbf{Combination:} The model predicts the rapamycin + acarbose combination (+33.5\% predicted vs.\ +34\% observed) without fitting to that result, identifying the correct direction and magnitude of sub-additivity.
+\end{itemize}
+
+\subsection{The Heteroplasmy Bottleneck Prediction}
+
+The model's most actionable prediction is structural: after the best available ITP compound stack, mitochondrial heteroplasmy is the dominant unaddressed contributor to residual biological age. In simulated treated animals, heteroplasmy accounts for 43.5\% of residual BioAge at death, compared to 27.9\% in untreated controls. None of the four unisex ITP compounds directly targets mitochondrial mutant load; heteroplasmy's indirect connections to the AMPK/mTORC1 pathway are too weak to produce meaningful reduction.
+
+This identifies mitophagy-enhancing compounds (for example, urolithin A via PINK1/Parkin activation) as the highest-value novel targets to add to the ITP base---not because of extraordinary intrinsic potency, but because they address the one aging axis the existing compounds leave untouched. Reliability theory predicts this is precisely where the largest marginal gains should be found \citep{Gavrilov2001}.
+
+\subsection{Novel Target Predictions}
+
+Layered on the rapamycin + acarbose base (+33.5\% M), the model predicts marginal additions for four novel targets:
+
+\begin{table}[ht]
+\centering
+\caption{Predicted marginal lifespan additions to the rapa+acarb base.}
+\begin{tabular}{@{}llr@{}}
+\toprule
+Compound & Mechanism & Marginal addition \\
+\midrule
+NMN & NAD$^+$ precursor (NAMPT bypass) & +11.4~pp \\
+CD38 inhibitor & NAD$^+$ preservation (consumption block) & +7.0~pp \\
+Dasatinib+quercetin & Senolytic (pulsed apoptosis) & +0.6~pp \\
+Urolithin A & Mitophagy (PINK1/Parkin activation) & +0.2~pp \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+NMN leads because it addresses the NAD$^+$ deficit that amplifies all four aging axes simultaneously. The superadditive interaction between rapamycin and NMN (+31.7\% combined vs.\ +26.1\% additive expectation, a +5.6~pp superadditive component) arises because mTORC1 inhibition and NAD$^+$ replenishment address independent rate-limiting steps.
+
+These magnitudes are directional estimates from literature-estimated pathway injection parameters, not ITP-calibrated dose-response data. Relative ranking is more reliable than absolute magnitude for any individual compound.
+
+% ============================================================
+\section{Experimental Design}
+% ============================================================
+
+\subsection{Taguchi L18 Orthogonal Array}
+
+The L18 array ($2^1 \times 3^7$) tests eight compounds at two or three dose levels across 18 treatment groups, arranged so that each compound's main effect is estimable independently of all others. A vehicle control and an all-compounds-high group bring the total to 20 treatment arms.
+
+\subsection{Compound Selection}
+
+Two of six ITP compounds---17$\alpha$-estradiol and aspirin---show zero female efficacy through mechanisms that may limit translatability. The screen excludes both. The four remaining unisex ITP compounds (rapamycin, acarbose, canagliflozin, glycine) form the base panel. The four novel targets predicted to produce the highest marginal additions (urolithin A, NMN, CD38 inhibitor, dasatinib+quercetin) complete the set.
+
+\subsection{Decision-Grade Deliverables}
+
+The design is powered to detect main effects at 80\% power assuming a 10\% lifespan extension threshold (50 fish/group, 1,000 animals total). Primary endpoint: median lifespan by group. Secondary endpoints:
+
+\begin{itemize}
+\item Main effect estimate and 95\% CI for each compound
+\item Pairwise interaction screen ranked by effect size
+\item All-compounds-high arm compared against model's full-stack prediction (+139\% M / +115\% F)
+\end{itemize}
+
+The all-high arm is not part of the orthogonal array---it is a direct test of the full-stack prediction and the cross-pathway independence assumption.
+
+\subsection{Operational Controls}
+
+Fish randomized to tanks by stratified body-mass allocation. Compounds administered via diet with batch-matched controls across all 20 groups. Mortality scored blind by two independent observers with preregistered censoring protocol. Full analysis plan---primary endpoint, secondary endpoints, statistical thresholds---preregistered before first fish dosing.
+
+\subsection{Cost and Timeline}
+
+Estimated cost: \$200K over approximately 8 months. Comparative context: a single ITP Stage~I study costs several million dollars and runs approximately 65 months to endpoint across three sites---approximately 10$\times$ lower cost and 8$\times$ shorter timeline.
+
+% ============================================================
+\section{Interpretation Framework}
+% ============================================================
+
+\subsection{What Results Would Mean}
+
+\textbf{Full-stack prediction substantially below model prediction.} If the all-compounds-high arm produces an extension well outside the model's $\pm$20\% parameter perturbation uncertainty, the most probable interpretation is that the cross-pathway independence assumption fails in vivo. Revision would begin by relaxing the SASP coupling coefficients and refitting to the Taguchi outcome data.
+
+\textbf{Killifish main effects diverging in direction from ITP mouse main effects.} If any compound shows zero or reversed extension in killifish, the translation assumption fails for that compound. This would not necessarily invalidate the mouse combination predictions, but it would terminate the killifish screen as a validation platform for that compound.
+
+\textbf{Confirmation of cross-pathway independence.} If the full-stack result falls within the model's predicted range, confirmatory UM-HET3 mouse cohorts can be designed with prior information from the screen on which combinations are most promising---substantially reducing the cost and risk of multi-year mouse experiments.
+
+\subsection{Model Calibration to Killifish Data}
+
+The Taguchi screen's 20-arm design produces sufficient data to recalibrate the ELM to killifish biology. Main effects provide compound-level calibration targets; the all-high arm tests the full-stack prediction; pairwise interaction estimates (extractable from the orthogonal structure) constrain the SASP and cross-pathway coupling parameters that currently sit in the model's null space. This closes a feedback loop: model predictions guide compound selection $\to$ killifish data refine model parameters $\to$ refined model guides mouse cohort design.
+
+\subsection{Killifish-to-Mouse Translation}
+
+The turquoise killifish shares the relevant aging hallmarks and shows lifespan extension with dietary restriction \citep{Terzibasi2008}. Its compressed lifespan ($\sim$3--4 months) makes AGE crosslink accumulation and clonal evolution less prominent than in UM-HET3 mouse cohorts, and its pharmacokinetics are less well characterized. A positive Taguchi result justifies confirmatory mouse cohorts; a negative result triggers model revision before committing resources to a multi-year mouse experiment.
+
+% ============================================================
+\section{Falsification Conditions}
+% ============================================================
+
+We specify the experimental results that would require model revision rather than merely refinement:
+
+\begin{enumerate}
+\item \textbf{Full-stack extension $<$50\% of predicted value} in the all-high arm $\Rightarrow$ cross-pathway independence assumption fails; revise SASP coupling and pathway interaction terms.
+
+\item \textbf{Any ITP compound shows reversed direction} in killifish $\Rightarrow$ killifish translation fails for that compound; exclude from subsequent analysis.
+
+\item \textbf{Direct heteroplasmy measurement} in ITP-treated tissue contradicts bottleneck prediction $\Rightarrow$ revise $w_H$ assignment and novel target rankings.
+
+\item \textbf{Epigenetic clock scores} (GrimAge2 or DunedinPACE) in ITP cohorts diverge substantially from methylation ODE predictions $\Rightarrow$ revise methylation drift parameters.
+\end{enumerate}
+
+Each condition specifies what would change and why, ensuring the experimental program generates information regardless of outcome.
+
+% ============================================================
+% Bibliography
+% ============================================================
+
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+
+\end{document}

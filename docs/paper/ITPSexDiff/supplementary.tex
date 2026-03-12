@@ -1,0 +1,456 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage{natbib}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{textcomp}
+\usepackage{longtable}
+\usepackage{float}
+
+\onehalfspacing
+
+\title{Supplementary Material:\\Four Biological Mechanisms Predict ITP Sex Differences from Male Data Alone}
+\author{Silmon James Biggs\\[0.3em]
+\normalsize Longrun Bio\\
+\normalsize \texttt{james@longrun.bio}}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\setcounter{section}{0}
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\theequation}{S\arabic{equation}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+% ============================================================
+\section{Full Parameter Tables}
+\label{sec:params}
+% ============================================================
+
+The ELM contains 168 parameters: 151 pathway rate constants and coupling coefficients (Tables~S3--S10), 6 compound scale factors, 6 compound pathway ratios (Table~S2), and 5 sex mechanism parameters (Table~S11). These fall into five categories based on provenance.
+
+\begin{table}[H]
+\centering
+\caption{Parameter classification by provenance.}
+\begin{tabular}{@{}lp{8cm}r@{}}
+\toprule
+Category & Description & Count \\
+\midrule
+Calibrated to ITP & Root-found compound scale factors (male ITP targets) & 6 \\
+Literature & Published experimental measurements (PMIDs cited) & 115 \\
+Set (plausible range) & Value placed within a biologically plausible range; constrained by mechanism knowledge but not derived from a specific measurement & 18 \\
+Calibrated to control & Adjusted so the untreated mouse has realistic lifespan or damage trajectories; no intervention data used & 6 \\
+Structural & Normalization constants, coupling topology, bounds, standard defaults & 23 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Only the 6 calibrated-to-ITP parameters are free. The remaining 162 are frozen priors: set before examining ITP lifespan outcomes and not adjusted during calibration. The 6 calibrated-to-control parameters were adjusted to produce a biologically realistic untreated mouse (for example, correct lifespan, methylation trajectory, and damage accumulation rate) but were not informed by any ITP intervention data.
+
+\subsection{Compound Pathway Ratios and Literature Basis}
+
+Each ITP compound perturbs one or more pathways. For multi-pathway compounds, the \emph{ratio} of activity across pathways is fixed before calibration; only the overall scale factor $\alpha_c$ is fitted. Table~\ref{tab:pathway_ratios} documents the literature basis for each ratio assignment.
+
+\begin{longtable}{@{}llcp{7.5cm}@{}}
+\caption{Compound pathway ratios and literature basis.}
+\label{tab:pathway_ratios} \\
+\toprule
+Compound & Pathway & Ratio & Basis \\
+\midrule
+\endfirsthead
+\toprule
+Compound & Pathway & Ratio & Basis \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+
+Rapamycin & mTORC1 inhib. & 0.60 & Rapamycin-FKBP12 directly inhibits mTORC1 at the FRB domain \citep{Lamming2014}. AMPK activation is indirect: mTORC1 inhibition relieves S6K1-mediated negative feedback on IRS-1/PI3K, permitting LKB1$\to$AMPK signaling. The 60:40 split is estimated from mechanism hierarchy (direct target vs.\ feedback effect); no publication quantifies the relative longevity contributions. \\
+ & AMPK & 0.40 & \\
+\hline
+
+Acarbose & AMPK & 0.50 & $\alpha$-glucosidase inhibition reduces postprandial glucose, activating AMPK via increased AMP:ATP ratio. Gut microbiome remodeling (increased short-chain fatty acid production) reduces CD38-mediated NAD$^+$ consumption \citep{Harrison2014}. The 50:50 split reflects two comparably important mechanisms; the literature establishes both pathways but does not quantify their relative longevity contributions. \\
+ & gut microbiome & 0.50 & \\
+\hline
+
+17$\alpha$-Estradiol & AMPK & 0.50 & Non-feminizing estrogen that activates AMPK via ER$\alpha$$\to$LKB1 \citep{McInnes2011} and reduces ROS via direct antioxidant properties of the phenolic A-ring. The 50:50 split reflects two well-documented mechanisms of comparable importance; no study isolates their relative contributions to lifespan. \\
+ & antioxidant & 0.50 & \\
+\hline
+
+Canagliflozin & AMPK & 1.00 & SGLT2 inhibition causes urinary glucose loss, activating AMPK via energy deficit. Single-pathway assignment. Note: the model underpredicts female efficacy, suggesting a second, sex-independent pathway (possibly FGF21/ketogenesis; see main text \S3.1). \\
+\hline
+
+Aspirin & antioxidant & 0.50 & COX-1/2 inhibition reduces prostaglandin-mediated ROS (antioxidant), suppresses NF-$\kappa$B-driven inflammation (anti-inflammatory), and mildly activates AMPK via salicylate binding to the $\beta$1 subunit \citep{Egan2004,Grosser2006}. The 50:30:20 split reflects the published mechanism hierarchy (COX inhibition is the dominant pharmacological effect, AMPK activation is secondary, and anti-inflammatory effects are tertiary) but the specific numbers are estimated, not measured. \\
+ & AMPK & 0.30 & \\
+ & anti-inflam. & 0.20 & \\
+\hline
+
+Glycine & antioxidant & 0.90 & Glycine is a glutathione precursor; oral supplementation increases glutathione synthesis and reduces oxidative stress markers. AMPK activation is minimal and indirect. The 90:10 split reflects glycine's primary role as an antioxidant substrate; the small AMPK component is estimated. \\
+ & AMPK & 0.10 & \\
+
+\end{longtable}
+
+\subsection{NAD$^+$ Homeostasis Parameters}
+
+\begin{table}[H]
+\centering
+\caption{NAD$^+$ pathway parameters. $\Delta_{\max}$ defined in \S\ref{sec:oat}.}
+\begin{tabular}{|ll|p{3cm}|p{6cm}|r|}
+\hline
+Parameter & Value & Description & Source & $\Delta_{\max}$ \\
+\hline
+$k_{\text{nampt,base}}$ & 0.55 & Basal NAMPT activity & \citet{Yoshino2011}: rate-limiting enzyme & 0.26 \\
+\hline
+$k_{\text{nampt,ampk}}$ & 0.50 & AMPK boost to NAMPT & \citet{Canto2009}: AMPK activates NAMPT $\sim$1.5--2$\times$ & $<$0.01 \\
+\hline
+$k_{\text{nampt,age}}$ & 0.431 & Age-related NAMPT decline & \citet{Yoshino2011}: NAMPT declines with age & $<$0.1 \\
+\hline
+$k_{\text{consumption}}$ & 0.40 & Baseline NAD$^+$ turnover & Set within plausible range 0.25--0.55. Constrained by $\sim$50\% NAD$^+$ decline over lifespan \citep{Massudi2012} & 0.17 \\
+\hline
+$k_{\text{cd38,base}}$ & 0.35 & Basal CD38 consumption & \citet{Chini2020}: major NADase & 0.12 \\
+\hline
+$k_{\text{cd38,age}}$ & 0.50 & Age-related CD38 increase & \citet{CamachoPereira2016}: 2--3$\times$ with age & $<$0.1 \\
+\hline
+$k_{\text{cd38,sasp}}$ & 0.60 & SASP-induced CD38 & Estimated from \citet{Covarrubias2020}: senescent cells upregulate CD38 via NF-$\kappa$B. Plausible range 0.3--0.8 & $<$0.1 \\
+\hline
+$k_{\text{parp}}$ & 0.70 & PARP consumption (damage-dep.) & \citet{Massudi2012}: PARP1 major consumer & 0.12 \\
+\hline
+$k_{\text{sirt}}$ & 0.10 & Sirtuin consumption & SIRT1 uses NAD$^+$ as co-substrate \citep{Imai2000}; minor consumer. Plausible range 0.05--0.20 & $<$0.1 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{AMPK/mTORC1 Signaling Parameters}
+
+\begin{table}[H]
+\centering
+\caption{AMPK and mTORC1 pathway parameters. $\Delta_{\max}$: see \S\ref{sec:oat}.}
+\begin{tabular}{|ll|p{3cm}|p{6cm}|r|}
+\hline
+Parameter & Value & Description & Source & $\Delta_{\max}$ \\
+\hline
+$K_{m,\text{ampk}}$ & 0.40 & AMPK saturation constant & Set at midpoint of plausible range 0.2--0.8; AMPK saturation well-established (PMIDs 16469405, 23022416) & $<$0.01 \\
+\hline
+$V_{\max,\text{ampk}}$ & 1.0 & Maximum AMPK activity & Structural (normalization) & $<$0.01 \\
+\hline
+$k_{\text{mtorc1,auto}}$ & 0.70 & mTORC1 inhib.\ $\to$ autophagy & \citet{Kim2011}: mTORC1 inhibition activates ULK1 & $<$0.1 \\
+\hline
+$k_{\text{mtorc1,sen}}$ & 0.35 & mTORC1 inhib.\ $\to$ senescence & \citet{Demidenko2009}: rapamycin suppresses senescence & 0.16 \\
+\hline
+$\text{TSC2}_{\text{basal}}$ & 0.30 & Basal TSC2 GAP activity & \citet{Huang2008} & $<$0.1 \\
+\hline
+$k_{\text{ampk,tsc2}}$ & 0.70 & Max AMPK-induced TSC2 & \citet{Inoki2003}: AMPK phosphorylates TSC2 at Thr1271 & $<$0.01 \\
+\hline
+$n_{\text{ampk,tsc2}}$ & 1.5 & Hill coefficient (AMPK/GSK3) & Set at midpoint of plausible range 1.0--2.0; mild cooperativity (\citet{Inoki2003}, PMID 16959574) & $<$0.01 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Sirtuin and Autophagy Parameters}
+
+\begin{table}[H]
+\centering
+\caption{Sirtuin and autophagy parameters. $\Delta_{\max}$: see \S\ref{sec:oat}.}
+\begin{tabular}{|ll|p{3cm}|p{6cm}|r|}
+\hline
+Parameter & Value & Description & Source & $\Delta_{\max}$ \\
+\hline
+$K_{m,\text{sirt1}}$ & 0.4 & NAD$^+$ affinity for SIRT1 & SIRT1 $K_m$ for NAD$^+$ $\sim$100--170 $\mu$M in vitro (PMID 10675329); normalized to 0.4. Plausible range 0.3--0.6 & 0.13 \\
+\hline
+$n_{\text{sirt1}}$ & 2.0 & SIRT1 Hill coefficient & Standard Hill coefficient for moderate sigmoidality ($n=2$). Plausible range 1.0--3.0 & $<$0.1 \\
+\hline
+$k_{\text{sirt1,foxo3}}$ & 0.8 & SIRT1 $\to$ FOXO3 activation & \citet{Brunet2004}: SIRT1 deacetylates FOXO3 & 0.20 \\
+\hline
+$V_{\max,\text{auto}}$ & 1.0 & Maximum autophagy rate & Structural (normalization) & $<$0.1 \\
+\hline
+$K_{m,\text{auto}}$ & 0.35 & Autophagy half-max & Set at midpoint of plausible range 0.2--0.5; autophagy has finite capacity (lysosomal processing, ATG proteins) & $<$0.1 \\
+\hline
+$w_{\text{ampk,auto}}$ & 0.45 & AMPK contribution to autophagy & AMPK$\to$ULK1 direct phosphorylation (\citet{Kim2011}); dominant autophagy input. Plausible range 0.3--0.6 & $<$0.01 \\
+\hline
+$w_{\text{foxo3,auto}}$ & 0.35 & FOXO3 contribution to autophagy & FOXO3 transcriptional autophagy program (\citet{Warr2013}). Plausible range 0.2--0.5 & $<$0.1 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{DNA Damage and Repair Parameters}
+
+\begin{table}[H]
+\centering
+\caption{DNA damage and repair parameters. $\Delta_{\max}$: see \S\ref{sec:oat}.}
+\begin{tabular}{|ll|p{3cm}|p{6cm}|r|}
+\hline
+Parameter & Value & Description & Source & $\Delta_{\max}$ \\
+\hline
+$k_{\text{damage,ros}}$ & 0.60 & ROS-induced damage & Set to produce $\sim$3$\times$ damage accumulation over control lifespan (PMID 27026073). Plausible range 0.40--0.80 & 0.16 \\
+\hline
+$k_{\text{damage,repl}}$ & 0.12 & Replication errors & Constitutive replication damage \citep{Lindahl1993}. Plausible range 0.05--0.25; minor contributor & $<$0.1 \\
+\hline
+$k_{\text{damage,sasp}}$ & 0.25 & SASP-induced damage & \citet{Coppe2008}: SASP paracrine damage & $<$0.01 \\
+\hline
+$k_{\text{ber}}$ & 0.35 & Base excision repair & Set so total repair ($\sim$0.63) is exceeded by total damage ($\sim$0.90). BER is PARP1-dependent (PMID 26924217). Plausible range 0.20--0.50 & $<$0.1 \\
+\hline
+$k_{\text{ber,nad}}$ & 0.7 & BER NAD$^+$ dependence & Sub-linear NAD$^+$ dependence: PARP1 requires NAD$^+$ as substrate \citep{Bai2011}. Plausible range 0.4--1.0 & $<$0.1 \\
+\hline
+$k_{\text{damage,sen}}$ & 0.15 & Damage $\to$ senescence & Set within plausible range 0.05--0.30; secondary coupling via p53 (PMID 27026073) & $<$0.01 \\
+\hline
+$k_{\text{antioxidant}}$ & 0.55 & Antioxidant ROS reduction & Set to produce realistic control ROS dynamics (PMID 30048462). Plausible range 0.35--0.75 & $<$0.01 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Methylation Parameters}
+
+\begin{table}[H]
+\centering
+\caption{Methylation drift parameters. $\Delta_{\max}$: see \S\ref{sec:oat}.}
+\begin{tabular}{|ll|p{3cm}|p{6cm}|r|}
+\hline
+Parameter & Value & Description & Source & $\Delta_{\max}$ \\
+\hline
+$k_{\text{ezh2}}$ & 1.85 & Basal EZH2 activity & Set to produce realistic control methylation trajectory. Plausible range 1.5--2.2; dominant drift term & 0.10 \\
+\hline
+$k_{\text{ezh2,sirt1}}$ & 0.5 & SIRT1 inhibition of EZH2 & SIRT1 deacetylates EZH2, reducing H3K27me3 activity (\citet{Vire2006}). Plausible range 0.3--0.8 & $<$0.01 \\
+\hline
+$k_{\text{ezh2,ampk}}$ & 0.70 & AMPK inhibition of EZH2 & \citet{Vire2006}: AMPK$\to$EZH2$\to$DNMT & $<$0.01 \\
+\hline
+$k_{\text{dnmt}}$ & 0.28 & Basal DNMT activity & Constitutive DNMT1 maintenance methylation. Set within plausible range 0.15--0.40 & $<$0.1 \\
+\hline
+$k_{\text{sasp,meth}}$ & 0.42 & SASP-induced methylation drift & Set at $\sim$40\%, reflecting inflammation-associated CpG fraction in GrimAge (\citet{Lu2019}). Plausible range 0.2--0.6 & $<$0.1 \\
+\hline
+$M_{\text{young}}$ & 0.25 & Youthful methylation level & \citet{Horvath2013}: epigenetic clock baseline & $<$0.1 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Heteroplasmy Parameters}
+
+\begin{table}[H]
+\centering
+\caption{Heteroplasmy dynamics parameters (Kowald--Kirkwood model). $\Delta_{\max}$: see \S\ref{sec:oat}.}
+\begin{tabular}{|ll|p{3cm}|p{6cm}|r|}
+\hline
+Parameter & Value & Description & Source & $\Delta_{\max}$ \\
+\hline
+$H_0$ & 0.05 & Initial heteroplasmy & \citet{Stewart2015}: mtDNA mutation load at birth & $<$0.1 \\
+\hline
+$N_{\text{eff}}$ & 100 & Effective mtDNA population size & \citet{Shoubridge2007}: bottleneck estimate & $<$0.1 \\
+\hline
+$\alpha$ & 0.20 & Mutant transcription advantage & \citet{Wallace2010}: deletion mutants replicate faster & \textbf{0.65} \\
+\hline
+$s_0$ & 0.001 & Baseline selection & Negligible placeholder ensuring selection $\neq 0$ when FOXO3 = 0. Plausible range 0--0.01 & $<$0.1 \\
+\hline
+$s_{\text{foxo3}}$ & 0.10 & FOXO3 selection boost & FOXO3$\to$PINK1/Parkin mitophagy strength. Set within plausible range 0.05--0.20 & \textbf{0.28} \\
+\hline
+$s_{\text{mito}}$ & 0.08 & Mitophagy selection (60\% clearance) & Calibrated to \citet{Pickrell2015} knockout data & $<$0.01 \\
+\hline
+$\tau$ & 12.0 & Time scaling factor & Converts Kowald-Kirkwood time units to normalized lifespan. Set so $H$ increases $\sim$3--4$\times$ (\citet{Wallace2010}). Plausible range 8--18 & \textbf{0.35} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Senescence and SASP Parameters}
+
+\begin{table}[H]
+\centering
+\caption{Senescence and SASP parameters. $\Delta_{\max}$: see \S\ref{sec:oat}.}
+\begin{tabular}{|ll|p{3cm}|p{6cm}|r|}
+\hline
+Parameter & Value & Description & Source & $\Delta_{\max}$ \\
+\hline
+$k_{\text{sen,damage}}$ & 0.40 & Damage-induced senescence & \citet{Campisi2007}: DDR$\to$senescence & $<$0.1 \\
+\hline
+$k_{\text{sen,telomere}}$ & 0.12 & Replicative senescence & Hayflick-limit arrivals (PMID 13905658). Set within plausible range 0.05--0.20; minor contributor & $<$0.1 \\
+\hline
+$k_{\text{sen,clear}}$ & 0.02 & Natural immune clearance & \citet{Baker2016}: low basal clearance & $<$0.1 \\
+\hline
+$k_{\text{sen,auto}}$ & 0.70 & Autophagy-mediated clearance & Autophagy facilitates immune surveillance of senescent cells (PMIDs 21979375, 24267888). Plausible range 0.40--1.00 & $<$0.1 \\
+\hline
+$k_{\text{ampk,sen}}$ & 0.45 & AMPK protective effect & AMPK suppresses senescence entry via mTORC1 inhibition (PMID 18725386). Plausible range 0.30--0.60 & $<$0.01 \\
+\hline
+$k_{\text{sasp,prod}}$ & 0.45 & SASP production rate & \citet{Coppe2008}: SASP dynamics & $<$0.1 \\
+\hline
+$k_{\text{sasp,decay}}$ & 0.60 & SASP decay rate & Aggregate SASP signal decay. Set within plausible range 0.30--1.00 & $<$0.01 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{BioAge and Normalization}
+
+Normalization constants are derived from the control simulation at $t = 1.0$ (see \S\ref{sec:normalization}). BioAge weights are swept separately in the weight sensitivity analysis (main text); normalization constants are structural.
+
+\begin{table}[H]
+\centering
+\caption{BioAge weights and normalization constants.}
+\begin{tabular}{|llllr|}
+\hline
+Parameter & Value & Description & Provenance & $\Delta_{\max}$ \\
+\hline
+$w_M$ & 0.25 & Methylation weight & Equal prior & --- \\
+\hline
+$w_D$ & 0.25 & DNA damage weight & Equal prior & --- \\
+\hline
+$w_H$ & 0.25 & Heteroplasmy weight & Equal prior & --- \\
+\hline
+$w_S$ & 0.25 & Senescence weight & Equal prior & --- \\
+\hline
+$\hat{M}_0$ & 1.0925 & Methylation at $t=1.0$ & Structural & --- \\
+\hline
+$\hat{D}_0$ & 0.6653 & Damage at $t=1.0$ & Structural & --- \\
+\hline
+$\hat{H}_0$ & 0.1800 & Heteroplasmy at $t=1.0$ & Structural & --- \\
+\hline
+$\hat{S}_0$ & 0.2143 & SenCells at $t=1.0$ & Structural & --- \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Sex Mechanism Parameters}
+
+All sex-specific parameters are set from published measurements prior to examining female ITP data. They are not included in the OAT sweep because they apply only to one sex and are not re-calibrated.
+
+\begin{table}[H]
+\centering
+\caption{Sex-specific mechanism parameters.}
+\begin{tabular}{|lll|p{7.5cm}|}
+\hline
+Mechanism & Parameter & Value & Source \\
+\hline
+AMPK saturation & baseline $b$ (F/M) & 1.3 & LKB1 expression \citep{McInnes2011} \\
+\hline
+ & curvature $k$ & 8 & Midpoint of plausible range [3--20]; sensitivity sweep confirms mean female error 1.2--1.7~pp across entire range \\
+\hline
+ & attenuation factor & 0.29 & Derived: $1/(1+k(b-1))$ \\
+\hline
+CYP3A PK & exposure ratio (F/M) & 3.48 & Blood levels \citep{Lamming2014} \\
+\hline
+Testosterone & female effect & 0.0 & Castration data \citep{Garratt2018} \\
+\hline
+COX-2/PGI$_2$ & female effect & 0.0 & HRT + NSAID data \citep{Egan2004} \\
+\hline
+\end{tabular}
+\end{table}
+
+% ============================================================
+\section{Identifiability Analysis}
+\label{sec:identifiability}
+% ============================================================
+
+\subsection{Calibration Jacobian}
+
+The calibration Jacobian $\mathbf{J}_{\text{cal}} \in \mathbb{R}^{12 \times 6}$ has rows corresponding to the 12 compound-sex targets (6 male calibration + 6 female prediction) and columns corresponding to the 6 compound scale factors. Each entry $J_{ij} = \partial \Delta L^{(i)} / \partial \alpha^{(j)}$ was computed by finite differences (step $\epsilon = 10^{-3}$). The matrix has numerical rank 6, but aspirin's singular value is negligible (its small injection magnitudes produce near-zero cross-sensitivity to other scale factors), giving an effective rank of 5. Excluding aspirin, the remaining $5 \times 5$ block has condition number $\kappa \approx 1.0$: the calibration is well-posed, with 6 parameters determined by 6 independent male targets via root-finding.
+
+\subsection{Sensitivity of Frozen Priors (One-at-a-Time Analysis)}
+\label{sec:oat}
+
+\textbf{Method.} Each of the 141 perturbable frozen parameters was individually perturbed by $\pm 10\%$. After each perturbation, the 6 compound scale factors were re-calibrated by root-finding so that male predictions still match ITP targets exactly. Because male predictions are held fixed by re-calibration, only perturbations that affect male and female mice \emph{differently}, or that alter the combination's sub-additivity, produce nonzero shifts. All 6 female predictions and the rapa+acarbose combination prediction were then recomputed. The reported sensitivity is the maximum absolute shift across these 7 out-of-sample predictions.
+
+\textbf{Results.} No parameter shifts any prediction by $\geq$1~pp. Of the 141 parameters swept, 15 (11\%) produce shifts of 0.1--0.65~pp (moderate sensitivity) and 126 (89\%) shift predictions by $<$0.1~pp (insensitive). Table~\ref{tab:oat_top15} lists the 15 most sensitive frozen priors. The $\Delta_{\max}$ column in Tables~S3--S10 reports this sensitivity for every parameter individually, so readers can verify the insensitivity claim directly.
+
+\begin{table}[H]
+\centering
+\caption{Top 15 most sensitive frozen priors.}
+\label{tab:oat_top15}
+\begin{tabular}{@{}rlllr@{}}
+\toprule
+Rank & Subsystem & Parameter & Value & Max shift (pp) \\
+\midrule
+1 & Heteroplasmy & transcription advantage $\alpha$ & 0.20 & 0.65 \\
+2 & Heteroplasmy & time scale $\tau$ & 12.0 & 0.35 \\
+3 & Heteroplasmy & FOXO3 selection $s_{\text{foxo3}}$ & 0.10 & 0.28 \\
+4 & NAD$^+$ & basal NAMPT $k_{\text{nampt}}$ & 0.55 & 0.26 \\
+5 & mTORC1 & damage reduction $k_{\text{mtorc1,dmg}}$ & 0.25 & 0.20 \\
+6 & Sirtuin & SIRT1$\to$FOXO3 $k_{\text{sirt1,foxo3}}$ & 0.80 & 0.20 \\
+7 & TSC2 & TSC2$\to$mTORC1 max $k_{\text{tsc2,mtorc1}}$ & 0.65 & 0.20 \\
+8 & NAD$^+$ & basal turnover $k_{\text{consumption}}$ & 0.40 & 0.17 \\
+9 & mTORC1 & senescence effect $k_{\text{mtorc1,sen}}$ & 0.35 & 0.16 \\
+10 & DNA repair & ROS damage $k_{\text{damage,ros}}$ & 0.60 & 0.16 \\
+11 & Sirtuin & NAD$^+$ affinity $K_{m,\text{sirt1}}$ & 0.40 & 0.13 \\
+12 & TSC2 & TSC2$\to$mTORC1 $K_m$ & 0.50 & 0.12 \\
+13 & NAD$^+$ & basal CD38 $k_{\text{cd38,base}}$ & 0.35 & 0.12 \\
+14 & NAD$^+$ & PARP consumption $k_{\text{parp}}$ & 0.70 & 0.12 \\
+15 & Methylation & basal EZH2 $k_{\text{ezh2}}$ & 1.85 & 0.10 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Why heteroplasmy dominates.} Three of the top five parameters belong to the heteroplasmy subsystem. This is not an accident. The Kowald--Kirkwood equation for mitochondrial DNA dynamics is exponential: mutant mtDNA copies have a replicative advantage $\alpha$ that compounds over the animal's lifetime, so small changes in $\alpha$ or the time scale $\tau$ produce large shifts in the heteroplasmy trajectory. Unlike DNA damage, which has three parallel repair pathways (base excision repair, nucleotide excision repair, homologous recombination) that buffer perturbations, heteroplasmy has only one clearance mechanism (FOXO3-driven mitophagy), leaving it with less compensating capacity. The NAD$^+$ and mTORC1 parameters that rank next (positions 4--9) sit upstream in long signal chains: NAMPT sets NAD$^+$ levels, which affect SIRT1, which affects FOXO3, which controls both autophagy and heteroplasmy selection. These long dependency chains propagate small perturbations.
+
+\textbf{Why most parameters are insensitive.} The root-finding step is the key: when a frozen parameter is perturbed, the 6 compound scale factors adjust to compensate, holding male predictions fixed by construction. Female predictions only shift if the perturbation changes the \emph{sex difference}: the gap between how male and female mice respond to the same compound. Most pathway parameters affect both sexes equally, so even substantial control-lifespan shifts are absorbed by recalibration.
+
+\textbf{Implications.} Even the most sensitive frozen prior ($\alpha$, $\pm 0.65$~pp) shifts predictions by less than half the mean female prediction error (1.3~pp). This means prediction errors are dominated by model structure (which biological mechanisms are included or excluded, and how they are coupled) rather than by uncertainty in any individual parameter value.
+
+\subsection{Is the Model a Disguised One-Parameter Fit?}
+
+If the model were secretly rescaling a single aging rate, then adjusting that rate would shift all predictions by the same fraction, and the compound scale factors would simply compensate. To test for this, we increased the heteroplasmy transcription advantage $\alpha$ by 10\%. This shifts all 12 ITP predictions, but the fractional shift ratios vary by compound (0.151 for canagliflozin to 0.207 for acarbose, a 37\% spread). If the model were merely fitting a rescalable rate, these ratios would be identical. The spread arises from nonlinear Michaelis--Menten saturation in the AMPK pathway, confirming genuine mechanistic content beyond rate rescaling.
+
+\subsection{Leave-One-Out Analysis}
+
+For each compound, we asked: how well can the other five predict its behavior? We projected each compound's Jacobian sensitivity row onto the space spanned by the remaining five. The fraction captured measures how much of that compound's prediction is already determined by the others. All compounds are 79--99\% captured:
+
+\begin{itemize}
+\item Glycine is most vulnerable (79.2\%): its antioxidant-heavy profile is not shared by other compounds.
+\item 17$\alpha$-Estradiol is most implied (99.9\%): its male effect uses shared pathways; its female zero is categorical.
+\item Estimated leave-one-out errors are bounded within $\sim$5\% for all compounds.
+\end{itemize}
+
+% ============================================================
+\section{BioAge Weight Validation Against Published Clocks}
+\label{sec:clock_mapping}
+% ============================================================
+
+To assess whether equal BioAge weights ($w = 0.25$ per subsystem) are consistent with published biological age clocks, we classified the component biomarkers of three clocks into ELM-equivalent categories and summed their published weights (Table~\ref{tab:clock_mapping}).
+
+\textbf{Classification procedure.} Each biomarker in GrimAge \citep{Lu2019}, PhenoAge \citep{Levine2018}, and DunedinPACE \citep{Belsky2022} was assigned to the ELM subsystem it most directly reflects. For example: GrimAge's DNAm-estimated PAI-1 (plasminogen activator inhibitor-1) and TIMP-1 are products of the senescence-associated secretory phenotype, so they map to Senescence/SASP. DNAm-estimated smoking pack-years reflects cumulative oxidative and mutagenic damage, mapping to DNA Damage. GrimAge's age and sex terms were excluded (not biological subsystems). PhenoAge's albumin and creatinine reflect metabolic/mitochondrial function; its CRP and lymphocyte percentage reflect inflammation/senescence. DunedinPACE is a pace-of-aging composite; we used the CpG site annotations from \citet{Belsky2022} Table~S2 to classify by nearest biological pathway.
+
+Where a biomarker plausibly spans two categories (for example, glucose reflects both metabolic and DNA damage pathways), we split its weight equally. Biomarkers with no clear ELM mapping (for example, white blood cell count in PhenoAge) were assigned to an ``Other/unmapped'' category and excluded from the per-subsystem percentages. Ranges in the table reflect classification uncertainty (alternative plausible assignments shift shares by $\pm$5\%).
+
+\begin{table}[H]
+\centering
+\caption{ELM subsystem shares from three biological age clocks.}
+\label{tab:clock_mapping}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Subsystem & GrimAge & PhenoAge & DunedinPACE & ELM weight \\
+\midrule
+Heteroplasmy / mitochondrial & 10--20\% & 15--25\% & 10--20\% & 25\% \\
+DNA damage & 15--25\% & 20--30\% & 15--25\% & 25\% \\
+Methylation / epigenetic drift & 20--30\% & 5--15\% & 25--30\% & 25\% \\
+Senescence / SASP & 15--25\% & 15--25\% & 10--20\% & 25\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The decomposition does not pin down a unique weight vector, but it excludes pathological ones. Setting $w_M = 0.50$, for example, exceeds the range implied by both GrimAge (20--30\%) and PhenoAge (5--15\%). All four equal weights (0.25) fall within every clock's implied range. This does not prove the weights are correct; it establishes that equal weights are consistent with available clock data, and that extreme alternatives are not.
+
+% ============================================================
+\section{Normalization Procedure}
+\label{sec:normalization}
+% ============================================================
+
+Normalization constants ($\hat{H}_0, \hat{D}_0, \hat{M}_0, \hat{S}_0$) are derived from the control (no-intervention) simulation evaluated at $t = 1.0$ (median lifespan). This ensures BioAge$(1.0) = 1.0$ by construction. The ODE dynamics are independent of these normalization constants; they serve only to set the death-threshold scale. Changing BioAge weights therefore changes the relative contribution of each subsystem at death without introducing circularity, because the normalization constants are recomputed for each weight vector via \texttt{derive\_normalization\_constants()}.
+
+% ============================================================
+\section{Integration and Numerical Details}
+\label{sec:numerics}
+% ============================================================
+
+ODEs were integrated with SciPy's \texttt{solve\_ivp} using the RK45 method (rtol = $10^{-8}$, atol = $10^{-10}$). Compound scale factors were calibrated by SciPy \texttt{brentq} root-finding (xtol = $10^{-3}$). Convergence was verified by halving the integration step size and confirming predictions shifted by $< 0.01$~pp.
+
+Sensitivity analysis used one-at-a-time perturbation ($\pm 10\%$) with re-calibration of all 6 compound scale factors per perturbation (141 parameters, 19 minutes on a single core).
+
+All code, calibrated parameter sets, and figure generation scripts are available at \url{https://github.com/silmonbiggs/extensible-longevity-model} (MIT license).
+
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,316 @@
+\documentclass[11pt]{article}
+
+% bioRxiv-compatible packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage{natbib}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{textcomp}
+
+\onehalfspacing
+
+\title{Predicting Combination Longevity Interventions\\from Single-Compound ITP Data}
+\author{Silmon James Biggs}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+A mechanistic ODE model of mammalian aging, validated on ITP sex differences and a two-compound combination \citep{Biggs2025elm}, is used to predict multi-compound longevity interventions. The model identifies a heteroplasmy bottleneck: under the best ITP compound stack, mitochondrial heteroplasmy rises from 25\% to 40\% of biological age at death, because no ITP compound directly targets mitochondrial DNA quality control. This predicts mitophagy-enhancing compounds as the highest-value novel targets. Systematic pairwise analysis of 10 compounds (6 ITP-validated, 4 novel) reveals that most pairs interact near-additively (mean interaction ratio 1.02), with sub-additivity confined to compounds sharing the AMPK/mTORC1 axis and superadditivity arising from pathway-independent pairs. The strongest predicted superadditive pair is rapamycin + NMN (+5.5~pp above additive in males), arising from independent targeting of mTORC1 and NAD$^+$ metabolism. Network analysis of the ODE coupling structure explains the synergy pattern: compounds entering through short-path nodes (methylation, distance 2.9) show weak interactions, while those entering through long-path nodes (AMPK, distance 6.2) cascade through shared intermediaries and interact strongly. A full 8-compound stack predicts +139\% median lifespan extension in males and +115\% in females (9-month treatment start), with all internal variables remaining within physiologically plausible ranges. Each prediction is accompanied by a specified falsification condition.
+\end{abstract}
+
+% ============================================================
+\section{Introduction}
+% ============================================================
+
+Aging biology has identified numerous single-compound interventions that extend lifespan in mice \citep{Miller2007,Strong2008,Harrison2009}, but the field lacks a systematic framework for predicting how these interventions interact in combination. The practical question---which compounds to combine, at what doses, and which interactions to expect---currently requires exhaustive empirical testing. The combinatorial space is too large to screen exhaustively ($k^n$ combinations for $n$ compounds at $k$ doses) and, until recently, no quantitative model for predicting combination outcomes from single-compound data has been available.
+
+In a companion paper \citep{Biggs2025elm}, we described the Extensible Longevity Model (ELM), a mechanistic ODE model of four coupled aging subsystems calibrated to six male ITP lifespan targets. That model was validated on two independent tests: prediction of all six female ITP outcomes using four sex-specific mechanisms (1.3~pp mean error, zero sex-specific fitting), and prediction of the rapamycin + acarbose combination (+33.5\% predicted vs.\ +34\% observed, not used in fitting). The present paper takes the validated model as given and asks: what does it predict about multi-compound interventions?
+
+The predictions fall into four categories: (i)~identification of the dominant unaddressed aging axis under current ITP interventions, (ii)~ranking of novel compound targets by predicted marginal benefit, (iii)~pairwise synergy and antagonism across all compound pairs, and (iv)~a full-stack prediction with internal-variable audit. Each prediction comes with a mechanistic explanation derived from the ODE structure and a specified falsification condition.
+
+We emphasize that these are predictions, not results. Their value lies in being specific, quantitative, mechanistically motivated, and testable. The companion Taguchi L18 killifish screen proposal \citep{Biggs2025taguchi} describes an experimental design to test them.
+
+% ============================================================
+\section{Methods}
+% ============================================================
+
+\subsection{Model Summary}
+
+The ELM is fully described in \citet{Biggs2025elm}. Briefly: five state variables (mitochondrial heteroplasmy $H$, NAD$^+$ level $N$, DNA damage $D$, senescent cell burden $S$, methylation drift $M$) evolve under coupled ODEs. Ten signaling intermediates (AMPK, TSC2, mTORC1, SIRT1, FOXO3, autophagy, SASP, ROS, EZH2, PGC-1$\alpha$) are computed as quasi-steady-state algebraic functions at each time step. A scalar BioAge composite with equal weights ($w_H = w_D = w_M = w_S = 0.25$) maps to Gompertz mortality. Six compound scale factors are the only calibrated parameters; 162 additional parameters are frozen priors (115 from published measurements, 24 set within biologically plausible ranges, 23 structural constants).
+
+\subsection{Novel Compound Implementation}
+
+Four novel compounds are added to the validated model, each targeting a pathway not directly addressed by the six ITP compounds (Figure~\ref{fig:system}):
+
+\begin{itemize}
+\item \textbf{NMN} (nicotinamide mononucleotide): NAD$^+$ precursor. Modeled as direct NAD$^+$ synthesis boost ($k_{\text{nmn}} = 0.80$), based on tissue NAD$^+$ elevation in supplementation studies \citep{Mills2016,Yoshino2018}.
+\item \textbf{CD38 inhibitor} (for example, 78c): reduces age-dependent NAD$^+$ consumption. Modeled as fractional reduction in CD38 activity ($k_{\text{cd38i}} = 0.50$), based on CD38 knockout phenotypes \citep{Camacho-Pereira2016}.
+\item \textbf{Urolithin A}: PINK1/Parkin-mediated mitophagy enhancer. Modeled as continuous enhanced selection against mutant mtDNA (injection $= 0.40$; daily oral supplement). The pathway capacity parameter $k_{\text{selection,mito}} = 0.08$ is calibrated so that full PINK1/Parkin activation reduces heteroplasmy to 40\% of untreated levels at midlife---that is, 60\% clearance of accumulated mutant mtDNA \citep{Pickrell2015,Ryu2016}.
+\item \textbf{Dasatinib + quercetin} (D+Q): senolytic. Modeled as pulsed senescent cell clearance---3 consecutive days every 14 days, matching the Xu et al.\ protocol \citep{Baker2016,Xu2018}. Kill fraction per pulse: $k_{\text{kill}} \times \text{injection} = 0.30 \times 0.40 = 12\%$.
+\end{itemize}
+
+These parameters are literature-estimated, not calibrated to lifespan data. The predictions indicate which mechanisms contribute most to further extension, not precise magnitudes.
+
+\begin{figure}[ht]
+\centering
+% \includegraphics[width=\textwidth]{system_diagram_all.png}
+\textbf{[Figure 1: system\_diagram\_all.png]}\\[4pt]
+\small System architecture showing ITP compound entry points (green) and novel compound entry points (red). Key observation: all six ITP compounds enter through AMPK and/or antioxidant pathways. No ITP compound directly targets mitochondrial heteroplasmy (Urolithin A, red) or NAD$^+$ synthesis (NMN, red).
+\caption{ELM system architecture with ITP (green) and novel (red) compound entry points.}
+\label{fig:system}
+\end{figure}
+
+\subsection{Combination Simulation}
+
+Combination simulations activate multiple compound perturbations simultaneously, applied independently to their respective rate constants. Cross-compound interactions arise through shared state variables and signaling intermediates, not through any explicit interaction terms. Each compound enters at its calibrated (ITP) or literature-estimated (novel) dose. All multi-compound simulations use a uniform 9-month treatment start ($t = 0.30$ normalized), matching the standard ITP protocol for new combination trials. Note: in the ITP's individual compound tests, start ages varied (acarbose at 4 months, canagliflozin at 7 months, rapamycin and glycine at 9 months); the companion paper \citep{Biggs2025elm} uses compound-specific start times for single-compound calibration. For multi-compound predictions here, the uniform 9-month start provides a conservative, protocol-realistic baseline.
+
+\subsection{Pairwise Synergy Analysis}
+
+For each pair of compounds $i, j$, synergy is defined as:
+\begin{equation}
+\Delta_{ij} = \text{ext}(i{+}j) - \text{ext}(i) - \text{ext}(j)
+\label{eq:synergy}
+\end{equation}
+where $\text{ext}(\cdot)$ is predicted median lifespan extension. $\Delta > 0$ indicates superadditivity (pathway-independent benefit); $\Delta < 0$ indicates sub-additivity (shared bottleneck). All 45 compound pairs $\times$ 2 sexes = 90 pairwise simulations were performed.
+
+For novel compounds on an ITP base, conditional synergy isolates the novel$\times$novel interaction:
+\begin{equation}
+\Delta_{ij|B} = \text{ext}(B{+}i{+}j) - \text{ext}(B{+}i) - \text{ext}(B{+}j) + \text{ext}(B)
+\end{equation}
+where $B$ is the ITP base cocktail (rapamycin + acarbose + canagliflozin + glycine).
+
+\subsection{Network Analysis}
+
+The ODE coupling structure was expressed as a weighted directed graph with adjacency matrix $A_{ij}$ equal to the coupling strength of node $j$'s influence on node $i$. Shortest weighted path distances from each intervention entry point to BioAge were computed via Floyd--Warshall on the distance matrix $d_{ij} = 1/|A_{ij}|$. Betweenness centrality $C_B(v) = \sum_{s \neq v \neq t} \sigma_{st}(v)/\sigma_{st}$ was computed for all nodes.
+
+\subsection{Sensitivity Analysis}
+
+Every parameter was perturbed $\pm$20\% independently; the resulting shift in each prediction was recorded. BioAge weights were swept across $[0.05, 0.40]$ with the model recalibrated at each value.
+
+% ============================================================
+\section{Results}
+% ============================================================
+
+\subsection{The Heteroplasmy Bottleneck}
+
+\begin{figure}[ht]
+\centering
+% \includegraphics[width=0.7\textwidth]{stage_A26_serial_reliability.png}
+\textbf{[Figure 2: stage\_A26\_serial\_reliability.png]}\\[4pt]
+\small Series reliability: a system with multiple failure modes fails when any single component reaches its threshold. Treating three of four subsystems leaves the untreated subsystem as the binding constraint.
+\caption{Series reliability and the masking principle.}
+\label{fig:reliability}
+\end{figure}
+
+The ELM's four aging subsystems behave as a series reliability system \citep{Gavrilov2001}: fix everything but one thing and the one thing kills you. A mouse receiving every available intervention still dies---of the one thing none of them addressed. Under the best ITP compound stack (rapamycin + acarbose + canagliflozin + glycine), the model predicts that heteroplasmy's contribution to BioAge at death rises from 25\% (control) to 40\% (treated), while the other three subsystems are substantially reduced (Figure~\ref{fig:bottleneck}). This occurs because all six ITP compounds enter through AMPK, mTORC1, or antioxidant pathways---none directly targets mitochondrial DNA quality control.
+
+\begin{figure}[ht]
+\centering
+% \includegraphics[width=0.7\textwidth]{stage_16_bioage_composition.png}
+\textbf{[Figure 3: stage\_16\_bioage\_composition.png]}\\[4pt]
+\small BioAge composition at death for control, ITP base (4-compound stack), and ITP + all 4 novel targets. Under the ITP base, heteroplasmy rises from 25\% to 40\% of BioAge at death. Even with all novel compounds active (+139\%), heteroplasmy remains the largest component (43\%), confirming it as the persistent bottleneck.
+\caption{Heteroplasmy bottleneck: BioAge composition at simulated death.}
+\label{fig:bottleneck}
+\end{figure}
+
+This is a structural prediction of the model, not a fitting artifact. It follows from two features: (i)~the Kowald--Kirkwood heteroplasmy dynamics are largely autonomous---driven by the mutant mtDNA replication advantage, modulated only weakly by mitophagy flux---and (ii)~no ITP compound significantly increases mitophagy-mediated selection against mutant mtDNA.
+
+\textbf{Falsification condition:} Measure heteroplasmy fraction in rapamycin + acarbose-treated mice at median lifespan. If heteroplasmy is not elevated relative to age-matched controls (that is, if ITP compounds suppress heteroplasmy through a mechanism not in the model), the bottleneck prediction is wrong.
+
+\subsection{Novel Target Rankings}
+
+Given the heteroplasmy bottleneck, which novel compounds provide the largest marginal benefit when added to the ITP base? Figure~\ref{fig:whatif} shows the predicted marginal extensions:
+
+\begin{figure}[ht]
+\centering
+% \includegraphics[width=0.85\textwidth]{stage_16_whatif.png}
+\textbf{[Figure 4: stage\_16\_whatif.png]}\\[4pt]
+\small Predicted total lifespan extension when each novel compound is added individually to the ITP 4-compound base (+41\% M, +35\% F; all compounds starting at 9 months). D+Q, NMN, and Urolithin A provide the largest marginal gains.
+\caption{Novel target marginal extensions on the ITP base.}
+\label{fig:whatif}
+\end{figure}
+
+\begin{itemize}
+\item \textbf{D+Q} (senolytic): +17\% marginal (M)---biweekly pulsed clearance of senescent cells (3 days on, 11 days off).
+\item \textbf{NMN} (NAD$^+$): +15\% marginal---directly supplements the NAD$^+$ pool depleted by rising heteroplasmy.
+\item \textbf{Urolithin A} (mitophagy): +15\% marginal---addresses the heteroplasmy bottleneck directly via continuous enhanced PINK1/Parkin selection against mutant mtDNA. Its predicted marginal reflects where the bottleneck is, not an assumption of extraordinary intrinsic potency.
+\item \textbf{CD38 inhibitor}: +9\% marginal---reduces age-dependent NAD$^+$ consumption driven by SASP.
+\end{itemize}
+
+The top two targets address different consequences of the heteroplasmy bottleneck: NMN compensates for NAD$^+$ depletion caused by rising heteroplasmy (downstream rescue), while Urolithin A directly reduces the mutant mtDNA fraction (upstream intervention). D+Q targets senescence---partially addressed by the AMPK/mTORC1 axis of the ITP base but with substantial residual burden. CD38 inhibition provides a second route to NAD$^+$ rescue by reducing consumption rather than boosting synthesis.
+
+The four marginals sum to +56\% but the combined all-4-novel marginal is +96\% (M), indicating strong synergy among the novel compounds---each addresses a different rate-limiting step. All whatif simulations use a uniform 9-month treatment start, matching the standard ITP protocol for new combination trials.
+
+\textbf{Falsification condition:} If a mitophagy enhancer added to the ITP base provides less marginal benefit than a senolytic, the heteroplasmy bottleneck is less severe than predicted---either because heteroplasmy accumulates more slowly than the Kowald--Kirkwood model predicts, or because the heteroplasmy weight $w_H = 0.25$ is too high.
+
+\subsection{Pairwise Synergy Matrix}
+
+\begin{figure}[ht]
+\centering
+% \includegraphics[width=\textwidth]{stage_A10_synergy_full.png}
+\textbf{[Figure 5: stage\_A10\_synergy\_full.png]}\\[4pt]
+\small Full 10$\times$10 pairwise synergy matrix (male + female panels). Diagonal: solo extension. Off-diagonal: synergy $\Delta_{ij}$ in percentage points. Blue: sub-additive (shared bottleneck). Red/green: superadditive (pathway-independent). Dashed lines separate 6 ITP-validated compounds (top-left) from 4 novel targets (bottom-right).
+\caption{Pairwise synergy matrix for all 10 compounds.}
+\label{fig:synergy}
+\end{figure}
+
+The full synergy matrix reveals a dominant pattern that reflects pathway architecture: compounds converging on the same signaling node are sub-additive; compounds acting through independent pathways are superadditive. Three specific patterns emerge (Figure~\ref{fig:synergy}):
+
+\textbf{Sub-additivity within AMPK.} Rapamycin + acarbose: $\Delta = -8.3$~pp (M). Both compounds converge on AMPK, which follows Michaelis--Menten kinetics with saturation constant $K_m = 0.40$. Once TSC2 is near-maximally activated, additional AMPK stimulation yields diminishing returns. This is the same mechanism that produces the validated rapa+acarb prediction (+33.5\% vs.\ +34\% observed, compared to the naive +42\%). ITP-only pairs are predominantly sub-additive (mean ratio 0.88) because five of six ITP compounds activate AMPK.
+
+\textbf{Superadditivity across independent axes.} Rapamycin + NMN: $\Delta = +5.5$~pp. mTORC1 inhibition and NAD$^+$ replenishment attack independent rate-limiting steps---rapamycin boosts autophagy while NMN restores SIRT1-mediated DNA repair. No shared bottleneck. Rapamycin + Urolithin A: $\Delta = +4.8$~pp---similarly pathway-independent. ITP$\times$novel pairs are predominantly superadditive (mean ratio 1.10) because the novel compounds target axes not addressed by ITP interventions. This cross-axis mechanism is qualitatively different from the AMPK convergence that makes rapa+acarb sub-additive. The clearest example: mitophagy reduces heteroplasmy, improving OXPHOS efficiency and reducing mitochondrial drain on NAD$^+$; NMN boosts the now-more-efficient NAD$^+$ synthesis pathway. Each compound makes the other more effective.
+
+\textbf{Near-additivity as the overall mean.} Across all 45 pairs of 10 compounds, the mean interaction ratio is 1.02 (range 0.79--1.21). The sub-additivity within the ITP set and the superadditivity of cross-pathway pairs approximately cancel. The system's sparse coupling (14\% network density, 31 of 225 possible edges nonzero) means most compound pairs do not share intermediaries.
+
+\textbf{Falsification condition:} If rapamycin + NMN in mice produces sub-additive rather than superadditive lifespan extension, either (i)~NMN's NAD$^+$ boost saturates at the same node as rapamycin's AMPK activation (not predicted by the model), or (ii)~late-life NMN efficacy declines in ways the constant-efficacy model does not capture.
+
+\subsection{Rapamycin + NMN: The Key Testable Prediction}
+
+The rapa+NMN superadditivity prediction is the most experimentally accessible test of the model's combination framework:
+
+\begin{center}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Scenario & Male & Female \\
+\midrule
+Rapamycin alone & +23.0\% & +26.7\% \\
+NMN alone & +3.2\% & +3.2\% \\
+Additive floor & +26.3\% & +29.9\% \\
+\textbf{Model prediction} & \textbf{+31.8\%} & \textbf{+36.0\%} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The +5.5\% superadditive component (M) arises from model structure: NMN's NAD$^+$ boost compounds over the extra lifespan that rapamycin provides. Sensitivity analysis (Figure~\ref{fig:tornado}) confirms that the superadditive component survives all $\pm$20\% parameter perturbations---it never drops below zero. The most sensitive parameter is $k_{\text{nmn,synthesis}}$ (NMN$\to$NAD$^+$ efficiency, $\pm$1.5~pp).
+
+\begin{figure}[ht]
+\centering
+% \includegraphics[width=0.7\textwidth]{stage_A5_sensitivity.png}
+\textbf{[Figure 6: stage\_A5\_sensitivity.png]}\\[4pt]
+\small Tornado chart: every parameter perturbed $\pm$20\%. Total rapa+NMN prediction shifts by at most $\pm$1.5~pp. The superadditive component (+5.5~pp baseline) never drops below zero under any single perturbation. Most sensitive: $k_{\text{nmn,synthesis}}$ ($\pm$1.5~pp), $K_{m,\text{nad,sirt1}}$ ($\pm$1.3~pp).
+\caption{Rapa+NMN sensitivity tornado: parameter robustness.}
+\label{fig:tornado}
+\end{figure}
+
+\textbf{Late-life caveat.} The model assumes constant intervention efficacy throughout life. In reality, autophagy capacity declines and NAD$^+$ production falls in late life. The additive floor (+26\% M, +30\% F) is the defensible lower bound; the full prediction (+32\% M, +36\% F) is a structural upper bound conditioned on late-life extrapolation.
+
+\subsection{Network Structure Explains Synergy}
+
+Why do some pairs synergize and others antagonize? The answer lies in the ODE coupling structure expressed as a weighted directed graph (Figure~\ref{fig:paths}).
+
+\begin{figure}[ht]
+\centering
+% \includegraphics[width=0.85\textwidth]{stage_A10_paths.png}
+\textbf{[Figure 7: stage\_A10\_paths.png]}\\[4pt]
+\small Shortest weighted path distances from each intervention entry point to BioAge. Red = direct (distance $<$3), orange = moderate (3--5), blue = indirect ($>$5). Short-path compounds show weak interactions; long-path compounds cascade through shared intermediaries and interact strongly.
+\caption{Intervention path distances to BioAge explain synergy patterns.}
+\label{fig:paths}
+\end{figure}
+
+Three structural features explain the synergy matrix:
+
+\textbf{Path distance predicts interaction strength.} Methylation targets (17$\alpha$-estradiol, distance 2.9) feed almost directly into BioAge and show weak interactions. AMPK-activating compounds (distance 6.2) must cascade through TSC2$\to$mTORC1$\to$autophagy/senescence$\to$SASP$\to$damage$\to$BioAge; each hop introduces nonlinearity and creates opportunities for saturation when two compounds share the same cascade.
+
+\textbf{Betweenness centrality identifies bottleneck nodes.} SASP (betweenness 1.00) and SenCells (0.95) are the highest-centrality nodes---nearly every path from an intervention to a downstream damage variable passes through SASP signaling. Compounds that both route through the same high-centrality node show sub-additivity (diminishing returns at the bottleneck).
+
+\textbf{Design principle.} Combine a short-path compound (direct leverage, predictable effect) with a long-path compound (cascade amplification). The synergy data confirm this: mitophagy (distance 4.0) + senolytic (distance 6.6) is the top novel pair, while rapamycin (6.2) + acarbose (6.2) share the same long cascade and are sub-additive.
+
+\subsection{Weight Sensitivity of the Bottleneck Prediction}
+
+The prediction that mitochondrial heteroplasmy is the dominant unaddressed bottleneck is the most novel result of this paper and requires the most careful accounting of what is data and what is assumption. The conclusion depends on the BioAge weight assignment $w_H = 0.25$. Since no ITP compound targets heteroplasmy directly, this weight is constrained by model structure and literature, not by ITP lifespan data. Figure~\ref{fig:weight} shows that the qualitative conclusion is robust across the full biologically plausible range.
+
+\begin{figure}[ht]
+\centering
+% \includegraphics[width=\textwidth]{stage_A6b_weight_sensitivity.png}
+\textbf{[Figure 8: stage\_A6b\_weight\_sensitivity.png]}\\[4pt]
+\small Six panels showing calibration error, heteroplasmy bottleneck percentage, and urolithin A marginal benefit as $w_H$ varies from 0.05 to 0.40. The qualitative conclusion---heteroplasmy is the primary untreated bottleneck and mitophagy is the most valuable novel target---holds across the full range.
+\caption{Weight sensitivity: the bottleneck conclusion is robust.}
+\label{fig:weight}
+\end{figure}
+
+\subsection{Full-Stack Prediction: +139\% M / +115\% F with Internal Audit}
+
+The full 8-compound stack (rapamycin, acarbose, canagliflozin, glycine, NMN, CD38 inhibitor, Urolithin A, D+Q) predicts +139\% median lifespan extension in males and +115\% in females.
+
+A number this large demands scrutiny. Two structural checks support its defensibility:
+
+\textbf{No variable is pushed beyond calibration range.} Figure~\ref{fig:audit} shows the trajectory of all internal variables under the full stack. NAD$^+$ levels, DNA damage, heteroplasmy, senescent cell burden, and methylation drift all remain within physiologically plausible ranges. The large extension arises from addressing six partially independent aging axes simultaneously, not from any single variable being driven to an implausible extreme.
+
+\textbf{Pairwise interactions are well-behaved.} All 28 pairwise combinations produce predictable results (mean additivity ratio 1.02). Five pairs sharing AMPK show diminishing returns. Eleven cross-pathway pairs show mild synergy. No pair produces a wildly unexpected result. The full-stack prediction is a sum of many small, well-behaved interactions, not a product of combinatorial explosion.
+
+\begin{figure}[ht]
+\centering
+% \includegraphics[width=\textwidth]{audit_trajectories_M.png}
+\textbf{[Figure 9: audit\_trajectories\_M.png]}\\[4pt]
+\small Full 8-variable trajectory audit under the +139\% full stack (males). All variables remain within physiologically plausible ranges. NAD$^+$ stays elevated but bounded; heteroplasmy is suppressed but nonzero; senescent cell burden is reduced but not eliminated. The large extension comes from many well-behaved perturbations across independent axes.
+\caption{Internal variable audit: full-stack trajectory (males).}
+\label{fig:audit}
+\end{figure}
+
+\textbf{Falsification condition:} The Taguchi L18 killifish screen \citep{Biggs2025taguchi} tests this prediction directly. If the observed multi-compound extension is $<$30\% in killifish (calibrated for species differences), either (i)~pathway interactions in vivo are more antagonistic than the ODE structure predicts, or (ii)~unmeasured failure modes (toxicity, immune dysfunction, organ-specific pathology) dominate at high extension.
+
+\textbf{What this does not prove:} The model may be wrong about biology it has not measured. Whether eight compounds actually combine as predicted in a living animal is an empirical question that no amount of ODE analysis can settle.
+
+% ============================================================
+\section{Discussion}
+% ============================================================
+
+\subsection{The Value of Mechanistic Predictions}
+
+These predictions are useful even before experimental validation, for three reasons. First, they are specific: each prediction comes with a number, a mechanistic explanation, and a falsification condition. A prediction that ``NMN might help'' is not useful; a prediction that ``rapamycin + NMN should produce +32\% in males, superadditive by +5.5~pp, because they target independent rate-limiting steps, and this would be falsified by sub-additive interaction'' is useful regardless of whether it turns out to be correct.
+
+Second, the predictions are structurally derived from an ODE system that has been validated on independent data (sex differences, one combination). The model's track record is limited---one combination prediction is not comprehensive validation---but it is nonzero. The rapa+acarb interaction operates through the most tightly constrained element of the ODE system (shared AMPK saturation); the harder test---cross-pathway interactions involving mechanistically independent axes---requires multi-compound experimental designs that have not yet been conducted.
+
+Third, the predictions identify which experiments are most informative. The heteroplasmy bottleneck prediction, if correct, implies that mitophagy-enhancing compounds should be prioritized over additional AMPK activators. If wrong, it implies that the Kowald--Kirkwood heteroplasmy dynamics need revision. Either outcome advances the field.
+
+\subsection{Relationship to the Heteroplasmy Bottleneck}
+
+The bottleneck finding follows from a structural feature of the ITP compound set, not a property of aging biology in general: all six compounds enter through AMPK, mTORC1, or antioxidant pathways. This is not a property of aging biology in general---it is a property of the compounds the ITP chose to test. The prediction is that the next large gain in lifespan extension requires addressing a different aging axis, specifically mitochondrial DNA quality control.
+
+This is consistent with the series reliability framework: a system with multiple failure modes fails when any single component reaches threshold. Treating three of four subsystems leaves the untreated subsystem as the binding constraint. The ITP compounds are highly effective at reducing methylation drift, DNA damage accumulation, and senescent cell burden through the AMPK/mTORC1 cascade. They do not significantly affect the autonomous heteroplasmy ratchet.
+
+\subsection{Limitations}
+
+\textbf{Novel compound parameters.} NMN, CD38i, Urolithin A, and D+Q parameters are literature-estimated, not calibrated to lifespan data. The marginal rankings (which compound adds most) are more reliable than the absolute magnitudes (how much it adds), because rankings depend on the relative pathway structure while magnitudes depend on parameter values.
+
+\textbf{Constant efficacy assumption.} The model assumes compound effects persist at mid-life magnitude throughout the lifespan. In reality, autophagy capacity declines, drug metabolism changes, and compensatory mechanisms engage. This assumption most affects the late-life extrapolation that drives the superadditivity predictions.
+
+\textbf{Missing failure modes.} The model includes four aging subsystems but excludes telomere dynamics, immune senescence, AGE crosslink accumulation, organ-specific fibrosis, and Wnt/$\beta$-catenin signaling. Compounds that extend lifespan by +139\% in the model might encounter ceiling effects from unmeasured failure modes.
+
+\textbf{Coarse methylation module.} The model treats epigenetic drift as a single aggregate variable. In reality, biological age clocks (GrimAge, PhenoAge, DunedinPACE) query specific CpG sites whose methylation states are controlled by identifiable transcription factors. Expanding the methylation subsystem to resolve individual CpG loci and their regulators would enable direct calibration against clock data and could sharpen the BioAge weight estimates, which currently assign equal weight (25\%) to each subsystem for lack of data to do otherwise.
+
+\textbf{SASP coupling.} The senolytic and anti-inflammatory predictions depend on SASP coupling parameters that are literature-estimated, not calibrated to lifespan data. The mitophagy + senolytic conditional synergy (+29~pp) is the most SASP-dependent result. The mitophagy + NMN synergy (+33~pp) is more robust, operating through the NAD$^+$/heteroplasmy axis.
+
+\textbf{No toxicity prediction.} The model tracks aging biology, not pharmacology. A compound predicted to extend model lifespan by 50\% might produce hepatotoxicity, drug-drug interactions, or off-target effects not captured by the ODE system.
+
+\subsection{Experimental Priorities}
+
+The model suggests a clear experimental sequence:
+
+\begin{enumerate}
+\item \textbf{Rapamycin + NMN} in mice. The most accessible test: both compounds are available, the ITP infrastructure exists, and the prediction (superadditive by +5--6~pp) is specific and falsifiable.
+\item \textbf{Heteroplasmy measurement} in ITP-treated mice. Does heteroplasmy fraction increase under rapamycin + acarbose treatment, as predicted?
+\item \textbf{Taguchi L18 killifish screen.} Tests the full 8-compound prediction and reveals which interactions matter, in 8 months rather than 3 years \citep{Biggs2025taguchi}.
+\end{enumerate}
+
+\subsection{Conclusions}
+
+A mechanistic ODE model validated on ITP sex differences and one combination predicts that (i)~mitochondrial heteroplasmy is the dominant unaddressed bottleneck under current ITP interventions, (ii)~rapamycin + NMN should be superadditive by +5.5~pp, (iii)~most compound pairs interact near-additively, with synergy and antagonism explained by network path distances and shared bottleneck nodes, and (iv)~a full 8-compound stack predicts +139\% M / +115\% F median lifespan extension with well-behaved internal dynamics. Each prediction is accompanied by a mechanistic explanation and a specified falsification condition. Whether these predictions survive experimental testing is the question that motivates the Taguchi L18 killifish screen---designed to inform decisions about which combinations may warrant testing, and why.
+
+% ============================================================
+% Bibliography
+% ============================================================
+
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+
+\end{document}

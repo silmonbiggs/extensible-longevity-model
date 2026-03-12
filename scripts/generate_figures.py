@@ -1007,15 +1007,17 @@ def gen_stage_15():
     plt.tight_layout()
     save(fig, 'stage_15_risk_profile.png')
 
-    # --- Precompute all cocktail extensions (one pass, both sexes) ---
-    cocktails = _enumerate_cocktails(risk_data)
-    ext_cache = _precompute_all_cocktail_extensions(cocktails)
-
-    # --- Optimal cocktails ---
-    _gen_optimal_cocktails(risk_data, cocktails, ext_cache)
-
-    # --- Pareto ---
-    _gen_pareto(risk_data, cocktails, ext_cache)
+    # --- Cocktail precomputation and Pareto frontier ---
+    # Skipped by default: enumerates 4^6 = 4096 cocktails x 2 sexes,
+    # takes ~1 hour, and the Pareto figure is not used in any paper.
+    # To enable, run: python generate_figures.py stage_15_pareto
+    if os.environ.get('ELM_GEN_PARETO'):
+        cocktails = _enumerate_cocktails(risk_data)
+        ext_cache = _precompute_all_cocktail_extensions(cocktails)
+        _gen_optimal_cocktails(risk_data, cocktails, ext_cache)
+        _gen_pareto(risk_data, cocktails, ext_cache)
+    else:
+        print('    Skipping Pareto/cocktail precomputation (set ELM_GEN_PARETO=1 to enable)')
 
 
 def _enumerate_cocktails(risk_data):
@@ -1182,27 +1184,26 @@ def _gen_pareto(risk_data, cocktails, ext_cache):
 # STAGE 16: Novel targets + BioAge composition
 # =============================================================================
 
-def _build_whatif_interventions(base_compounds, novel_inj, sex):
+def _build_whatif_interventions(base_compounds, novel_inj, sex,
+                                start_time=0.30):
     """Build merged interventions dict with per-compound sex modifiers applied.
 
     base_compounds: list of (compound_name, injections_dict) — each compound's
                     raw pathway injections (before sex adjustment).
     novel_inj:      optional dict of additional (non-sex-adjusted) pathway injections.
     sex:            'M' or 'F'
+    start_time:     normalized treatment start (default 0.30 = 9 months,
+                    standard ITP protocol for new combination trials).
     """
     merged = {}
-    earliest_start = 1.0
     for name, inj in base_compounds:
-        start = get_itp_start_time(name)
-        if start < earliest_start:
-            earliest_start = start
         adjusted = apply_sex_modifier(name, dict(inj), sex)
         for k, v in adjusted.items():
             merged[k] = merged.get(k, 0) + v
     if novel_inj:
         for k, v in novel_inj.items():
             merged[k] = merged.get(k, 0) + v
-    merged['start_time'] = earliest_start
+    merged['start_time'] = start_time
     return merged
 
 
@@ -1620,6 +1621,7 @@ def gen_w_meth_sweep():
     ax1.set_ylabel('Calibration error (%)')
     ax1.set_title('BioAge Weight Sensitivity:\nCalibration Quality vs Methylation Weight', fontsize=12, fontweight='bold')
     ax1.set_xlim(0, 0.50)
+    ax1.set_ylim(0, 8)
     ax1.legend(loc='upper left', fontsize=9)
     ax1.grid(True, alpha=0.3)
 
@@ -1627,9 +1629,11 @@ def gen_w_meth_sweep():
     ax2.plot(w_values, ra_preds, 'g-D', linewidth=2, markersize=8)
     ax2.axhline(y=34.0, color='red', linestyle='--', linewidth=2, label='Observed: 34%')
     ax2.axhspan(33.0, 35.0, alpha=0.15, color='red', label='\u00b11% band')
+    ax2.axvspan(0.05, 0.30, alpha=0.15, color='#7B2D8E', label='Clock decomposition range (0.05\u20130.30)')
     ax2.axvline(x=current_wm, color='#1a5276', linestyle='--', alpha=0.7, linewidth=1.5)
     ax2.annotate(f'current\n({current_wm:.2f})', xy=(current_wm, 29.5), fontsize=9, ha='center', color='#1a5276')
     ax2.set_xlim(0, 0.50)
+    ax2.set_ylim(0, 40)
     ax2.set_xlabel('Methylation weight (w_meth)')
     ax2.set_ylabel('Rapa+Acarbose prediction (%)')
     ax2.set_title('Validation Prediction:\nRapa+Acarbose Lifespan Extension', fontsize=12, fontweight='bold')
@@ -1638,6 +1642,31 @@ def gen_w_meth_sweep():
 
     plt.tight_layout()
     save(fig, 'w_meth_sweep.png')
+
+
+# =============================================================================
+# RAPA SURVIVAL: 1x2 panel (Male / Female), control + rapamycin
+# =============================================================================
+
+def gen_rapa_survival():
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+    for ax, sex, label in [(ax1, 'M', 'Male'), (ax2, 'F', 'Female')]:
+        c = ctrl(sex)
+        r = treated('rapamycin', sex)
+        ax.plot(c.t, c.Survival * 100, 'k-', linewidth=2.5, label='Control')
+        ax.plot(r.t, r.Survival * 100, '-', color='#e74c3c', linewidth=2.5, label='Rapamycin')
+        ax.axhline(50, color='gray', linestyle='--', alpha=0.5)
+        ax.set_xlabel('Normalized Age')
+        ax.set_ylabel('Survival (%)')
+        ax.set_title(f'{label}', fontsize=13, fontweight='bold')
+        ax.set_xlim(0, 2.0)
+        ax.set_ylim(0, 105)
+        ax.legend(fontsize=10, loc='lower left')
+        ax.grid(True, alpha=0.3)
+
+    plt.tight_layout()
+    save(fig, 'rapa_survival_mf.png')
 
 
 # =============================================================================
@@ -2880,6 +2909,7 @@ GENERATORS = {
     'stage_16': gen_stage_16,
     'stage_17': gen_stage_17,
     'w_meth': gen_w_meth_sweep,
+    'rapa_survival': gen_rapa_survival,
     'analytical': gen_analytical,
     'stage_A10': gen_stage_A10,
     'stage_A5': gen_stage_A5_sensitivity,
