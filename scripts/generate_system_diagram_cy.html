@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ELM System Diagram — Cytoscape Export</title>
+    <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f0f0; }
+        #controls {
+            padding: 12px 20px; background: #2c3e50; color: white;
+            display: flex; align-items: center; gap: 20px; font-size: 14px;
+        }
+        #controls button {
+            background: #3498db; color: white; border: none;
+            padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 13px;
+        }
+        #controls button:hover { background: #2980b9; }
+        #controls label { cursor: pointer; user-select: none; }
+        #controls input[type="checkbox"] { margin-right: 4px; }
+        #cy {
+            width: 1400px; height: 900px; background: #ffffff;
+            margin: 20px auto; border: 1px solid #ddd;
+        }
+        .status { font-size: 12px; opacity: 0.7; }
+    </style>
+</head>
+<body>
+<div id="controls">
+    <button onclick="downloadPNG('system_diagram_paper1.png')">Download Paper 1 (no cana→DNA)</button>
+    <button onclick="toggleCanaEdge(); downloadPNG('system_diagram_deck.png'); toggleCanaEdge();">Download Deck version</button>
+    <label>
+        <input type="checkbox" id="cana-aox-cb" onchange="toggleCanaEdge()">
+        Show Canagliflozin → DNA Damage edge
+    </label>
+    <span class="status" id="status"></span>
+</div>
+<div id="cy"></div>
+
+<script>
+// ===================== POSITIONS (from deck.html) =====================
+const P = {
+    iv_aspirin:{x:400,y:-10}, iv_17ae2:{x:540,y:-10}, iv_cana:{x:680,y:-10},
+    iv_glycine:{x:820,y:-10}, iv_acarb:{x:960,y:-10}, iv_rapa:{x:1100,y:-10},
+    H:{x:120,y:115}, ROS:{x:120,y:220}, UPRmt:{x:120,y:330},
+    NAMPT:{x:355,y:115}, sum_nad:{x:355,y:180}, NAD:{x:530,y:180},
+    CD38:{x:355,y:260}, SIRT1:{x:530,y:260},
+    Repair:{x:750,y:180}, sum_dna:{x:750,y:330}, DNA_Damage:{x:750,y:440},
+    AMPK:{x:960,y:115}, TSC2:{x:960,y:180}, mTORC1:{x:960,y:260}, Autophagy:{x:960,y:330},
+    sum_left:{x:120,y:440}, SenCells:{x:120,y:550}, SASP:{x:355,y:550},
+    sum_epi:{x:530,y:550}, Methylation:{x:660,y:550},
+    BioAge:{x:440,y:660},
+    wp_h_left:{x:40,y:115}, wp_h_bio:{x:40,y:660},
+    wp_sen_bio:{x:120,y:660}, wp_meth_bio:{x:660,y:660}, wp_dmg_bio:{x:750,y:660},
+    wp_ros_1:{x:740,y:321},
+};
+
+// ===================== ELEMENTS =====================
+const elements = { nodes: [
+    // Regions
+    {data:{id:'r_mito',label:'MITOCHONDRIA'},classes:'region region-mito'},
+    {data:{id:'r_nadh',label:'NAD+ HOMEOSTASIS'},classes:'region region-nadh'},
+    {data:{id:'r_dna',label:'DNA DAMAGE'},classes:'region region-dna'},
+    {data:{id:'r_sig',label:'CORE SIGNALING'},classes:'region region-signal'},
+    {data:{id:'r_sen',label:'SENESCENT CELLS'},classes:'region region-sen'},
+    {data:{id:'r_inf',label:'INFLAMMATION'},classes:'region region-inflam'},
+    {data:{id:'r_epi',label:'EPIGENETIC DRIFT'},classes:'region region-epi'},
+    {data:{id:'r_bio',label:'BIOAGE'},classes:'region region-bioage'},
+    // Bio nodes
+    {data:{id:'H',label:'H',parent:'r_mito'},classes:'driver',position:P.H},
+    {data:{id:'UPRmt',label:'UPRmt',parent:'r_mito'},classes:'enzyme',position:P.UPRmt},
+    {data:{id:'ROS',label:'ROS',parent:'r_mito'},classes:'enzyme',position:P.ROS},
+    {data:{id:'NAMPT',label:'NAMPT\n(+AMPK)',parent:'r_nadh'},classes:'enzyme',position:P.NAMPT},
+    {data:{id:'sum_nad',label:'+',parent:'r_nadh'},classes:'junction',position:P.sum_nad},
+    {data:{id:'NAD',label:'NAD',parent:'r_nadh'},classes:'state-var',position:P.NAD},
+    {data:{id:'CD38',label:'CD38\n(+SASP)',parent:'r_nadh'},classes:'enzyme',position:P.CD38},
+    {data:{id:'SIRT1',label:'SIRT1',parent:'r_nadh'},classes:'enzyme',position:P.SIRT1},
+    {data:{id:'Repair',label:'PARP1 /\nRepair',parent:'r_dna'},classes:'enzyme',position:P.Repair},
+    {data:{id:'sum_dna',label:'+',parent:'r_dna'},classes:'junction',position:P.sum_dna},
+    {data:{id:'DNA_Damage',label:'DNA\nDamage',parent:'r_dna'},classes:'state-var',position:P.DNA_Damage},
+    {data:{id:'AMPK',label:'AMPK',parent:'r_sig'},classes:'state-var-blue',position:P.AMPK},
+    {data:{id:'TSC2',label:'TSC2',parent:'r_sig'},classes:'enzyme',position:P.TSC2},
+    {data:{id:'mTORC1',label:'mTORC1',parent:'r_sig'},classes:'enzyme',position:P.mTORC1},
+    {data:{id:'Autophagy',label:'Autophagy',parent:'r_sig'},classes:'enzyme',position:P.Autophagy},
+    {data:{id:'sum_left',label:'+'},classes:'junction',position:P.sum_left},
+    {data:{id:'SenCells',label:'SenCells',parent:'r_sen'},classes:'state-var',position:P.SenCells},
+    {data:{id:'SASP',label:'SASP',parent:'r_inf'},classes:'state-var',position:P.SASP},
+    {data:{id:'sum_epi',label:'+',parent:'r_epi'},classes:'junction',position:P.sum_epi},
+    {data:{id:'Methylation',label:'Methylation',parent:'r_epi'},classes:'state-var',position:P.Methylation},
+    {data:{id:'BioAge',label:'\u03A3',parent:'r_bio'},classes:'output',position:P.BioAge},
+    // Waypoints
+    {data:{id:'wp_h_left'},classes:'waypoint',position:P.wp_h_left},
+    {data:{id:'wp_h_bio'},classes:'waypoint',position:P.wp_h_bio},
+    {data:{id:'wp_sen_bio'},classes:'waypoint',position:P.wp_sen_bio},
+    {data:{id:'wp_meth_bio'},classes:'waypoint',position:P.wp_meth_bio},
+    {data:{id:'wp_dmg_bio'},classes:'waypoint',position:P.wp_dmg_bio},
+    {data:{id:'wp_ros_1'},classes:'waypoint',position:P.wp_ros_1},
+    // Intervention nodes
+    {data:{id:'iv_rapa',label:'Rapamycin'},classes:'intervention',position:P.iv_rapa},
+    {data:{id:'iv_acarb',label:'Acarbose'},classes:'intervention',position:P.iv_acarb},
+    {data:{id:'iv_cana',label:'Canagliflozin'},classes:'intervention',position:P.iv_cana},
+    {data:{id:'iv_17ae2',label:'17\u03B1E2'},classes:'intervention',position:P.iv_17ae2},
+    {data:{id:'iv_aspirin',label:'Aspirin'},classes:'intervention',position:P.iv_aspirin},
+    {data:{id:'iv_glycine',label:'Glycine'},classes:'intervention',position:P.iv_glycine},
+], edges: [
+    // Activation
+    {data:{id:'e_h_ros',source:'H',target:'ROS'},classes:'edge-act edge-taxi-down'},
+    {data:{id:'e_ros_uprmt',source:'ROS',target:'UPRmt'},classes:'edge-act edge-taxi-down'},
+    {data:{id:'e_ros_wp1',source:'ROS',target:'wp_ros_1'},classes:'edge-act edge-taxi-right'},
+    {data:{id:'e_wp1_sumdna',source:'wp_ros_1',target:'sum_dna'},classes:'edge-act edge-straight edge-no-arrow'},
+    {data:{id:'e_uprmt_sumdna',source:'UPRmt',target:'sum_dna'},classes:'edge-act edge-straight'},
+    {data:{id:'e_repair_sum',source:'Repair',target:'sum_dna'},classes:'edge-act edge-taxi-down'},
+    {data:{id:'e_sumdna_dmg',source:'sum_dna',target:'DNA_Damage'},classes:'edge-act edge-taxi-down'},
+    {data:{id:'e_nampt_sum',source:'NAMPT',target:'sum_nad'},classes:'edge-act edge-taxi-down'},
+    {data:{id:'e_sum_nad',source:'sum_nad',target:'NAD'},classes:'edge-act edge-straight'},
+    {data:{id:'e_sumleft_sen',source:'sum_left',target:'SenCells'},classes:'edge-act edge-taxi-down'},
+    {data:{id:'e_sen_sasp',source:'SenCells',target:'SASP'},classes:'edge-act edge-straight'},
+    {data:{id:'e_sumepi_meth',source:'sum_epi',target:'Methylation'},classes:'edge-act edge-straight'},
+    {data:{id:'e_ampk_tsc2',source:'AMPK',target:'TSC2'},classes:'edge-act edge-taxi-down'},
+    // Inhibition
+    {data:{id:'e_h_nampt',source:'H',target:'NAMPT'},classes:'edge-inh edge-straight'},
+    {data:{id:'e_dmg_sumnad',source:'DNA_Damage',target:'sum_nad'},classes:'edge-inh edge-straight'},
+    {data:{id:'e_cd38_sum',source:'CD38',target:'sum_nad'},classes:'edge-inh edge-taxi-up'},
+    {data:{id:'e_tsc2_mtor',source:'TSC2',target:'mTORC1'},classes:'edge-inh edge-taxi-down'},
+    {data:{id:'e_mtor_auto',source:'mTORC1',target:'Autophagy'},classes:'edge-inh edge-taxi-down'},
+    {data:{id:'e_auto_sumdna',source:'Autophagy',target:'sum_dna'},classes:'edge-inh edge-straight'},
+    {data:{id:'e_uprmt_sumleft',source:'UPRmt',target:'sum_left'},classes:'edge-inh edge-taxi-down'},
+    {data:{id:'e_sirt1_sumepi',source:'SIRT1',target:'sum_epi'},classes:'edge-inh edge-taxi-down'},
+    // Purple / cross-region
+    {data:{id:'e_dmg_sumleft',source:'DNA_Damage',target:'sum_left'},classes:'edge-act edge-straight'},
+    // Dashed coupling
+    {data:{id:'e_nad_repair',source:'NAD',target:'Repair'},classes:'edge-dash edge-taxi-right'},
+    {data:{id:'e_ampk_nampt',source:'AMPK',target:'NAMPT'},classes:'edge-dash edge-straight'},
+    {data:{id:'e_sasp_epi',source:'SASP',target:'sum_epi'},classes:'edge-dash edge-straight'},
+    {data:{id:'e_sasp_cd38',source:'SASP',target:'CD38'},classes:'edge-dash edge-taxi-up'},
+    {data:{id:'e_sasp_sumdna',source:'SASP',target:'sum_dna'},classes:'edge-dash edge-straight'},
+    {data:{id:'e_nad_sirt1',source:'NAD',target:'SIRT1'},classes:'edge-act edge-taxi-down'},
+    // BioAge paths
+    {data:{id:'e_h_bio1',source:'H',target:'wp_h_left'},classes:'edge-dash edge-straight edge-no-arrow'},
+    {data:{id:'e_h_bio1b',source:'wp_h_left',target:'wp_h_bio'},classes:'edge-dash edge-straight'},
+    {data:{id:'e_h_bio2',source:'wp_h_bio',target:'BioAge'},classes:'edge-dash edge-straight'},
+    {data:{id:'e_sen_bio1',source:'SenCells',target:'wp_sen_bio'},classes:'edge-dash edge-straight'},
+    {data:{id:'e_sen_bio2',source:'wp_sen_bio',target:'BioAge'},classes:'edge-dash edge-straight'},
+    {data:{id:'e_meth_bio1',source:'Methylation',target:'wp_meth_bio'},classes:'edge-dash edge-straight'},
+    {data:{id:'e_meth_bio2',source:'wp_meth_bio',target:'BioAge'},classes:'edge-dash edge-straight'},
+    {data:{id:'e_dmg_bio1',source:'DNA_Damage',target:'wp_dmg_bio'},classes:'edge-dash edge-straight'},
+    {data:{id:'e_dmg_bio2',source:'wp_dmg_bio',target:'BioAge'},classes:'edge-dash edge-straight'},
+    // Intervention edges
+    {data:{id:'e_iv_rapa_mtor',source:'iv_rapa',target:'mTORC1'},classes:'edge-iv-inh edge-straight'},
+    {data:{id:'e_iv_rapa_ampk',source:'iv_rapa',target:'AMPK'},classes:'edge-iv edge-straight'},
+    {data:{id:'e_iv_acarb_ampk',source:'iv_acarb',target:'AMPK'},classes:'edge-iv edge-straight'},
+    {data:{id:'e_iv_cana_ampk',source:'iv_cana',target:'AMPK'},classes:'edge-iv edge-straight'},
+    {data:{id:'e_iv_17ae2_ampk',source:'iv_17ae2',target:'AMPK'},classes:'edge-iv edge-straight'},
+    {data:{id:'e_iv_aspirin_ampk',source:'iv_aspirin',target:'AMPK'},classes:'edge-iv edge-straight'},
+    {data:{id:'e_iv_glycine_ampk',source:'iv_glycine',target:'AMPK'},classes:'edge-iv edge-straight'},
+    // Antioxidant edges (inhibit ROS contribution to DNA damage)
+    {data:{id:'e_iv_cana_antioxidant',source:'iv_cana',target:'sum_dna'},classes:'edge-iv-inh edge-straight'},
+    {data:{id:'e_iv_17ae2_antioxidant',source:'iv_17ae2',target:'sum_dna'},classes:'edge-iv-inh edge-straight'},
+    {data:{id:'e_iv_aspirin_antioxidant',source:'iv_aspirin',target:'sum_dna'},classes:'edge-iv-inh edge-straight'},
+    {data:{id:'e_iv_glycine_antioxidant',source:'iv_glycine',target:'sum_dna'},classes:'edge-iv-inh edge-straight'},
+    // Anti-inflammatory
+    {data:{id:'e_iv_aspirin_sasp',source:'iv_aspirin',target:'SASP'},classes:'edge-iv-inh edge-straight'},
+    // Acarbose gut edges
+    {data:{id:'e_iv_acarb_cd38',source:'iv_acarb',target:'CD38'},classes:'edge-iv-inh edge-straight'},
+    {data:{id:'e_iv_acarb_meth',source:'iv_acarb',target:'sum_epi'},classes:'edge-iv-inh edge-straight'},
+    {data:{id:'e_iv_acarb_sen',source:'iv_acarb',target:'SenCells'},classes:'edge-iv-inh edge-straight'},
+]};
+
+// ===================== CYTOSCAPE INIT =====================
+const cy = cytoscape({
+    container: document.getElementById('cy'),
+    elements: elements,
+    layout: { name: 'preset' },
+    style: [
+        // Regions
+        {selector:'.region',style:{'shape':'rectangle','background-opacity':0.08,'border-width':2,'border-style':'dashed','border-opacity':0.7,'padding':'25px','text-valign':'top','text-halign':'center','font-size':'10px','font-weight':'bold','text-margin-y':20,'color':'#555','label':'data(label)','text-wrap':'wrap'}},
+        {selector:'.region-mito',style:{'background-color':'#ff0000','border-color':'#cc0000'}},
+        {selector:'.region-nadh',style:{'background-color':'#7030A0','border-color':'#7030A0'}},
+        {selector:'.region-dna',style:{'background-color':'#ffff00','border-color':'#FFC000'}},
+        {selector:'.region-signal',style:{'background-color':'#FFC000','border-color':'#FFC000'}},
+        {selector:'.region-sen',style:{'background-color':'#FFC000','border-color':'#FFC000'}},
+        {selector:'.region-inflam',style:{'background-color':'#ff0000','border-color':'#ff0000'}},
+        {selector:'.region-epi',style:{'background-color':'#70AD47','border-color':'#70AD47'}},
+        {selector:'.region-bioage',style:{'background-color':'#70AD47','border-color':'#70AD47'}},
+        // Nodes
+        {selector:'.driver',style:{'shape':'round-rectangle','background-color':'#FF0000','border-width':2,'border-color':'#880000','width':50,'height':32,'label':'data(label)','text-valign':'center','text-halign':'center','color':'#000','font-weight':'bold','font-size':'11px'}},
+        {selector:'.enzyme',style:{'shape':'diamond','background-color':'#FFFF00','border-width':2,'border-color':'#444','width':75,'height':45,'label':'data(label)','text-valign':'center','text-halign':'center','color':'#000','font-size':'8px','text-wrap':'wrap','text-max-width':'55px'}},
+        {selector:'.state-var',style:{'shape':'round-rectangle','background-color':'#d4edda','border-width':2,'border-color':'#444','width':70,'height':32,'label':'data(label)','text-valign':'center','text-halign':'center','color':'#000','font-size':'9px','text-wrap':'wrap','text-max-width':'60px'}},
+        {selector:'.state-var-blue',style:{'shape':'round-rectangle','background-color':'#e8e8ff','border-width':2,'border-color':'#444','width':70,'height':32,'label':'data(label)','text-valign':'center','text-halign':'center','color':'#000','font-size':'10px','font-weight':'bold'}},
+        {selector:'.junction',style:{'shape':'ellipse','background-color':'#fff','border-width':2,'border-color':'#333','width':24,'height':24,'label':'data(label)','text-valign':'center','text-halign':'center','color':'#000','font-size':'13px','font-weight':'bold'}},
+        {selector:'.output',style:{'shape':'ellipse','background-color':'#d8f0d8','border-width':3,'border-color':'#336633','width':42,'height':42,'label':'data(label)','text-valign':'center','text-halign':'center','color':'#222','font-size':'16px','font-weight':'bold'}},
+        {selector:'.waypoint',style:{'width':1,'height':1,'background-opacity':0,'border-width':0,'label':''}},
+        {selector:'.intervention',style:{'shape':'round-rectangle','background-color':'#d4f0f0','border-width':2.5,'border-color':'#008080','width':90,'height':28,'label':'data(label)','text-valign':'center','text-halign':'center','color':'#006666','font-size':'9px','font-weight':'bold'}},
+        // Edges
+        {selector:'edge',style:{'width':1.5,'line-color':'#444','target-arrow-color':'#444','target-arrow-shape':'triangle','arrow-scale':0.9,'curve-style':'taxi','taxi-direction':'auto','taxi-turn':'50%','taxi-turn-min-distance':10}},
+        {selector:'.edge-act',style:{'line-color':'#333','target-arrow-color':'#333','target-arrow-shape':'triangle'}},
+        {selector:'.edge-inh',style:{'line-color':'#FF0000','target-arrow-color':'#FF0000','target-arrow-shape':'tee','arrow-scale':1.2}},
+        {selector:'.edge-dash',style:{'line-style':'dashed','line-color':'#444','target-arrow-color':'#444','target-arrow-shape':'triangle','line-dash-pattern':[6,4]}},
+        {selector:'.edge-iv',style:{'line-color':'#008080','target-arrow-color':'#008080','target-arrow-shape':'triangle','line-style':'dashed','line-dash-pattern':[8,4]}},
+        {selector:'.edge-iv-inh',style:{'line-color':'#008080','target-arrow-color':'#008080','target-arrow-shape':'tee','line-style':'dashed','line-dash-pattern':[8,4],'arrow-scale':1.2}},
+        {selector:'.edge-taxi-down',style:{'taxi-direction':'downward'}},
+        {selector:'.edge-taxi-up',style:{'taxi-direction':'upward'}},
+        {selector:'.edge-taxi-right',style:{'taxi-direction':'rightward'}},
+        {selector:'.edge-taxi-left',style:{'taxi-direction':'leftward'}},
+        {selector:'#e_ros_wp1',style:{'taxi-turn':'95px'}},
+        {selector:'.edge-straight',style:{'curve-style':'straight'}},
+        {selector:'.edge-no-arrow',style:{'target-arrow-shape':'none'}},
+    ],
+    userZoomingEnabled: true,
+    userPanningEnabled: true,
+    boxSelectionEnabled: false,
+});
+
+// ===================== VISIBILITY & EXPORT =====================
+
+// Check URL parameter: ?cana-aox=0 hides the edge, ?cana-aox=1 shows it
+// Default: hidden (paper version)
+const params = new URLSearchParams(window.location.search);
+let showCanaAox = params.get('cana-aox') === '1';
+
+function applyVisibility() {
+    // The cana antioxidant edge
+    const canaEdge = cy.$('#e_iv_cana_antioxidant');
+    if (showCanaAox) {
+        canaEdge.style('display', 'element');
+    } else {
+        canaEdge.style('display', 'none');
+    }
+    document.getElementById('cana-aox-cb').checked = showCanaAox;
+
+    // Fit to visible elements
+    const vis = cy.elements().filter(e => e.style('display') !== 'none');
+    if (vis.length > 0) cy.fit(vis, 40);
+}
+
+function toggleCanaEdge() {
+    showCanaAox = !showCanaAox;
+    applyVisibility();
+}
+
+function downloadPNG(filename) {
+    const pngData = cy.png({ scale: 3, bg: '#ffffff', full: true });
+    const link = document.createElement('a');
+    link.href = pngData;
+    link.download = filename || 'system_diagram.png';
+    link.click();
+    document.getElementById('status').textContent = 'Downloaded ' + link.download;
+}
+
+// Expose for Puppeteer
+window.getCyPNG = function(scale) {
+    return cy.png({ scale: scale || 3, bg: '#ffffff', full: true });
+};
+window.setShowCanaAox = function(show) {
+    showCanaAox = show;
+    applyVisibility();
+};
+
+// Initial render
+cy.ready(function() {
+    applyVisibility();
+});
+</script>
+</body>
+</html>
