@@ -1,6 +1,6 @@
 [project]
 name = "extensible-longevity-model"
-version = "0.1.0"
+version = "0.43.0"
 description = "Mechanistic ODE model of aging interventions, calibrated to ITP data"
 readme = "README.md"
 license = "MIT"

@@ -1164,6 +1164,8 @@ def simulate(
         )
         Cancer_prob[i] = calculate_cancer_probability(Mutations[i], CANCER_PARAMS)
 
+        # Cancer module: INACTIVE. Tracks stochastic cancer onset for future
+        # use but does not affect BioAge, death time, or any model output.
         if not cancer_occurred and rng.random() < Cancer_prob[i] * dt:
             cancer_occurred = True
             cancer_time = t

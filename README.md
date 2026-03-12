@@ -85,7 +85,7 @@ tests/
 Python 3.10+.
 
 ```bash
-pip install -r requirements.txt
+pip install -e .                    # install as editable package
 python tests/smoke_test.py          # verify calibration
 python scripts/generate_figures.py  # regenerate all figures
 ```
