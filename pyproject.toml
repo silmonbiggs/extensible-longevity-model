@@ -16,4 +16,4 @@ include = ["elm*"]
 
 [project.urls]
 Homepage = "https://github.com/silmonbiggs/extensible-longevity-model"
-Documentation = "https://silmonbiggs.github.io/extensible-longevity-model/deck.html"
+Documentation = "https://silmonbiggs.github.io/extensible-longevity-model/ITPSexDiff.html"

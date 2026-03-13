@@ -98,9 +98,9 @@ Reproduces every figure in the paper from the model code.
 
 **5. Browse the interactive deck**
 
-[View the deck](https://silmonbiggs.github.io/extensible-longevity-model/deck.html)
-— model architecture, calibration walkthrough, validation results,
-and combination predictions with interactive figures.
+[View the deck](https://silmonbiggs.github.io/extensible-longevity-model/ITPSexDiff.html)
+— model architecture, calibration, sex difference mechanisms,
+and validation results with interactive figures.
 
 **6. Run sensitivity analysis (~19 min)**
 
@@ -122,7 +122,8 @@ elm/                  # Core model package
 docs/
   paper/              #   LaTeX sources and PDFs
   figures/            #   All generated figures
-  deck.html           #   Interactive slide deck
+  ITPSexDiff.html     #   Paper 1 slide deck (reviewer-ready)
+  working_slides.html #   Master slide pool (all 61 slides)
 scripts/
   generate_figures.py #   Regenerate all figures
   oat_sensitivity.py  #   One-at-a-time sensitivity analysis
@@ -155,9 +156,9 @@ print(f"Rapamycin male extension: {ext:.1f}%")  # -> 23.0%
 
 ## Interactive Deck
 
-**[View the deck](https://silmonbiggs.github.io/extensible-longevity-model/deck.html)**
-— model architecture, calibration, validation, and combination
-predictions with interactive figures.
+**[View the deck](https://silmonbiggs.github.io/extensible-longevity-model/ITPSexDiff.html)**
+— model architecture, calibration, sex difference mechanisms,
+and validation results with interactive figures.
 
 ## License
 
