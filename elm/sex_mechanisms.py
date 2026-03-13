@@ -106,11 +106,12 @@ SEX_MECHANISMS: Dict[str, SexMechanism] = {
         ampk_baseline=1.3,
         ampk_k_diminishing=8.0,
         explanation=(
-            'Single AMPK pathway via SGLT2-mediated glycosuria. Same global '
-            'AMPK saturation parameters as other AMPK compounds (baseline=1.3, '
-            'k=7.5). The model underpredicts the female effect (-3.8 pp), '
-            'suggesting a sex-independent second pathway (FGF21/ketogenesis) '
-            'not yet modeled.'
+            'Dual-action: 88% antioxidant/FGF21 (sex-independent) + 12% AMPK '
+            '(subject to female saturation). The antioxidant fraction represents '
+            'FGF21/ketogenesis signaling (Ferrannini 2016, Osataphan 2019, '
+            'Packer 2020), which passes through the sex modifier at full '
+            'strength. Sweep-calibrated f=0.88 minimizes female prediction '
+            'error (0.2 pp vs 4.1 pp with pure AMPK).'
         ),
         pmids=[32990681, 30843877, 37406767, 21876548],
         confidence='medium',

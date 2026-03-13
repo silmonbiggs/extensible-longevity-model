@@ -73,7 +73,7 @@ async function main() {
 
         // Get PNG data URL from Cytoscape
         const pngDataUrl = await page.evaluate(() => {
-            return window.getCyPNG(3);
+            return window.getCyPNG(5);
         });
 
         // Convert data URL to buffer
@@ -88,7 +88,7 @@ async function main() {
     console.log('Exporting system diagrams...');
 
     if (doPaper) {
-        await exportVariant(false, 'system_diagram_paper1.png');
+        await exportVariant(true, 'system_diagram_paper1.png');
     }
     if (doDeck) {
         await exportVariant(true, 'system_diagram_deck.png');

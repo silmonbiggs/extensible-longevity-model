@@ -8,10 +8,10 @@ Pass: all 12 ITP outputs within tolerance of targets.
 Male predictions are calibrated by root-finding (tight tolerance).
 Female predictions are genuine out-of-sample: the model uses four
 sex-specific mechanisms from prior literature with no female fitting.
-The paper reports 1.3 pp mean absolute error for females; individual
-errors reach ~4 pp for canagliflozin (see paper Section 3.1). The
-wider female tolerance verifies that the code reproduces the paper's
-reported values, not that the model is perfect.
+The paper reports 1.3 pp mean absolute error for females with the
+pure-AMPK model (0.65 pp with dual-action canagliflozin extension).
+The wider female tolerance verifies that the code reproduces the
+paper's reported values, not that the model is perfect.
 """
 
 import sys

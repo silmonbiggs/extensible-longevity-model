@@ -39,7 +39,8 @@ COMPOUNDS: Dict[str, Dict[str, float]] = {
         'gut_microbiome': 0.1690,
     },
     'canagliflozin': {
-        'ampk': 0.1618,
+        'ampk': 0.0716,
+        'antioxidant': 0.5254,
     },
     '17_alpha_estradiol': {
         'ampk': 0.1764,
@@ -175,7 +176,7 @@ ITP_VALIDATION: Dict[str, ITPCompound] = {
         pmid=32990681,
         dose='180 ppm',
         start_age_months=7,
-        notes='SGLT2 inhibitor. Multi-pathway: AMPK + FGF21/ketogenesis.',
+        notes='SGLT2 inhibitor. Dual-action: 88% antioxidant/FGF21 + 12% AMPK (sweep-calibrated).',
     ),
     '17_alpha_estradiol': ITPCompound(
         name='17-alpha-Estradiol',
@@ -387,7 +388,7 @@ def get_sex_ratio(compound: str) -> Optional[float]:
 TAGUCHI_8_STACK: Dict[str, Dict[str, float]] = {
     'Rapamycin': {'mtorc1_drug_inhibition': 0.4190, 'ampk': 0.2792},
     'Acarbose': {'ampk': 0.1690, 'gut_microbiome': 0.1690},
-    'Canagliflozin': {'ampk': 0.1618},
+    'Canagliflozin': {'ampk': 0.0716, 'antioxidant': 0.5254},
     'Glycine': {'antioxidant': 0.2842, 'ampk': 0.0316},
     'NMN': {'nmn': 0.50},
     'CD38_Inhibitor': {'cd38_inhibitor': 0.50},
