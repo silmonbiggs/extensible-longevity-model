@@ -1603,44 +1603,77 @@ def gen_w_meth_sweep():
     for k, v in orig_weights.items():
         BIOAGE_PARAMS[k] = v
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+    plt.rcParams.update({
+        'font.family': 'Arial',
+        'font.size': 9,
+        'axes.labelsize': 10,
+        'axes.titlesize': 10,
+        'xtick.labelsize': 8,
+        'ytick.labelsize': 8,
+        'legend.fontsize': 8,
+        'axes.linewidth': 0.8,
+        'xtick.major.width': 0.6,
+        'ytick.major.width': 0.6,
+        'xtick.major.size': 3,
+        'ytick.major.size': 3,
+        'lines.linewidth': 1.2,
+        'lines.markersize': 4,
+    })
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.0, 3.2))
+
+    current_wm = orig_weights['w_meth']
 
     # Left: calibration error
-    ax1.plot(w_values, mean_errors, 'b-o', linewidth=2, markersize=8, label='Mean |error|')
-    ax1.plot(w_values, max_errors, 'r--s', linewidth=2, markersize=8, label='Max |error|')
-    ax1.axhline(y=1.0, color='gray', linestyle=':', alpha=0.7, label='\u00b11% threshold')
-    acceptable = [w for w, mx in zip(w_values, max_errors) if mx <= 1.0]
-    if acceptable:
-        ax1.axvspan(min(acceptable) - 0.025, max(acceptable) + 0.025,
-                    alpha=0.15, color='green', label='All 12 targets within \u00b11%')
-    ax1.axvspan(0.05, 0.30, alpha=0.15, color='#7B2D8E', label='Clock decomposition range (0.05\u20130.30)')
-    current_wm = orig_weights['w_meth']
-    ax1.axvline(x=current_wm, color='#1a5276', linestyle='--', alpha=0.7, linewidth=1.5)
-    ax1.annotate(f'current\n({current_wm:.2f})', xy=(current_wm, 1.3), fontsize=9, ha='center', color='#1a5276')
-    ax1.set_xlabel('Methylation weight (w_meth)')
+    ax1.plot(w_values, mean_errors, '-o', color='#1565C0', markerfacecolor='#1565C0',
+             markeredgecolor='#1565C0', label='Mean |error|', zorder=2)
+    ax1.plot(w_values, max_errors, '--s', color='#CC0000', markerfacecolor='#CC0000',
+             markeredgecolor='#CC0000', label='Max |error|', zorder=2)
+    ax1.axhline(y=2.5, color='#999999', linestyle=':', linewidth=0.6,
+                label='ITP measurement SE (2.5 pp)')
+    ax1.axvspan(0.05, 0.30, alpha=0.10, color='#7B2D8E',
+                label='Clock range (0.05\u20130.30)')
+    ax1.axvline(x=current_wm, color='#666666', linestyle='--', linewidth=0.8)
+    ax1.annotate(f'current ({current_wm:.2f})', xy=(current_wm, 1.5),
+                 fontsize=7, ha='center', color='#555555')
+    ax1.set_xlabel('Methylation weight ($w_{meth}$)')
     ax1.set_ylabel('Calibration error (%)')
-    ax1.set_title('BioAge Weight Sensitivity:\nCalibration Quality vs Methylation Weight', fontsize=12, fontweight='bold')
-    ax1.set_xlim(0, 0.50)
+    ax1.set_xlim(0, 0.52)
     ax1.set_ylim(0, 8)
-    ax1.legend(loc='upper left', fontsize=9)
-    ax1.grid(True, alpha=0.3)
+    handles, labels = ax1.get_legend_handles_labels()
+    ax1.legend(handles[::-1], labels[::-1], loc='upper right', markerfirst=False,
+               frameon=True, facecolor='white', edgecolor='#cccccc',
+               framealpha=0.9)
+    ax1.text(-0.15, 1.05, 'A', transform=ax1.transAxes,
+             fontsize=12, fontweight='bold', va='bottom')
 
-    # Right: validation
-    ax2.plot(w_values, ra_preds, 'g-D', linewidth=2, markersize=8)
-    ax2.axhline(y=34.0, color='red', linestyle='--', linewidth=2, label='Observed: 34%')
-    ax2.axhspan(33.0, 35.0, alpha=0.15, color='red', label='\u00b11% band')
-    ax2.axvspan(0.05, 0.30, alpha=0.15, color='#7B2D8E', label='Clock decomposition range (0.05\u20130.30)')
-    ax2.axvline(x=current_wm, color='#1a5276', linestyle='--', alpha=0.7, linewidth=1.5)
-    ax2.annotate(f'current\n({current_wm:.2f})', xy=(current_wm, 29.5), fontsize=9, ha='center', color='#1a5276')
-    ax2.set_xlim(0, 0.50)
+    # Right: validation prediction
+    ax2.plot(w_values, ra_preds, '-D', color='#2E7D32', markerfacecolor='#2E7D32',
+             markeredgecolor='#2E7D32', zorder=2)
+    ax2.axhline(y=34.0, color='#CC0000', linestyle='--', linewidth=0.8,
+                label='Observed: 34%')
+    ax2.axhspan(31.5, 36.5, alpha=0.12, color='#CC0000', label='\u00b12.5 pp (ITP SE)')
+    ax2.axvspan(0.05, 0.30, alpha=0.10, color='#7B2D8E',
+                label='Clock range (0.05\u20130.30)')
+    ax2.axvline(x=current_wm, color='#666666', linestyle='--', linewidth=0.8)
+    ax2.annotate(f'current ({current_wm:.2f})', xy=(current_wm, 29.5),
+                 fontsize=7, ha='center', color='#555555')
+    ax2.set_xlim(0, 0.52)
     ax2.set_ylim(0, 40)
-    ax2.set_xlabel('Methylation weight (w_meth)')
+    ax2.set_xlabel('Methylation weight ($w_{meth}$)')
     ax2.set_ylabel('Rapa+Acarbose prediction (%)')
-    ax2.set_title('Validation Prediction:\nRapa+Acarbose Lifespan Extension', fontsize=12, fontweight='bold')
-    ax2.legend(loc='lower right', fontsize=9)
-    ax2.grid(True, alpha=0.3)
+    ax2.legend(loc='center right', markerfirst=False,
+               frameon=True, facecolor='white', edgecolor='#cccccc',
+               framealpha=0.9)
+    ax2.text(-0.15, 1.05, 'B', transform=ax2.transAxes,
+             fontsize=12, fontweight='bold', va='bottom')
 
-    plt.tight_layout()
+    for ax in (ax1, ax2):
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.tick_params(direction='out')
+
+    fig.tight_layout(w_pad=2.5)
     save(fig, 'w_meth_sweep.png')
 
 
@@ -2571,12 +2604,12 @@ def gen_stage_A26_serial_reliability():
     # Mode A — the dominant killer (narrow, tall)
     ax1.fill_between(t, pdf_A, alpha=0.20, color=COL_A)
     ax1.plot(t, pdf_A, color=COL_A, linewidth=2.5,
-             label='Mode A \u2014 earliest (e.g. cancer)')
+             label='Mode A \u2014 earliest (e.g. tires)')
 
     # Mode B — wider, left tail extends earlier than A's
     ax1.fill_between(t, pdf_B, alpha=0.12, color=COL_B)
     ax1.plot(t, pdf_B, color=COL_B, linewidth=2.5,
-             label='Mode B \u2014 middle, wider (e.g. cardiovascular)')
+             label='Mode B \u2014 middle, wider (e.g. brakes)')
 
     # THE SLIVER: on the early (left) side, B's wide tail sits above A's narrow tail.
     # These are deaths from B that happen before A would have killed the organism.
@@ -2594,7 +2627,7 @@ def gen_stage_A26_serial_reliability():
 
     # Mode C — completely invisible, no overlap
     ax1.plot(t, pdf_C, color=COL_C, linewidth=2, linestyle='--', alpha=0.7,
-             label='Mode C \u2014 invisible (e.g. structural)')
+             label='Mode C \u2014 invisible (e.g. battery)')
     ax1.fill_between(t, pdf_C, alpha=0.08, color=COL_C)
 
     # Annotations — point arrow squarely into the shaded crescent

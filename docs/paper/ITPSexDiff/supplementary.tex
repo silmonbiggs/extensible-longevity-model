@@ -16,7 +16,7 @@
 
 \onehalfspacing
 
-\title{Supplementary Material:\\Four Biological Mechanisms Predict ITP Sex Differences from Male Data Alone}
+\title{Supplementary Material:\\Why ITP Longevity Drugs Work Differently in Male and Female Mice}
 \author{Silmon James Biggs\\[0.3em]
 \normalsize Longrun Bio\\
 \normalsize \texttt{james@longrun.bio}}
@@ -37,7 +37,7 @@
 \label{sec:params}
 % ============================================================
 
-The ELM contains 168 parameters: 151 pathway rate constants and coupling coefficients (Tables~S3--S10), 6 compound scale factors, 6 compound pathway ratios (Table~S2), and 5 sex mechanism parameters (Table~S11). These fall into five categories based on provenance.
+The ELM contains 168 parameters: 151 pathway rate constants and coupling coefficients (Tables~S3--S10), 6 compound scale factors, 6 compound pathway ratios (Table~S2), and 5 sex mechanism parameters (Table~S11). The dual-action canagliflozin extension (Table~\ref{tab:cana_variants}) adds one parameter (the pathway split $f$), bringing the total to 169. These fall into five categories based on provenance.
 
 \begin{table}[H]
 \centering
@@ -87,7 +87,11 @@ Acarbose & AMPK & 0.50 & $\alpha$-glucosidase inhibition reduces postprandial gl
  & antioxidant & 0.50 & \\
 \hline
 
-Canagliflozin & AMPK & 1.00 & SGLT2 inhibition causes urinary glucose loss, activating AMPK via energy deficit. Single-pathway assignment. Note: the model underpredicts female efficacy, suggesting a second, sex-independent pathway (possibly FGF21/ketogenesis; see main text \S3.1). \\
+Canagliflozin & AMPK & 1.00 & \textbf{Baseline model.} SGLT2 inhibition causes urinary glucose loss, activating AMPK via energy deficit. Single-pathway assignment ($\alpha_c = 0.16$). Underpredicts female efficacy by 4~pp (+5.0\% vs.\ +9.0\%). \\
+\hline
+\multicolumn{4}{l}{\emph{Canagliflozin alternative (main text \S3.1, Figure~3):}} \\
+Canagliflozin & antioxidant & 0.88 & \textbf{Dual-action model.} FGF21/ketogenesis via SGLT2-mediated glycosuria activates Nrf2 antioxidant defenses \citep{Ferrannini2016,Osataphan2019,Packer2020}. Sweep-calibrated $f^* = 0.88$ ($\alpha_c = 0.60$). Female prediction +8.8\% (0.2~pp error). One additional parameter identified by one female datum. \\
+(dual-action) & AMPK & 0.12 & \\
 \hline
 
 Aspirin & antioxidant & 0.50 & COX-1/2 inhibition reduces prostaglandin-mediated ROS (antioxidant), suppresses NF-$\kappa$B-driven inflammation (anti-inflammatory), and mildly activates AMPK via salicylate binding to the $\beta$1 subunit \citep{Egan2004,Grosser2006}. The 50:30:20 split reflects the published mechanism hierarchy (COX inhibition is the dominant pharmacological effect, AMPK activation is secondary, and anti-inflammatory effects are tertiary) but the specific numbers are estimated, not measured. \\
@@ -99,6 +103,30 @@ Glycine & antioxidant & 0.90 & Glycine is a glutathione precursor; oral suppleme
  & AMPK & 0.10 & \\
 
 \end{longtable}
+
+\begin{table}[H]
+\centering
+\caption{Canagliflozin model variants compared. The baseline model (AMPK-only) has 6 free parameters calibrated to male ITP data; all female predictions are out-of-sample. The dual-action model adds one parameter ($f$, the antioxidant fraction), identified by one female datum (canagliflozin $F = +9\%$). Male predictions are identical by construction.}
+\label{tab:cana_variants}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+ & \textbf{Baseline (AMPK-only)} & \textbf{Dual-action} \\
+\midrule
+Pathway ratios & AMPK 1.00 & antioxidant 0.88 / AMPK 0.12 \\
+Scale factor $\alpha_c$ & 0.16 & 0.60 \\
+Injection: AMPK & 0.16 & 0.07 \\
+Injection: antioxidant & --- & 0.53 \\
+\midrule
+Free parameters & 6 & 6 + 1 ($f$) \\
+Female data used & none & canagliflozin only \\
+\midrule
+Cana.\ male prediction & +14.0\% & +14.0\% \\
+Cana.\ female prediction & +5.0\% & +8.8\% \\
+Cana.\ female error & 4.0~pp & 0.2~pp \\
+Mean female MAE (all 6) & 1.3~pp & 0.65~pp \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{NAD$^+$ Homeostasis Parameters}
 
@@ -284,13 +312,13 @@ $k_{\text{sasp,decay}}$ & 0.60 & SASP decay rate & Aggregate SASP signal decay. 
 \end{tabular}
 \end{table}
 
-\subsection{BioAge and Normalization}
+\subsection{Biological Age and Normalization}
 
-Normalization constants are derived from the control simulation at $t = 1.0$ (see \S\ref{sec:normalization}). BioAge weights are swept separately in the weight sensitivity analysis (main text); normalization constants are structural.
+Normalization constants are derived from the control simulation at $t = 1.0$ (see \S\ref{sec:normalization}). Biological age weights are swept separately in the weight sensitivity analysis (main text); normalization constants are structural.
 
 \begin{table}[H]
 \centering
-\caption{BioAge weights and normalization constants.}
+\caption{Biological age weights and normalization constants.}
 \begin{tabular}{|llllr|}
 \hline
 Parameter & Value & Description & Provenance & $\Delta_{\max}$ \\
@@ -404,11 +432,11 @@ For each compound, we asked: how well can the other five predict its behavior? W
 \end{itemize}
 
 % ============================================================
-\section{BioAge Weight Validation Against Published Clocks}
+\section{Biological Age Weight Validation Against Published Clocks}
 \label{sec:clock_mapping}
 % ============================================================
 
-To assess whether equal BioAge weights ($w = 0.25$ per subsystem) are consistent with published biological age clocks, we classified the component biomarkers of three clocks into ELM-equivalent categories and summed their published weights (Table~\ref{tab:clock_mapping}).
+To assess whether equal biological age weights ($w = 0.25$ per subsystem) are consistent with published biological age clocks, we classified the component biomarkers of three clocks into ELM-equivalent categories and summed their published weights (Table~\ref{tab:clock_mapping}).
 
 \textbf{Classification procedure.} Each biomarker in GrimAge \citep{Lu2019}, PhenoAge \citep{Levine2018}, and DunedinPACE \citep{Belsky2022} was assigned to the ELM subsystem it most directly reflects. For example: GrimAge's DNAm-estimated PAI-1 (plasminogen activator inhibitor-1) and TIMP-1 are products of the senescence-associated secretory phenotype, so they map to Senescence/SASP. DNAm-estimated smoking pack-years reflects cumulative oxidative and mutagenic damage, mapping to DNA Damage. GrimAge's age and sex terms were excluded (not biological subsystems). PhenoAge's albumin and creatinine reflect metabolic/mitochondrial function; its CRP and lymphocyte percentage reflect inflammation/senescence. DunedinPACE is a pace-of-aging composite; we used the CpG site annotations from \citet{Belsky2022} Table~S2 to classify by nearest biological pathway.
 
@@ -437,7 +465,7 @@ The decomposition does not pin down a unique weight vector, but it excludes path
 \label{sec:normalization}
 % ============================================================
 
-Normalization constants ($\hat{H}_0, \hat{D}_0, \hat{M}_0, \hat{S}_0$) are derived from the control (no-intervention) simulation evaluated at $t = 1.0$ (median lifespan). This ensures BioAge$(1.0) = 1.0$ by construction. The ODE dynamics are independent of these normalization constants; they serve only to set the death-threshold scale. Changing BioAge weights therefore changes the relative contribution of each subsystem at death without introducing circularity, because the normalization constants are recomputed for each weight vector via \texttt{derive\_normalization\_constants()}.
+Normalization constants ($\hat{H}_0, \hat{D}_0, \hat{M}_0, \hat{S}_0$) are derived from the control (no-intervention) simulation evaluated at $t = 1.0$ (median lifespan). This ensures $B(1.0) = 1.0$ by construction. The ODE dynamics are independent of these normalization constants; they serve only to set the death-threshold scale. Changing biological age weights therefore changes the relative contribution of each subsystem at death without introducing circularity, because the normalization constants are recomputed for each weight vector via \texttt{derive\_normalization\_constants()}.
 
 % ============================================================
 \section{Integration and Numerical Details}

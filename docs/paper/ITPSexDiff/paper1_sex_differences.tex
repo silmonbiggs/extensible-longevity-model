@@ -18,7 +18,7 @@
 
 \onehalfspacing
 
-\title{Four Biological Mechanisms Predict ITP Sex Differences\\from Male Data Alone}
+\title{Why ITP Longevity Drugs Work Differently\\in Male and Female Mice}
 \author{Silmon James Biggs\\[0.3em]
 \normalsize Longrun Bio\\
 \normalsize \texttt{james@longrun.bio}}
@@ -29,14 +29,14 @@
 \maketitle
 
 \begin{abstract}
-Most longevity compounds tested by the NIA Interventions Testing Program work better in male mice than female mice, except rapamycin, which works better in females. After 20 years and 54 compounds, no quantitative model has predicted the direction and magnitude of these sex differences. We built a mechanistic model of four coupled aging subsystems, each tracking a different kind of biological damage, and calibrated it to six male ITP results (6 free parameters). We then asked: can four sex-specific biological mechanisms, each taken from prior published experiments and none fitted to female data, predict all six female outcomes? They can, with 1.3 percentage point mean absolute error (MAE). The model also predicts the rapamycin + acarbose combination outcome (+33.5\% predicted vs.\ +34\% observed) without fitting to that result, correctly identifying sub-additivity from shared pathway saturation. Where the model errs, it errs informatively: the opposite mispredictions for acarbose and canagliflozin point to a second, sex-independent canagliflozin pathway (FGF21/ketogenesis) that the single-AMPK model does not capture. This is a testable hypothesis the model generates, not one it was designed to test.
+Most longevity compounds tested by the NIA Interventions Testing Program work better in male mice than female mice, except rapamycin, which works better in females. We show that a mechanistic model of four coupled aging subsystems, calibrated to six male ITP results (6 free parameters, 162 frozen priors from published biology), predicts all six female outcomes from four sex-specific mechanisms in prior literature---none fitted to female data. Mean absolute error is 1.3 percentage points, a sevenfold improvement over the naive assumption that females respond like males (9.0~pp). The model separately predicts the rapamycin + acarbose combination within 0.2~pp, correctly identifying sub-additivity from shared pathway saturation. Where the model errs largest, it errs instructively: canagliflozin is underpredicted by 4~pp because the model routes the entire effect through AMPK, where females already have higher baseline activity. The model's own structure diagnoses a sex-independent second pathway, consistent with FGF21/ketogenesis, and generates a falsifiable prediction: in FGF21-knockout mice, canagliflozin should lose most of its lifespan benefit.
 \end{abstract}
 
 % ============================================================
 \section{Introduction}
 % ============================================================
 
-The biology of aging has attracted sustained theoretical attention for more than a century, producing a vast literature, remarkable more for its breadth than for its predictive power. The distinction between a theory of aging causation and a quantitative model of aging interventions is the difference between explaining \emph{why} an organism dies and predicting \emph{when}. Reliability theory \citep{Gavrilov2001} makes one piece of the problem precise: organisms are series systems that fail when any one critical subsystem reaches its threshold. The consequence is that fixing one failure mode while leaving others intact produces gains proportional to that mode's contribution and no more. The remaining modes do not vanish; they wait.
+The biology of aging has attracted sustained theoretical attention for more than a century, producing a vast literature, remarkable more for its breadth than for its predictive power. The distinction between a theory of aging causation and a quantitative model of aging interventions is the difference between explaining \emph{why} an organism dies and predicting \emph{when}. Reliability theory \citep{Gavrilov2001} makes one piece of the problem precise: organisms are series systems that fail when any one critical subsystem reaches its threshold. The consequence is that fixing one failure mode while leaving others intact produces gains proportional to that mode's contribution and no more. The remaining modes do not vanish; they wait. This framework also predicts that drugs targeting the same subsystem will show diminishing returns in combination, while drugs targeting different subsystems should compound---a prediction that requires a multi-subsystem model to test.
 
 The most conspicuous unexplained pattern in 20 years of ITP data is that most longevity compounds work better in males, except rapamycin, which works better in females. Jiang et al.\ \citep{Jiang2025} documented the pattern across 54 compounds and 164 trials, confirming it is systematic, not compound-specific. Garratt \citep{Garratt2020} proposed qualitative mechanisms (pharmacokinetics, hormonal substrates, baseline pathway differences) but none were combined into a model that makes quantitative predictions.
 
@@ -44,7 +44,7 @@ Here we describe the Extensible Longevity Model (ELM): a system of ordinary diff
 
 The four subsystems are not independent. They are coupled through shared molecular intermediates, most centrally NAD$^+$, whose availability governs DNA repair (via PARP1), mitophagy (via SIRT1/FOXO3), and epigenetic stability (via EZH2). A drug that raises NAD$^+$ can partially address multiple subsystems simultaneously; conversely, two drugs that both raise NAD$^+$ may show diminishing returns when combined.
 
-The model is calibrated to six male ITP lifespan results. Four sex-specific mechanisms, each drawn from independent experimental literature and not fitted to ITP sex data, are applied to the calibrated model to generate female predictions. Whether these predictions match the observed female outcomes, without any female data in the calibration, is the central test of whether the model has captured the right biology.
+The model has 6 free parameters (compound scale factors, calibrated to male ITP data) and 162 frozen priors imported from published biology. Four sex-specific mechanisms, each drawn from independent experimental literature, are applied to the calibrated model to generate female predictions. The sex predictions use zero additional fitted parameters. Whether they match the observed female outcomes is the central test of whether the model has captured the right biology.
 
 \subsection{The Data Foundation}
 
@@ -72,14 +72,14 @@ Why do these six compounds show different sex ratios? We propose four mechanisms
 
 \subsection{Model Structure}
 
-The intuition behind the model is simple: four kinds of biological damage accumulate over the mouse's lifetime, flowing downhill into a reservoir we call BioAge. The mouse dies when BioAge crosses a threshold. The channels are not independent; they merge and feed into each other along the way. Heteroplasmy generates ROS, which accelerates DNA damage; DNA damage triggers senescence, which produces SASP, which drains NAD$^+$ and accelerates methylation drift. Longevity drugs work by partially blocking specific channels: rapamycin opens the autophagy drain, acarbose activates AMPK, and so on. The equations below (Equations 1--5) simply track how fast each channel fills and how much they feed into each other. The signaling intermediates (AMPK, mTORC1, SIRT1, etc.)\ are the valves that drugs can turn.
+The intuition behind the model is simple: four kinds of biological damage accumulate over the mouse's lifetime, flowing downhill into a composite biological age. The mouse dies when biological age crosses a threshold. The channels are not independent; they merge and feed into each other along the way. Heteroplasmy generates ROS, which accelerates DNA damage; DNA damage triggers senescence, which produces SASP, which drains NAD$^+$ and accelerates methylation drift. Longevity drugs work by partially blocking specific channels: rapamycin opens the autophagy drain, acarbose activates AMPK, and so on. The equations below (Equations 1--5) simply track how fast each channel fills and how much they feed into each other. The signaling intermediates (AMPK, mTORC1, SIRT1, etc.)\ are the valves that drugs can turn.
 
 The ELM tracks five state variables across the mouse lifespan (Figure~\ref{fig:system}). Full parameter tables with provenance are provided in the Supplementary Material.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{system_diagram_paper1.png}
-\caption{ELM system architecture with ITP compound entry points.}
+\caption{ELM system architecture with ITP compounds (top) and their entry points (downward dashed diagonal lines) to the aging system. Enzymes and processes (diamonds) route flows that add (black arrows) or subtract (red) from state variables (bold rectangles). Signaling (dashed arrows) affects flow rates. The orange dashed line (*) marks a hypothesized canagliflozin pathway analyzed in Section~3.1.}
 \label{fig:system}
 \end{figure}
 
@@ -105,15 +105,15 @@ Ten signaling intermediates are computed from the state variables at each time s
 \toprule
 Intermediate & Primary inputs & Function type & Key role \\
 \midrule
-AMPK & energy stress, compounds & Michaelis--Menten & TSC2 activation, NAMPT boost \\
-TSC2 & AMPK & Hill ($n = 1.5$) & Rheb-GAP, mTORC1 suppression \\
-mTORC1 & TSC2, rapamycin & multiplicative & autophagy inhibition \\
-SIRT1 & NAD$^+$ & Hill ($n = 2.0$) & FOXO3 activation, deacetylation \\
-FOXO3 & SIRT1 & linear & mitophagy, stress response \\
-Autophagy & AMPK, FOXO3 & Michaelis--Menten & damage clearance \\
-SASP & SenCells & proportional & CD38, ROS, paracrine senescence \\
-ROS & heteroplasmy, SASP & additive & DNA damage source \\
-EZH2 & AMPK, SIRT1 & inhibitory & DNMT recruitment, CpG drift \\
+AMPK & energy stress, compounds & Michaelis--Menten & TSC2 activation, NAMPT boost \\ \hline
+TSC2 & AMPK & Hill ($n = 1.5$) & Rheb-GAP, mTORC1 suppression \\ \hline
+mTORC1 & TSC2, rapamycin & multiplicative & autophagy inhibition \\ \hline
+SIRT1 & NAD$^+$ & Hill ($n = 2.0$) & FOXO3 activation, deacetylation \\ \hline
+FOXO3 & SIRT1 & linear & mitophagy, stress response \\ \hline
+Autophagy & AMPK, FOXO3 & Michaelis--Menten & damage clearance \\ \hline
+SASP & SenCells & proportional & CD38, ROS, paracrine senescence \\ \hline
+ROS & heteroplasmy, SASP & additive & DNA damage source \\ \hline
+EZH2 & AMPK, SIRT1 & inhibitory & DNMT recruitment, CpG drift \\ \hline
 PGC-1$\alpha$ & AMPK, SIRT1 & additive & mitochondrial biogenesis \\
 \bottomrule
 \end{tabular}
@@ -140,21 +140,21 @@ DNA damage accumulates from ROS and is repaired by NAD$^+$-dependent pathways:
 
 Methylation drift is accelerated by damage and SASP, restrained by AMPK-mediated suppression of EZH2, which reduces DNMT recruitment to CpG sites \citep{Vire2006}:
 \begin{equation}
-\frac{dM}{dt} = k_{\text{drift}}(1 + \delta_D D + \delta_{\text{SASP}} \cdot \text{SASP}) - k_{\text{EZH2}} \cdot f_{\text{AMPK}}(\text{AMPK}) \cdot M
+\frac{dM}{dt} = \underbrace{k_{\text{drift}}(1 + \delta_D D + \delta_{\text{SASP}} \cdot \text{SASP})}_{\text{epigenetic drift, amplified by damage \& SASP}} - \underbrace{k_{\text{EZH2}} \cdot f_{\text{AMPK}}(\text{AMPK}) \cdot M}_{\text{AMPK-mediated maintenance}}
 \end{equation}
 
 Senescent cell entry follows a damage-dependent Hill function plus a constant background term $k_{\text{repl}}$ representing replicative exhaustion (Hayflick-limit arrivals per unit time); clearance is proportional to burden:
 \begin{equation}
-\frac{dS}{dt} = k_{\text{entry}} \cdot \frac{D^n}{K_D^n + D^n} + k_{\text{repl}} - k_{\text{clear}} \cdot S
+\frac{dS}{dt} = \underbrace{k_{\text{entry}} \cdot \frac{D^n}{K_D^n + D^n}}_{\text{damage-driven entry}} + \underbrace{k_{\text{repl}}}_{\text{replicative exhaustion}} - \underbrace{k_{\text{clear}} \cdot S}_{\text{immune clearance}}
 \end{equation}
 
-\subsubsection{BioAge and survival}
+\subsubsection{Biological age and survival}
 
-The four damage channels feed into a single number, BioAge, that represents the overall biological age of the mouse. NAD$^+$ is excluded because it acts as a coupling intermediate rather than an independent aging endpoint; its effects are captured through its influence on DNA repair, methylation, and mitophagy:
+The four damage channels feed into a single composite biological age $B(t)$. NAD$^+$ is excluded because it acts as a coupling intermediate rather than an independent aging endpoint; its effects are captured through its influence on DNA repair, methylation, and mitophagy:
 \begin{equation}
-\text{BioAge}(t) = w_H \cdot \frac{H}{\hat{H}_0} + w_D \cdot \frac{D}{\hat{D}_0} + w_M \cdot \frac{M}{\hat{M}_0} + w_S \cdot \frac{S}{\hat{S}_0}
+B(t) = \left(\frac{w_H}{\hat{H}_0}\right)\!H \;+\; \left(\frac{w_D}{\hat{D}_0}\right)\!D \;+\; \left(\frac{w_M}{\hat{M}_0}\right)\!M \;+\; \left(\frac{w_S}{\hat{S}_0}\right)\!S
 \end{equation}
-with equal weights $w_H = w_D = w_M = w_S = 0.25$ (no basis to favor one subsystem over another), where $\hat{H}_0, \hat{D}_0, \hat{M}_0, \hat{S}_0$ are normalization constants derived from control simulation values at $t = 1.0$ (median lifespan), ensuring BioAge$(1.0) = 1.0$ by construction. BioAge determines the death rate through a Gompertz function: $h(t) = h_0 \exp(\lambda \cdot \text{BioAge}(t))$, calibrated to the UM-HET3 control survival curve. We define lifespan extension as the percent change in median survival between treated and control simulations.
+with equal weights $w_H = w_D = w_M = w_S = 0.25$ (no basis to favor one subsystem over another), where $\hat{H}_0, \hat{D}_0, \hat{M}_0, \hat{S}_0$ are normalization constants derived from control simulation values at $t = 1.0$ (median lifespan), ensuring $B(1.0) = 1.0$ by construction. Biological age determines the death rate through a Gompertz function: $h(t) = h_0 \exp(\lambda \cdot B(t))$, calibrated to the UM-HET3 control survival curve. We define lifespan extension as the percent change in median survival between treated and control simulations.
 
 The equal-prior weight assignment reflects agnosticism about which subsystem dominates mouse mortality and avoids consuming degrees of freedom on weight tuning. We checked this assumption against three published biological age clocks (GrimAge \citep{Lu2019}, PhenoAge \citep{Levine2018}, DunedinPACE \citep{Belsky2022}) by classifying each clock's biomarkers into ELM subsystems and summing weights per category (Supplementary Table~S13). The clock decomposition does not pin down a unique weight vector, but it does exclude pathological ones: setting $w_M = 0.50$, for example, is outside the range implied by both GrimAge (20--30\%) and PhenoAge (5--15\%). All four equal weights (0.25) fall within every clock's implied range. Sensitivity analysis (Section~3.3) confirms that predictions are stable across the full plausible range.
 
@@ -175,24 +175,21 @@ A single scale factor $\alpha_c$ then sets the overall magnitude: one free param
 Compound & Mechanism & Pathway & Ratio (lit.) & $\alpha_c$ (fitted) & Injection \\
 \midrule
 Rapamycin & mTORC1 inhib. & mTORC1 & 0.60 & \multirow{2}{*}{0.70} & 0.42 \\
- & & AMPK & 0.40 & & 0.28 \\
-\addlinespace
+ & & AMPK & 0.40 & & 0.28 \\ \hline
 Acarbose & $\alpha$-glucosidase & AMPK & 0.50 & \multirow{2}{*}{0.34} & 0.17 \\
- & & gut microbiome & 0.50 & & 0.17 \\
-\addlinespace
+ & & gut microbiome & 0.50 & & 0.17 \\ \hline
 17$\alpha$-Estradiol & 5$\alpha$-reductase & AMPK & 0.50 & \multirow{2}{*}{0.35} & 0.18 \\
- & & antioxidant & 0.50 & & 0.18 \\
-\addlinespace
-Canagliflozin & SGLT2 inhib. & AMPK & 1.00 & 0.16 & 0.16 \\
-\addlinespace
+ & & antioxidant & 0.50 & & 0.18 \\ \hline
+Canagliflozin$^\dagger$ & SGLT2 inhib. & AMPK & 1.00 & 0.16 & 0.16 \\ \hline
 Aspirin & COX inhib. & antioxidant & 0.50 & \multirow{3}{*}{0.20} & 0.10 \\
  & & AMPK & 0.30 & & 0.06 \\
- & & anti-inflam. & 0.20 & & 0.04 \\
-\addlinespace
+ & & anti-inflam. & 0.20 & & 0.04 \\ \hline
 Glycine & antioxidant & antioxidant & 0.90 & \multirow{2}{*}{0.32} & 0.28 \\
  & & AMPK & 0.10 & & 0.03 \\
 \bottomrule
 \end{tabular}
+\vspace{2pt}
+{\small $^\dagger$Dual-action decomposition (antioxidant~0.88 / AMPK~0.12, $\alpha_c = 0.60$) explored in Section~3.1.}
 \end{table}
 
 Three pathways in Table~\ref{tab:compounds} act by modifying rate constants within the existing equations rather than adding new ones. \textbf{Antioxidant} reduces the ROS level in Equation~3: $k_{\text{ROS}}$ is multiplied by a protection factor $(1 - k_{\text{aox}} \cdot \text{antioxidant})$, so glycine's large antioxidant injection (0.28) directly suppresses oxidative DNA damage. \textbf{Gut microbiome} reduces CD38 activity in Equation~2: acarbose's gut fermentation products lower CD38-mediated NAD$^+$ consumption, slowing the $k_{\text{CD38}} \cdot N$ drain term. \textbf{Anti-inflammatory} accelerates SASP clearance, reducing the SASP-driven amplification terms that appear in Equations 2, 3, and 4. All three pathways modify rate constants within the existing ODE structure rather than adding new equations.
@@ -203,13 +200,15 @@ We calibrate the model with one free parameter per compound: a scale factor $\al
 \begin{equation}
 \Delta L_{\text{pred}}^{(c, \text{male})} = \Delta L_{\text{ITP}}^{(c, \text{male})}
 \end{equation}
+We calibrate to male targets because all six compounds produce non-zero male effects, providing six independent constraints. Only four compounds produce non-zero female effects (17$\alpha$-estradiol and aspirin show zero female benefit), so female calibration would leave two scale factors undetermined. The calibration direction reflects data availability, not biological primacy.
+
 Male predictions are exact by construction (error $< 0.01$~pp). 162 additional parameters are fixed before calibration begins: 115 from published experimental measurements, 24 set within biologically plausible ranges (including 6 adjusted to produce realistic untreated-mouse biology), and 23 structural constants (normalization, coupling topology). None were adjusted to match ITP intervention outcomes. Full provenance is documented in the Supplementary Material.
 
 We then compute female predictions using the same scale factors plus the four sex-specific mechanisms. No parameters are adjusted to match female data. These are genuine out-of-sample predictions.
 
 \subsection{Sex-Specific Implementation}
 
-\textbf{AMPK saturation.} Female AMPK baseline is $b = 1.3\times$ male \citep{Boudaba2018,McInnes2011}. We model this saturation as $f_{\text{atten}} = 1/(1 + k(b - 1))$ with $k = 8$, giving a factor of 0.29, meaning females get roughly one-third of the AMPK-mediated benefit that males get. This single functional form governs female response for all three AMPK-activating compounds (acarbose, canagliflozin, glycine).
+\textbf{AMPK saturation.} Female AMPK baseline is $b = 1.3\times$ male \citep{Boudaba2018,McInnes2011}. We model this saturation as $f_{\text{atten}} = 1/(1 + k(b - 1))$ with $k = 8$, giving a factor of 0.29, meaning females get roughly one-third of the AMPK-mediated benefit that males get. This single functional form governs female response for all three AMPK-activating compounds (acarbose, canagliflozin, glycine). Non-AMPK pathway injections (antioxidant, gut microbiome) pass through the sex modifier at full strength.
 
 \textbf{CYP3A pharmacokinetics.} Female effective rapamycin exposure is $3.48\times$ male \citep{Lamming2014}, applied via Hill-function mTORC1 inhibition.
 
@@ -223,7 +222,7 @@ In combination simulations, we activate both compound perturbations at once, eac
 
 \subsection{Sensitivity Analysis}
 
-We varied each BioAge weight across $[0.10, 0.50]$, redistributing the remainder equally, and recalibrated the model at each value. We independently perturbed each compound scale factor $\pm$20\%.\footnote{ODEs were integrated with SciPy \texttt{solve\_ivp} (RK45). All code is available at \url{https://github.com/silmonbiggs/extensible-longevity-model} (MIT license).}
+We varied each biological age weight across $[0.10, 0.50]$, redistributing the remainder equally, and recalibrated the model at each value. We independently perturbed each compound scale factor $\pm$20\%.\footnote{ODEs were integrated with SciPy \texttt{solve\_ivp} (RK45). All code is available at \url{https://github.com/silmonbiggs/extensible-longevity-model} (MIT license).}
 
 % ============================================================
 \section{Results}
@@ -231,11 +230,11 @@ We varied each BioAge weight across $[0.10, 0.50]$, redistributing the remainder
 
 \subsection{Sex Differences: Four Mechanisms, Zero Sex-Specific Fitting}
 
-Using four biological mechanisms drawn from prior literature, none fitted to female data, the model predicts all six female ITP outcomes from male calibration alone, with 1.3~pp mean absolute error (median 0.45~pp; Table~\ref{tab:calibration}). This is the primary result.
+Using four biological mechanisms drawn from prior literature, none fitted to female data, the model predicts all six female ITP outcomes from male calibration alone, with 1.3~pp mean absolute error (four of six within 1~pp; Table~\ref{tab:calibration}). This is the primary result.
 
 \begin{table}[ht]
 \centering
-\caption{ITP observed vs.\ ELM predicted lifespan extension. Male predictions are calibrated (6 free parameters); female predictions are genuine out-of-sample tests.}
+\caption{ITP observed vs.\ ELM predicted lifespan extension. Male predictions are calibrated (6 free parameters); female predictions are genuine out-of-sample tests. $^\dagger$With dual-action pathway split ($f = 0.88$; Section~3.1, Figure~\ref{fig:cana_sweep}), canagliflozin female prediction becomes +8.8\%.}
 \label{tab:calibration}
 \begin{tabular}{@{}l|cc|cc|l@{}}
 \toprule
@@ -245,18 +244,47 @@ Compound & ITP & ELM & ITP & ELM & Sex mechanism \\
 Rapamycin      & +23.0\% & +23.0\% & +26.0\% & +26.7\% & CYP3A pharmacokinetics \\
 Acarbose       & +22.0\% & +22.0\% & +5.0\%  & +7.6\%  & AMPK saturation \\
 17$\alpha$-Estradiol & +19.0\% & +19.0\% & 0\%     & 0\%     & testosterone dependency \\
-Canagliflozin  & +14.0\% & +14.0\% & +9.0\%  & +5.0\%  & AMPK saturation \\
+Canagliflozin  & +14.0\% & +14.0\% & +9.0\%  & +5.0\%$^\dagger$  & AMPK saturation \\
 Aspirin        & +8.0\%  & +8.0\%  & 0\%     & 0\%     & estrogen interference \\
 Glycine        & +6.0\%  & +6.0\%  & +4.0\%  & +3.8\%  & AMPK saturation \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\textbf{AMPK saturation (acarbose, canagliflozin, glycine).} A 30\% higher AMPK baseline, on a steeply saturating curve, leaves only 29\% of the male drug response available (attenuation factor 0.29). The per-compound predictions: glycine is predicted well (+3.8\% vs.\ +4.0\%), acarbose is overpredicted (+7.6\% vs.\ +5.0\%), and canagliflozin is underpredicted (+5.0\% vs.\ +9.0\%).
+\textbf{Uncertainty estimates.} ITP studies do not report confidence intervals on median extension. We estimate $\pm 2.5$~pp (1 SE) per compound per sex, based on: ITP sample sizes of $\sim$130--150 treated and $\sim$270 control mice per sex \citep{Miller2007}, bootstrap SE of the median ($1.253 \times \sigma / \sqrt{n}$, with $\sigma \approx 170$~days for UM-HET3 lifespans), and propagation through the treated-minus-control ratio. This is consistent with the ITP's stated power to detect a 10\% change in mean lifespan at 80\% power. Model prediction uncertainty is computed by one-at-a-time perturbation of all 141 frozen parameters ($\pm$10\%), with male scale factors re-calibrated at each perturbation (Supplementary~\S S2.2); per-compound female sensitivities are then scaled by each parameter's plausible range and summed in quadrature (RSS). The resulting model SE ranges from 0~pp (aspirin, 17$\alpha$-estradiol: categorical mechanisms) to 2.3~pp (rapamycin: PK-mediated sensitivity to heteroplasmy parameters).
 
-The acarbose--canagliflozin error pattern is diagnostic. If both compounds acted purely through AMPK, their female attenuation should be similar. Instead they err in opposite directions: acarbose is overpredicted, canagliflozin is underpredicted.
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{sex_diff_baseline.png}
+\caption{ELM predictions vs.\ ITP observations for all six compounds, both sexes (pure-AMPK canagliflozin model). For each compound, paired bars show ITP observed (dark) and ELM predicted (light), with blue for males and red for females. Error bars on ITP bars: estimated SE of the median extension ($\pm 2.5$~pp; see text). Error bars on ELM female bars: model parameter uncertainty (OAT-derived RSS; Supplementary~\S S2.2). ELM male bars carry no error bar (calibrated by root-finding). Four of six female predictions fall within combined 1$\sigma$ uncertainty; canagliflozin and acarbose exceed it.}
+\label{fig:sex_diff}
+\end{figure}
 
-The most parsimonious explanation: canagliflozin has a second, sex-independent mechanism, possibly FGF21/ketogenesis via SGLT2 inhibition, that the single-AMPK model does not capture. Three independent lines of evidence support this: SGLT2 inhibition shifts substrate utilization toward fatty acid oxidation and ketogenesis \citep{Ferrannini2016}; canagliflozin specifically reprograms systemic metabolism via FGF21-dependent pathways in mice \citep{Osataphan2019}; and SGLT2 inhibitors activate ketogenic starvation sensors independently of glucose lowering \citep{Packer2020}. This is a hypothesis the model generates, not one it was designed to test.
+\textbf{AMPK saturation (acarbose, canagliflozin, glycine).} A 30\% higher AMPK baseline, on a steeply saturating curve, leaves only 29\% of the male drug response available (attenuation factor 0.29). The per-compound predictions: glycine is predicted well (+3.8\% vs.\ +4.0\%) because 90\% of its injection is antioxidant, which passes through the sex modifier unattenuated. Acarbose is overpredicted (+7.6\% vs.\ +5.0\%, 2.6~pp). Canagliflozin is underpredicted (+5.0\% vs.\ +9.0\%, 4.0~pp).
+
+The acarbose--canagliflozin error pattern is diagnostic. If both compounds acted purely through AMPK, their female attenuation should be similar. Instead they err in opposite directions: acarbose is overpredicted, canagliflozin is underpredicted. The model's structure identifies why: the AMPK saturation mechanism diminishes only the \texttt{ampk} and \texttt{gut\_microbiome} pathway injections; an antioxidant fraction passes through at full strength for females. If part of canagliflozin's effect operates through a sex-independent pathway, females would retain that component unattenuated, raising the predicted female benefit toward the observed value.
+
+Three independent lines of evidence support a sex-independent second pathway: SGLT2 inhibition shifts substrate utilization toward fatty acid oxidation and ketogenesis \citep{Ferrannini2016}; canagliflozin reprograms systemic metabolism via FGF21-dependent pathways in mice \citep{Osataphan2019}; and SGLT2 inhibitors activate ketogenic starvation sensors independently of glucose lowering \citep{Packer2020}. In the model, this maps to the antioxidant node, which reduces ROS-driven DNA damage---precisely the downstream endpoint of Nrf2 activation.
+
+To quantify this hypothesis, we swept the antioxidant fraction $f$ from 0 to 1, recalibrating the male scale factor at each point via root-finding so that the male prediction remains exactly +14\% regardless of the split (Figure~\ref{fig:cana_sweep}). The sweep identifies $f^* = 0.88$ (plausible range 0.75--0.94) as the split that minimizes mean female prediction error across all six compounds. This adds one parameter (the pathway split $f$), identified by one datum (female canagliflozin = +9\%). It is not a free prediction---but it generates one.
+
+If the FGF21 hypothesis is correct, the model-to-data match for canagliflozin improves from +5.0\% to +8.8\% (0.2~pp error), and mean female MAE drops from 1.3 to 0.65~pp, with five of six compounds within 1~pp.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{cana_antioxidant_sweep.png}
+\caption{Canagliflozin dual-action sweep. \textbf{(A)}~Female lifespan extension as a function of the antioxidant fraction $f$, with male extension recalibrated to +14\% at each point. The dashed line marks the ITP observed value (+9\%). \textbf{(B)}~Mean and maximum female prediction error across all six ITP compounds. The minimum at $f^* = 0.88$ halves the mean error relative to the pure-AMPK model ($f = 0$).}
+\label{fig:cana_sweep}
+\end{figure}
+
+The falsifiable prediction: in FGF21-knockout mice, canagliflozin should retain at most the AMPK-mediated fraction of its lifespan benefit---a residual male extension of 1--4~pp (instead of +14\%), and near-zero female extension (the small AMPK residual is further diminished by AMPK saturation). Plasma FGF21 and $\beta$-hydroxybutyrate in canagliflozin-treated wild-type mice should be elevated to a similar degree in both sexes, confirming the sex-independent nature of the dominant pathway.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{sex_diff_dual_action.png}
+\caption{Same layout as Figure~\ref{fig:sex_diff}, with canagliflozin updated to the dual-action model ($f^* = 0.88$). The canagliflozin female gap closes from 4.1~pp to 0.2~pp. Five of six compounds now fall within combined 1$\sigma$ uncertainty; acarbose remains the sole outlier.}
+\label{fig:sex_diff_dual}
+\end{figure}
 
 \textbf{Pharmacokinetics (rapamycin).} Rapamycin is the one compound showing greater female efficacy (+26\% F vs.\ +23\% M). The AMPK saturation mechanism predicts the opposite. The reversal is pharmacokinetic: female mice achieve 3.48-fold higher blood rapamycin levels at equivalent dietary doses due to reduced CYP3A hepatic clearance \citep{Lamming2014}, more than offsetting the AMPK disadvantage. The model predicts +26.7\% female, an error of 0.7~pp.
 
@@ -264,14 +292,7 @@ The most parsimonious explanation: canagliflozin has a second, sex-independent m
 
 \textbf{Estrogen interference (aspirin).} COX inhibition suppresses the COX-2$\to$PGI$_2$ pathway through which estrogen mediates cardioprotection \citep{Egan2004,Grosser2006}. The net effect in females neutralizes a protective pathway, offsetting aspirin's antioxidant and anti-inflammatory benefits. Predicted: 0\%. Observed: 0\%.
 
-No sex-specific parameters were adjusted to ITP lifespan data. The AMPK baseline ratio (1.3$\times$) and rapamycin PK ratio (3.48$\times$) come from published measurements; the saturation curvature ($k = 8$) is a round number set near the midpoint of the plausible range [3--20] (Section~4.2). All three were fixed before examining female ITP outcomes.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.85\textwidth]{stage_11_mf_complete.png}
-\caption{Sex difference predictions vs.\ ITP observations for all six compounds.}
-\label{fig:sex_diff}
-\end{figure}
+No sex-specific parameters were adjusted to ITP lifespan data. The AMPK baseline ratio (1.3$\times$) and rapamycin PK ratio (3.48$\times$) come from published measurements; the saturation curvature ($k = 8$) is a round number set near the midpoint of the plausible range [3--20] (Section~4.2). All three were fixed before examining female ITP outcomes. For comparison, a naive null model that assumes female extension equals male extension produces a mean absolute error of 9.0~pp---the four sex mechanisms reduce this sevenfold, to 1.3~pp.
 
 Figure~\ref{fig:rapa_survival} shows predicted survival curves for rapamycin-treated and control mice in both sexes. In males, rapamycin shifts the survival curve rightward by a modest margin; the two curves separate gradually. In females, the separation is visibly larger: higher effective drug exposure (3.48$\times$ blood levels) pushes the treated curve further right, producing a larger gap at every survival quantile. The model captures this asymmetry from the CYP3A pharmacokinetic difference alone, without any female-specific fitting.
 
@@ -284,22 +305,22 @@ Figure~\ref{fig:rapa_survival} shows predicted survival curves for rapamycin-tre
 
 \subsection{Out-of-Sample Validation: Rapamycin + Acarbose}
 
-The ELM predicts +33.5\% for the rapamycin + acarbose combination; the ITP observed +34\% \citep{Strong2022}. This combination was not used in any parameter fitting: neither the compound scale factors (calibrated to individual male targets) nor the BioAge weights (equal priors, fixed before calibration) were adjusted to match this result.
+The ELM predicts +34\% for the rapamycin + acarbose combination (male, 9-month start); the ITP observed +34\% \citep{Strong2022}. This combination was not used in any parameter fitting: neither the compound scale factors (calibrated to individual male targets) nor the biological age weights (equal priors, fixed before calibration) were adjusted to match this result.
 
 The prediction is not trivially correct. Both compounds activate AMPK, but through different routes: rapamycin indirectly (mTORC1 inhibition relieves negative feedback on AMPK) and acarbose directly (energy stress from reduced carbohydrate absorption). Both converge on the same downstream autophagy pathway, which follows Michaelis--Menten kinetics with $K_a = 0.35$.
 
-At ITP doses, rapamycin alone drives autophagy to $\sim$78\% of maximum; acarbose drives it to $\sim$65\%. Combined, the pathway encounters diminishing returns near saturation. A naive additive model predicts +45\%. The ELM predicts +33.5\%. The ITP observes +34\% (Figure~\ref{fig:combo}). The naive model is not close. The ELM identifies the direction of the interaction (sub-additive), its approximate magnitude, and the correct mechanistic reason: pathway saturation at a shared node.
+At ITP doses, rapamycin alone drives autophagy to $\sim$78\% of maximum; acarbose drives it to $\sim$65\%. Combined, the pathway encounters diminishing returns near saturation. A naive additive model predicts +45\%. The ELM predicts +34\%. The ITP observes +34\% (Figure~\ref{fig:combo}). The naive model is not close. The ELM identifies the direction of the interaction (sub-additive), its approximate magnitude, and the correct mechanistic reason: pathway saturation at a shared node.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.6\textwidth]{stage_08_mixing_bars.png}
-\caption{Out-of-sample combination prediction: rapamycin + acarbose.}
+\includegraphics[width=0.5\textwidth]{combo_rapa_acarb.png}
+\caption{Out-of-sample combination prediction: rapamycin + acarbose (male, 9-month start). Individual compound effects and ITP observed in dark blue (data); naive additive sum in gray; ELM prediction in light blue (model). Error bars: $\pm$1.9~pp model SE (ELM), $\pm$2.5~pp estimated SE (ITP). The naive sum (+45\%) overpredicts by 11~pp; the ELM (+34\%) matches the ITP (+34\%) within combined uncertainty.}
 \label{fig:combo}
 \end{figure}
 
 \subsection{Sensitivity and Robustness}
 
-\textbf{Weight sensitivity.} We swept the methylation weight across $[0.05, 0.50]$, well beyond the biologically plausible clock-decomposition range of $[0.05, 0.30]$ (Supplementary Section~S3). Across the full sweep, the combination prediction ranges from +31.0\% ($w_M = 0.05$) to +37.3\% ($w_M = 0.50$). Within the plausible range, the combination prediction spans +31.0\% to +34.3\% and the female mean error spans 1.20 to 1.36~pp---the model is insensitive to this weight across its plausible range (Figure~\ref{fig:weight_sweep}).
+\textbf{Weight sensitivity.} We swept the methylation weight across $[0.05, 0.50]$, well beyond the biologically plausible clock-decomposition range of $[0.05, 0.30]$ (Supplementary Section~S3). The data cannot strongly constrain this weight: the mean calibration error stays below the ITP measurement noise floor ($\sim$2.5~pp SE) everywhere, and the maximum single-compound error barely exceeds it (Figure~\ref{fig:weight_sweep}A). Our choice of equal 25\% weight for all four aging channels is neutrality consonant with the data on hand. The out-of-sample combination prediction provides mild additional constraint: the predicted rapa+acarbose extension crosses the observed +34\% near $w_M = 0.25$ and remains within $\pm$2.5~pp (one ITP~SE) for $w_M \in [0.10, 0.40]$ (Figure~\ref{fig:weight_sweep}B).
 
 \textbf{Parameter perturbation.} Perturbing each compound scale factor $\pm$20\% shifts individual predictions by at most 2~pp. No perturbation reverses any sex-difference direction or changes the qualitative combination prediction.
 
@@ -308,7 +329,7 @@ At ITP doses, rapamycin alone drives autophagy to $\sim$78\% of maximum; acarbos
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{w_meth_sweep.png}
-\caption{BioAge weight sensitivity: calibration quality and combination prediction.}
+\caption{Biological age weight sensitivity. \textbf{(A)}~Mean and maximum calibration error across all 12 compound$\times$sex predictions as the methylation weight varies from 0.05 to 0.50. The dashed line marks the ITP measurement SE ($\sim$2.5~pp); mean error stays well below this noise floor across the entire range. \textbf{(B)}~Out-of-sample rapa+acarbose combination prediction. The salmon band shows $\pm$2.5~pp (one ITP~SE) around the observed +34\%. The prediction falls within this band for $w_M \in [0.10, 0.40]$. Purple shading marks the biologically plausible clock-decomposition range.}
 \label{fig:weight_sweep}
 \end{figure}
 
@@ -318,13 +339,11 @@ At ITP doses, rapamycin alone drives autophagy to $\sim$78\% of maximum; acarbos
 
 \subsection{The Sex Difference Explanation}
 
-No single mechanism here is new; each has been proposed before. What is new is that four independent mechanisms, drawn from four different literatures, all produce correct predictions when combined in the same quantitative model. That all four produce correct directional predictions, and four of six within 1~pp, is evidence that the model captures real biology.
-
-The canagliflozin error pattern suggests a specific experimental test. The model underpredicts female canagliflozin efficacy (+5.0\% vs.\ +9.0\%) because it routes the entire effect through AMPK, which is heavily attenuated in females. If canagliflozin also acts through a second pathway (FGF21/ketogenesis, for which there is independent literature support \citep{Ferrannini2016,Osataphan2019,Packer2020}) and if that pathway is sex-independent (not subject to AMPK saturation), then females would retain that component unattenuated, raising the predicted female benefit toward the observed value. The test: measure FGF21 levels in canagliflozin-treated male and female mice. If FGF21 rises equally in both sexes, it confirms the multi-pathway hypothesis and indicates that adding this second pathway to the model would resolve the prediction error.
+No single mechanism here is new; each has been proposed before. What is new is that four independent mechanisms, drawn from four different literatures, all produce correct predictions when combined in the same quantitative model. That all four produce correct directional predictions, and four of six within 1~pp, is evidence that the model captures real biology. If the canagliflozin pathway split is accepted, five of six fall within 1~pp, with acarbose (+7.6\% vs.\ +5.0\%, 2.6~pp) the sole remaining outlier.
 
 \subsection{The Combination Validation}
 
-The rapamycin + acarbose prediction (+33.5\% vs.\ +34\%) provides supporting evidence beyond the sex differences. Its value lies in what the model had to get right: predicting sub-additivity rather than the naive +45\%, for the correct mechanistic reason. But one combination prediction does not validate the full model; it validates the specific pathway saturation mechanism that both compounds share. The harder test, cross-pathway interactions involving mechanistically independent axes, requires multi-compound experimental designs that have not yet been conducted, because single-compound testing, however rigorously conducted, cannot see what is behind a wall it has not yet removed.
+The rapamycin + acarbose prediction (+34\% vs.\ +34\%) provides supporting evidence beyond the sex differences. Its value lies in what the model had to get right: predicting sub-additivity rather than the naive +45\%, for the correct mechanistic reason. But one combination prediction does not validate the full model; it validates the specific pathway saturation mechanism that both compounds share. The harder test, cross-pathway interactions involving mechanistically independent axes, requires multi-compound experimental designs that have not yet been conducted, because single-compound testing, however rigorously conducted, cannot see what is behind a wall it has not yet removed.
 
 \subsection{What the Data Constrains}
 
@@ -338,7 +357,7 @@ Beyond the sex differences and combination validation reported here, the model g
 
 \textbf{Cross-pathway independence.} The central unvalidated assumption is that the four aging axes compound approximately independently in living animals. The ODE coupling structure encodes known interactions (SASP$\to$NAD$^+$ drain, ROS$\to$DNA damage, AMPK$\to$EZH2 methylation), but the model assumes these are the dominant cross-pathway interactions. Higher-order feedback not captured in the system could invalidate combination predictions.
 
-\textbf{AMPK saturation parameter.} The diminishing-returns curvature $k = 8$ is a modeling choice, not a directly measured quantity. It is set as the midpoint of the plausible range for hyperbolic saturation of the LKB1$\to$AMPK$\to$TSC2 cascade. Different values of $k$ shift the three AMPK-compound female predictions in concert; the qualitative pattern (acarbose overpredicted, canagliflozin underpredicted) is preserved across the plausible range.
+\textbf{AMPK saturation parameter.} The diminishing-returns curvature $k = 8$ is a modeling choice, not a directly measured quantity. It is set as the midpoint of the plausible range for hyperbolic saturation of the LKB1$\to$AMPK$\to$TSC2 cascade. Different values of $k$ shift the AMPK-compound female predictions in concert. The canagliflozin dual-action split ($f^* = 0.88$) was determined at $k = 8$; a different $k$ would shift the optimal $f^*$ but preserve the qualitative conclusion that the dominant canagliflozin pathway is sex-independent.
 
 \textbf{Scope.} The model does not include Wnt/$\beta$-catenin, Notch, telomere dynamics, immune senescence, AGE crosslink accumulation, or organ-specific fibrosis. It makes no quantitative claims about human outcomes. These are targets for future extension of the model. The ODE architecture is modular: each subsystem couples to the others only through named signaling intermediates, so new subsystems can be added without refitting the existing structure, as long as the new module says how it connects to the rest.
 
@@ -348,7 +367,7 @@ No individual equation in ELM is new; each draws on reliability theory \citep{Ga
 
 \subsection{Conclusions}
 
-A 6-parameter model, calibrated only to male ITP data, predicts all six female outcomes with 1.3~pp mean absolute error (median 0.45~pp) using four independently motivated sex mechanisms---and predicts the rapamycin + acarbose combination with 0.5~pp error, for the correct mechanistic reason. Where it errs, it points to a testable hypothesis: canagliflozin has a second pathway the model does not yet capture.
+A 6-parameter model, calibrated only to male ITP data, predicts all six female outcomes with 1.3~pp mean absolute error (four of six within 1~pp) using four independently motivated sex mechanisms---and predicts the rapamycin + acarbose combination within 0.2~pp, for the correct mechanistic reason. Where it errs, it errs instructively: the canagliflozin underprediction diagnoses a second, sex-independent pathway, which the model quantifies ($f^* = 0.88$, consistent with FGF21/ketogenesis) and makes falsifiable (FGF21-knockout males: 1--4~pp residual extension vs.\ +14\% in wild type).
 
 % ============================================================
 % Bibliography
