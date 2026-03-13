@@ -205,6 +205,7 @@ def plot_sweep(results, best, coarse_f):
     ax1.set_ylabel('Female lifespan extension (%)')
     ax1.legend(loc='upper left', frameon=False)
     ax1.set_xlim(-0.03, 1.03)
+    ax1.set_ylim(0, None)
     ax1.text(-0.15, 1.05, 'A', transform=ax1.transAxes,
              fontsize=12, fontweight='bold', va='bottom')
 
@@ -213,19 +214,21 @@ def plot_sweep(results, best, coarse_f):
              markeredgecolor='#333333', label='Mean |error| (6 compounds)')
     ax2.plot(f_vals, max_errs, '-^', color='#CC0000', markerfacecolor='white',
              markeredgecolor='#CC0000', label='Max |error| (worst compound)')
-    ax2.axvline(x=f_star, color='#666666', linestyle=':', linewidth=0.8,
-                label=f'$f^*$ = {f_star:.2f}')
+    ax2.axvline(x=f_star, color='#666666', linestyle=':', linewidth=0.8)
 
-    ax2.annotate(f'{best["mean_err"]:.2f} pp',
-                 xy=(f_star, best['mean_err']),
-                 xytext=(f_star - 0.25, best['mean_err'] + 0.5),
-                 fontsize=7, ha='left',
-                 arrowprops=dict(arrowstyle='-', color='#999999', lw=0.6))
+    # Noise-floor references
+    itp_se = 2.5
+    expected_mae = itp_se * np.sqrt(2 / np.pi)  # ~2.0 pp
+    ax2.axhline(y=itp_se, color='#CC0000', linestyle=':', linewidth=0.6,
+                alpha=0.7, label=f'ITP measurement SE ({itp_se} pp)')
+    ax2.axhline(y=expected_mae, color='#333333', linestyle=':', linewidth=0.6,
+                alpha=0.7, label=f'Expected MAE under noise ({expected_mae:.1f} pp)')
 
     ax2.set_xlabel('Antioxidant fraction ($f$)')
     ax2.set_ylabel('Female prediction error (pp)')
     ax2.legend(loc='upper right', frameon=False)
     ax2.set_xlim(-0.03, 1.03)
+    ax2.set_ylim(0, 8)
     ax2.text(-0.15, 1.05, 'B', transform=ax2.transAxes,
              fontsize=12, fontweight='bold', va='bottom')
 
