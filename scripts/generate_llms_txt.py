@@ -464,9 +464,9 @@ def generate_brief(stages):
         ('Calibration & Prediction',17, 19),
         ('Sex Differences',         19, 26),
         ('Limitations',             26, 27),
-        ('Validation',              27, 30),
-        ('Sensitivity',             30, 35),
-        ('Specification',           35, len(stages)),
+        ('Validation',              27, 29),
+        ('Sensitivity',             29, 34),
+        ('Specification',           34, len(stages)),
     ]
 
     for section_name, start, end in SECTIONS:
@@ -484,7 +484,6 @@ def generate_brief(stages):
     lines.append("## Sensitivity Analysis")
     lines.append("")
     lines.append("The deck includes extensive sensitivity and robustness analysis:")
-    lines.append("- Slide A1: Identifiability analysis (6 free parameters)")
     lines.append("- Slide A3: Leave-one-out vulnerability analysis")
     lines.append("- Slide A6: BioAge weight (w_meth) sweep with clock PCA constraint")
     lines.append("- Slide A6b: heteroplasmy and senescence weight sweeps")

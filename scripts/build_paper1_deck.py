@@ -49,7 +49,7 @@ SECTIONS = [
     ("Calibration &amp; Prediction", "9"),
     ("Sex Differences",            "11"),
     ("Limitations",                "18"),
-    ("Validation",                 "A1"),
+    ("Validation",                 "A3"),
     ("Sensitivity",                "A6"),
     ("Specification",              "A16"),
 ]

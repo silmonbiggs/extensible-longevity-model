@@ -129,7 +129,7 @@ charts (Slides A5, A5b). Reproducible: run_monte_carlo(seed=42).
 
 ## Slide Deck Structure
 
-Total slides: 36
+Total slides: 35
 
 ### Introduction
   [intro] Paper 1: ITP Sex Differences
@@ -171,7 +171,6 @@ Total slides: 36
   [18] Limitations
 
 ### Validation
-  [A1] Identifiability Analysis
   [A3] Leave-One-Out Vulnerability
   [A4] SASP: The Phantom Node
 
@@ -188,7 +187,6 @@ Total slides: 36
 ## Sensitivity Analysis
 
 The deck includes extensive sensitivity and robustness analysis:
-- Slide A1: Identifiability analysis (6 free parameters)
 - Slide A3: Leave-one-out vulnerability analysis
 - Slide A6: BioAge weight (w_meth) sweep with clock PCA constraint
 - Slide A6b: heteroplasmy and senescence weight sweeps

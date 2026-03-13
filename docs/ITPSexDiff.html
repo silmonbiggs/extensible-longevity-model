@@ -487,8 +487,8 @@
             <option value="19">Sex Differences</option>
             <option value="26">Limitations</option>
             <option value="27">Validation</option>
-            <option value="30">Sensitivity</option>
-            <option value="35">Specification</option>
+            <option value="29">Sensitivity</option>
+            <option value="34">Specification</option>
         </select>
         <button id="btn-prev" onclick="prevStage()">&larr; Previous</button>
         <div id="stage-indicator">
@@ -965,14 +965,6 @@ const STAGES = [
         '<li><strong>Explain sex differences</strong> through four mechanistic routes (Stage 13.3).</li>' +
         '</ul>',
     equation:'',
-    graph:null,
-},
-{ // A1: Identifiability Analysis
-    title:'Identifiability Analysis', sub:'A1', paper1:true,
-    nodes:[], edges:[],
-    narrative:'<h3>How Many Parameters Does the Data See?</h3><p>The ELM has ~150 parameters but only 6 calibration targets (male) and 7 predictions. A Jacobian-SVD analysis reveals that exactly <strong>6 free parameters</strong> are constrained by the ITP data. The remaining ~144 directions have zero sensitivity \u2014 the data cannot distinguish changes along them.</p><p><strong>Two condition numbers, two questions:</strong></p><ul style="font-size:12px;margin:4px 0 8px 16px;"><li><strong>\u03ba = 14.6</strong> (full space): The 6 free parameters are well-separated. Best-constrained direction is only 14.6\u00d7 more observable than the worst. <em>Are the 6 free parameters well-defined?</em> Yes.</li><li><strong>\u03ba = 210</strong> (observable subspace): Among the 18 individual parameters with nonzero sensitivity, the strongest (heteroplasmy transcription_advantage, \u03c3=251) is 210\u00d7 more observable than the weakest (Km_nad_sirt1, \u03c3=1.2). <em>Can we pin down individual values?</em> Moderately.</li></ul><p style="font-size:11px;color:#555">The model has 6 free parameters for 6 calibration targets (male), with 7 female predictions, leaving room for genuine prediction rather than curve-fitting. Two exact null directions exist: k_nmn_synthesis and k_sirt_consumption form a gauge pair (their ratio is constrained but individual values are not).</p>',
-    equation:'$$J = U \\Sigma V^T \\quad \\text{where } J_{ij} = \\frac{\\partial (\\text{extension}_i)}{\\partial \\theta_j}$$$$\\text{rank}(J) = 6, \\quad \\kappa_{\\text{full}} = \\frac{\\sigma_1}{\\sigma_{6}} = 14.6, \\quad \\kappa_{\\text{obs}} = 210$$<br>$$\\sigma_1 = 251.4$$ &mdash; heteroplasmy dynamics<br>$$\\sigma_2 = 68.3$$ &mdash; mTOR signaling chain<br>$$\\sigma_3 = 31.0$$ &mdash; AMPK &rarr; methylation<br>$$\\sigma_{6} = 1.2$$ &mdash; sirtuin sensitivity',
-    mainGraph:'stage_A1_svd_spectrum.png',
     graph:null,
 },
 { // A3: LOO Vulnerability

@@ -6,7 +6,7 @@
 # The interactive version includes Cytoscape network diagrams,
 # clickable nodes, and dynamically rendered figures.
 #
-# Total slides: 36
+# Total slides: 35
 # Generated from: docs/ITPSexDiff.html
 
 ## Scope of Evaluation
@@ -497,30 +497,6 @@ combination outcomes for ITP compounds (validated: rapa+acarbose within 1% of
 observed). Rank intervention targets by predicted leverage (Slide A9-A10).
 Identify which novel targets to test first and which pairs to prioritize (Slide
 A10-A11). Explain sex differences through four mechanistic routes (Stage 13.3).
-
-## SLIDE A1: Identifiability Analysis
-
-[Figure: stage_A1_svd_spectrum.png]
-
---- Narrative ---
-How Many Parameters Does the Data See? The ELM has ~150 parameters but only 6
-calibration targets (male) and 7 predictions. A Jacobian-SVD analysis reveals
-that exactly 6 free parameters are constrained by the ITP data. The remaining
-~144 directions have zero sensitivity -- the data cannot distinguish changes
-along them. Two condition numbers, two questions: kappa = 14.6 (full space): The
-6 free parameters are well-separated. Best-constrained direction is only 14.6x
-more observable than the worst. Are the 6 free parameters well-defined? Yes.
-kappa = 210 (observable subspace): Among the 18 individual parameters with
-nonzero sensitivity, the strongest (heteroplasmy transcription_advantage,
-sigma=251) is 210x more observable than the weakest (Km_nad_sirt1, sigma=1.2).
-Can we pin down individual values? Moderately. The model has 6 free parameters
-for 6 calibration targets (male), with 7 female predictions, leaving room for
-genuine prediction rather than curve-fitting. Two exact null directions exist:
-k_nmn_synthesis and k_sirt_consumption form a gauge pair (their ratio is
-constrained but individual values are not).
-
---- Equation ---
-$$J = U \Sigma V^T \quad \text{where } J_{ij} = \frac{\partial (\text{extension}_i)}{\partial \theta_j}$$$$\text{rank}(J) = 6, \quad \kappa_{\text{full}} = \frac{\sigma_1}{\sigma_{6}} = 14.6, \quad \kappa_{\text{obs}} = 210$$ $$\sigma_1 = 251.4$$ &mdash; heteroplasmy dynamics $$\sigma_2 = 68.3$$ &mdash; mTOR signaling chain $$\sigma_3 = 31.0$$ &mdash; AMPK &rarr; methylation $$\sigma_{6} = 1.2$$ &mdash; sirtuin sensitivity
 
 ## SLIDE A3: Leave-One-Out Vulnerability
 
