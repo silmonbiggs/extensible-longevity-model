@@ -4,7 +4,7 @@ ELM Sex-Specific Mechanisms
 This module implements mechanistic explanations for sex differences in
 longevity intervention effects, as observed in ITP data.
 
-Three Mechanism Types:
+Four Mechanism Types:
 1. AMPK Saturation - Females have higher baseline AMPK (LKB1), causing
    diminishing returns for AMPK activators (acarbose, canagliflozin, glycine)
 

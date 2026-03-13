@@ -54,7 +54,7 @@ def main():
     
     # Report
     print("=" * 65)
-    print(f"  ELM rev_00 Smoke Test")
+    print(f"  ELM Smoke Test")
     print("=" * 65)
     print(f"  {'Compound':30s} {'Got':>7s} {'Target':>7s} {'Error':>7s}  Status")
     print("-" * 65)

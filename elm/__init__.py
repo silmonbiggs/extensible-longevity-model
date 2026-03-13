@@ -2,8 +2,8 @@
 ELM: Extensible Longevity Model
 
 A mechanistic model of mammalian longevity calibrated to ITP intervention data.
-Explains sex-specific effects through three mechanisms: AMPK saturation,
-pharmacokinetics, and testosterone dependence.
+Explains sex-specific effects through four mechanisms: AMPK saturation,
+CYP3A pharmacokinetics, testosterone dependence, and COX-2 interference.
 
 Basic usage:
     from elm import simulate, run_itp_compound
@@ -15,11 +15,10 @@ Basic usage:
     # Custom intervention
     result = simulate(interventions={'ampk': 0.5, 'mtorc1_inhibition': 0.3})
 
-For more examples, see the examples/ directory.
 """
 
-__version__ = "1.0.0"
-__author__ = "ELM Development Team"
+__version__ = "0.43.0"
+__author__ = "Silmon James Biggs"
 
 # Core simulation
 from .model import (

@@ -19,3 +19,6 @@ calibration_options/
 *.fdb_latexmk
 *.synctex.gz
 *.docx
+docs/paper/elm_paper.*
+docs/paper/references.bib
+package.json

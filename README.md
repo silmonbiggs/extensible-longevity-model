@@ -59,6 +59,58 @@ biologically plausible ranges, or structural constants.
   ([source](docs/paper/ITPSexDiff/supplementary.tex),
   [PDF](docs/paper/ITPSexDiff/supplementary.pdf))
 
+## Reviewer Guide
+
+A six-step walkthrough for validating the model and results.
+
+**1. Install and run the smoke test (< 1 min)**
+
+```bash
+pip install -e .
+python tests/smoke_test.py
+```
+
+This checks all 12 ITP predictions (6 compounds × 2 sexes) against
+published targets. Male predictions are calibrated by root-finding;
+female predictions are genuine out-of-sample.
+
+**2. Read the core model (~1200 lines across 3 files)**
+
+- `elm/model.py` — ODE system, simulation loop, lifespan calculation
+- `elm/compounds.py` — compound definitions, ITP targets, scale factors
+- `elm/sex_mechanisms.py` — four sex-specific mechanisms
+
+**3. Check parameter provenance**
+
+Every parameter has a source annotation in `elm/pathways.py`. The
+supplementary material (Table S1) lists all 168 parameters with
+provenance categories: published measurement, biologically plausible
+range, structural constant, or calibrated to control lifespan.
+Zero parameters are calibrated to ITP intervention data.
+
+**4. Regenerate all figures (~3 min)**
+
+```bash
+python scripts/generate_figures.py
+```
+
+Reproduces every figure in the paper from the model code.
+
+**5. Browse the interactive deck**
+
+[View the deck](https://silmonbiggs.github.io/extensible-longevity-model/deck.html)
+— model architecture, calibration walkthrough, validation results,
+and combination predictions with interactive figures.
+
+**6. Run sensitivity analysis (~19 min)**
+
+```bash
+python scripts/oat_sensitivity.py
+```
+
+One-at-a-time perturbation of all 141 frozen parameters (±10%).
+Pre-computed results are in `oat_sensitivity.tsv` for quick inspection.
+
 ## Project Structure
 
 ```
