@@ -135,7 +135,13 @@ tests/
 
 ## Reproducibility
 
-Python 3.10+.
+Python 3.10+. Dependencies in `requirements.txt` use range constraints
+(for example, `numpy>=1.24,<3`), not exact pins — any compatible
+version should work. The simulation uses a fixed-step Euler loop
+(`dt=0.002`) with no random seeding, so results are deterministic
+on a given platform. Floating-point differences across OS/architecture
+combinations can shift predictions by up to ~0.01 pp, well within
+the smoke test tolerances.
 
 ```bash
 pip install -e .                    # install as editable package
