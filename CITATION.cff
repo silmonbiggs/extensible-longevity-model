@@ -7,8 +7,8 @@ authors:
     given-names: Silmon James
     email: james@longrun.bio
     affiliation: Longrun Bio
-version: 0.43.0
-date-released: 2026-03-11
+version: 1.0.0
+date-released: 2026-03-14
 license: MIT
 repository-code: https://github.com/silmonbiggs/extensible-longevity-model
 keywords:

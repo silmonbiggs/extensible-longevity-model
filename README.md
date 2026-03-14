@@ -1,5 +1,9 @@
 # Extensible Longevity Model (ELM)
 
+[![Smoke Test](https://github.com/silmonbiggs/extensible-longevity-model/actions/workflows/smoke-test.yml/badge.svg)](https://github.com/silmonbiggs/extensible-longevity-model/actions/workflows/smoke-test.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/silmonbiggs/extensible-longevity-model)](https://github.com/silmonbiggs/extensible-longevity-model/releases/tag/v1.0.0)
+
 A mechanistic ODE model of mouse aging calibrated to the NIA
 Interventions Testing Program (ITP). Five state variables track
 four kinds of biological damage — mitochondrial heteroplasmy,
@@ -23,6 +27,35 @@ from prior literature with no additional fitting.
 - **Sensitivity:** One-at-a-time perturbation of 141 frozen parameters
   (±10%) shifts no prediction by more than 0.65 pp. Results are
   dominated by model structure, not individual parameter values.
+
+## Installation
+
+Requires Python 3.10 or later.
+
+```bash
+git clone https://github.com/silmonbiggs/extensible-longevity-model.git
+cd extensible-longevity-model
+pip install -e .             # installs elm package + dependencies (~10 s)
+python tests/smoke_test.py   # verify all 12 predictions (< 1 min)
+```
+
+A single simulation (one compound, one sex) runs in about 1 second.
+Regenerating all paper figures takes about 3 minutes.
+The full sensitivity analysis takes about 19 minutes.
+
+To view the interactive slide deck locally, open
+`docs/ITPSexDiff.html` in any browser — no server needed.
+
+## Quick Start
+
+```python
+from elm.model import run_control, simulate, calculate_lifespan_extension
+
+control = run_control(sex='M')
+treated = simulate(compound='rapamycin', sex='M')
+ext = calculate_lifespan_extension(treated, control)
+print(f"Rapamycin male extension: {ext:.1f}%")  # -> 23.0%
+```
 
 ## How It Works
 
@@ -58,6 +91,30 @@ biologically plausible ranges, or structural constants.
   identifiability analysis, and sensitivity results
   ([source](docs/paper/ITPSexDiff/supplementary.tex),
   [PDF](docs/paper/ITPSexDiff/supplementary.pdf))
+
+## Reproducibility
+
+**Determinism.** The simulation uses a fixed-step Euler loop
+(`dt=0.002`) with no random seeding, so results are deterministic
+on a given platform. Floating-point differences across OS/architecture
+combinations can shift predictions by up to ~0.01 pp, well within
+the smoke test tolerances.
+
+**Dependencies.** `requirements.txt` uses range constraints (for
+example, `numpy>=1.24,<3`), not exact pins — any compatible version
+should work.
+
+**Reproduce the paper from scratch:**
+
+```bash
+python tests/smoke_test.py              # verify 12 ITP targets (Table 1)
+python scripts/generate_figures.py      # regenerate all figures -> docs/figures/
+python scripts/oat_sensitivity.py       # OAT analysis -> oat_sensitivity.tsv
+```
+
+Expected outputs:
+- `docs/figures/` — all paper and supplementary figures (PNGs)
+- `oat_sensitivity.tsv` — sensitivity of all 141 frozen parameters
 
 ## Reviewer Guide
 
@@ -133,39 +190,13 @@ tests/
   test_pathways.py    #   Pathway unit tests
 ```
 
-## Reproducibility
+## Citation and Contact
 
-Python 3.10+. Dependencies in `requirements.txt` use range constraints
-(for example, `numpy>=1.24,<3`), not exact pins — any compatible
-version should work. The simulation uses a fixed-step Euler loop
-(`dt=0.002`) with no random seeding, so results are deterministic
-on a given platform. Floating-point differences across OS/architecture
-combinations can shift predictions by up to ~0.01 pp, well within
-the smoke test tolerances.
+**License:** MIT ([LICENSE](LICENSE))
 
-```bash
-pip install -e .                    # install as editable package
-python tests/smoke_test.py          # verify calibration
-python scripts/generate_figures.py  # regenerate all figures
-```
+**Citation:** See [CITATION.cff](CITATION.cff), or cite as:
 
-## Quick Start
+> Biggs, S. J. (2026). Extensible Longevity Model (ELM) v1.0.0.
+> https://github.com/silmonbiggs/extensible-longevity-model
 
-```python
-from elm.model import run_control, simulate, calculate_lifespan_extension
-
-control = run_control(sex='M')
-treated = simulate(compound='rapamycin', sex='M')
-ext = calculate_lifespan_extension(treated, control)
-print(f"Rapamycin male extension: {ext:.1f}%")  # -> 23.0%
-```
-
-## Interactive Deck
-
-**[View the deck](https://silmonbiggs.github.io/extensible-longevity-model/ITPSexDiff.html)**
-— model architecture, calibration, sex difference mechanisms,
-and validation results with interactive figures.
-
-## License
-
-MIT
+**Contact:** james@longrun.bio
