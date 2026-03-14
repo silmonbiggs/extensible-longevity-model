@@ -311,7 +311,7 @@ def plot_figure(preds, model_brackets, old_preds=None):
     ax.set_xticks(x_centers)
     ax.set_xticklabels(names, rotation=30, ha='right')
     ax.set_ylabel('Lifespan extension (%)')
-    ax.set_ylim(-5, 32)
+    ax.set_ylim(-10, 32)
     ax.axhline(0, color='#cccccc', linewidth=0.5, zorder=1)
 
     ax.legend(fontsize=7, loc='upper left', frameon=False, ncol=2)
@@ -324,10 +324,18 @@ def plot_figure(preds, model_brackets, old_preds=None):
         ('CYP3A PK', '#1565C0', 5, 5),
     ]
     margin = 2.0 * step + 0.02
+    # Two tiers: AMPK on lower tier spanning ALL compounds; others on upper tier
     for label, color, i_start, i_end in brackets:
-        y_ann = -3.2
-        x0 = x_centers[i_start] - margin
-        x1 = x_centers[i_end] + margin
+        if 'AMPK' in label:
+            # Lower tier: spans ALL compounds
+            y_ann = -7.0
+            x0 = x_centers[0] - margin
+            x1 = x_centers[-1] + margin
+        else:
+            # Upper tier
+            y_ann = -3.2
+            x0 = x_centers[i_start] - margin
+            x1 = x_centers[i_end] + margin
         mid = (x0 + x1) / 2.0
         ax.plot([x0, x1], [y_ann, y_ann], color=color, lw=1.5,
                 clip_on=False, solid_capstyle='butt')

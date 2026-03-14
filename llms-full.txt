@@ -14,8 +14,8 @@
 The active model -- the part that makes predictions and should be
 evaluated -- consists of:
 
-  - 8 coupled ODE subsystems (heteroplasmy, NAD+, DNA damage,
-    AMPK/mTORC1, autophagy, senescence, SASP, methylation)
+  - 5 state variables (heteroplasmy, NAD+, DNA damage,
+    senescence, methylation) + 10 signaling intermediates
   - 6 ITP compound calibrations (12 sex-specific targets)
   - 4 sex-difference mechanisms (AMPK saturation, PK, testosterone, COX-2 interference)
   - Dose-response Hill curves (3 fitted, 3 estimated)
@@ -39,11 +39,10 @@ predictions and should not factor into evaluation:
     All current predictions are in mouse units (normalized lifespan).
     No mouse-to-human translation is applied or claimed.
 
-Parameter census (Slide A16): ~150 total parameters break down as
-26 literature-sourced, 78 estimated within physiological constraints,
-39 structural/normalization constants, and ~25 inactive (cancer + human
-scaling). Six free parameters (one scale factor per compound) are
-calibrated to male ITP data by root-finding.
+Parameter census: 168 total parameters. 6 free (compound scale
+factors calibrated to male ITP data). 162 frozen priors: 115
+literature, 18 set within plausible ranges, 6 calibrated to control
+biology, 23 structural defaults.
 
 ## Why a Quantitative Model
 
@@ -58,31 +57,20 @@ This model is offered as a productive starting point, not a ground
 truth. It is designed to anneal toward agreement with biology through
 an explicit experiment -> calibrate -> extend cycle.
 
-## SLIDE intro: Paper 1: ITP Sex Differences
+## SLIDE Intro 0: Six drugs extend mouse lifespan
 
-Four Biological Mechanisms Predict ITP Sex Differences from Male Data Alone We
-calibrate on male ITP data (6 compounds, 6 free parameters). Four sex-specific
-mechanisms from prior literature predict female outcomes with 1.3 pp mean error
--- no female fitting. Mechanism What it does Compounds affected AMPK saturation
-Female AMPK already near ceiling Acarbose, Canagliflozin, Glycine CYP3A
-pharmacokinetics Faster drug clearance in females Rapamycin Testosterone
-dependency Male-only activation pathway 17alpha-Estradiol COX-2 interference
-Prostaglandin cross-talk in females Aspirin Use -> arrow key or Next button to
-continue
-
-## SLIDE Intro 1: Six drugs extend mouse lifespan
-
-Six drugs extend mouse lifespan. Which should we combine? About six drugs, given
-individually to mice, make them live 5-26% longer. These results come from the
-NIA Interventions Testing Program (ITP) -- a three-site, blinded lifespan study
-using genetically heterogeneous (UM-HET3) mice, independently replicated at each
-site. Compound What it does Male Female Rapamycin Slows cell growth signaling
-+23% +26% Acarbose Blocks sugar absorption +22% +5% 17alpha-Estradiol Activates
-energy-sensing pathway +19% 0% Canagliflozin Blocks sugar reabsorption in kidney
-+14% +9% Aspirin Reduces inflammation +8% 0% Glycine Amino acid antioxidant +6%
-+4% Notice: four of six drugs barely work -- or don't work at all -- in females.
-Each was tested individually. Nobody knows what happens when you combine them.
-Use -> arrow key or Next button to continue
+Four of six longevity drugs barely work -- or don't work at all -- in females,
+and one works better. Why? About six drugs, given individually to mice, make
+them live 5-26% longer. These results come from the NIA Interventions Testing
+Program (ITP) -- a three-site, blinded lifespan study using genetically
+heterogeneous (UM-HET3) mice, independently replicated at each site. Compound
+What it does Male Female Rapamycin Slows cell growth signaling +23% +26%
+Acarbose Blocks sugar absorption +22% +5% 17alpha-Estradiol Activates energy-
+sensing pathway +19% 0% Canagliflozin Blocks sugar reabsorption in kidney +14%
++9% Aspirin Reduces inflammation +8% 0% Glycine Amino acid antioxidant +6% +4%
+Each was tested individually. We show that four sex-specific mechanisms from
+prior literature -- none fitted to female data -- predict all six female
+outcomes. Use -> arrow key or Next button to continue
 
 --- Narrative ---
 The ITP The Interventions Testing Program (ITP) is the gold standard for rodent
@@ -93,7 +81,19 @@ matters, because it means they're not all doing the same thing. The question is
 whether combining drugs that work through different pathways could produce
 larger effects than any single drug achieves alone.
 
-## SLIDE 0: The Thesis
+## SLIDE intro: Paper 1: ITP Sex Differences
+
+Four Biological Mechanisms Predict ITP Sex Differences from Male Data Alone We
+calibrate on male ITP data (6 compounds, 6 free parameters). Four sex-specific
+mechanisms from prior literature predict female outcomes with 1.3 pp mean error
+(0.65 pp with dual-action canagliflozin) -- no female fitting. Mechanism What it
+does Compounds affected AMPK saturation Female AMPK already near ceiling
+Acarbose, Canagliflozin, Glycine CYP3A pharmacokinetics Faster drug clearance in
+females Rapamycin Testosterone dependency Male-only activation pathway 17alpha-
+Estradiol COX-2 interference Prostaglandin cross-talk in females Aspirin Use ->
+arrow key or Next button to continue
+
+## SLIDE 0: Mitochondrial Dysfunction
 
 --- Narrative ---
 The Thesis The model has four subsystems. We start with the one that turns out
@@ -105,10 +105,10 @@ accounts for 25% of biological age (w H =0.25), but its real impact is larger --
 it drives the downstream cascade through the other subsystems introduced in the
 next six stages. Normalized age: t = 1.0 corresponds to median control lifespan
 (~30 months for UM-HET3 males). All dynamics are expressed in this normalized
-time. Degrees of freedom: 196 numbers define the model, but SVD analysis (Slide
-A1) shows the ITP data only constrains 6 independent directions in parameter
-space. The rest are set by published biology or don't affect predictions. This
-is a 6-parameter model wearing a 196-parameter coat.
+time. Degrees of freedom: 168 parameters define the model (5 state variables +
+10 signaling intermediates), but only 6 are free (compound scale factors). The
+remaining 162 are frozen priors from published biology. This is a 6-parameter
+model wearing a 168-parameter coat.
 
 --- Equation ---
 $$\text{BioAge} = w_H \frac{H}{N_H} + \text{(other terms introduced in Stages 1-6)}$$ $$\begin{aligned} w_H &= 0.25 &\quad \%\; &\text{heteroplasmy weight} \\ N_H &= 0.18 &\quad \%\; &\text{heteroplasmy norm (derived from control)} \end{aligned}$$The full equation with all four components is shown in Stage 7.
@@ -282,14 +282,17 @@ $$\text{AMPK}_{\text{eff}} = f(\text{ampk}_{\text{direct}} + \text{other inputs}
 ## SLIDE 8.3: Canagliflozin
 
 --- Narrative ---
-8.3 Canagliflozin The glucose dumper -- excreting sugar in urine reduces the
-fuel that generates damaging oxygen radicals. SGLT2 (sodium-glucose
-cotransporter 2) inhibitor. Creates caloric deficit via glucose excretion,
-activating AMPK mildly. Primary effect is antioxidant (reduced mitochondrial
-ROS). ITP male: +14% lifespan extension.
+8.3 Canagliflozin The glucose dumper -- excreting sugar in urine activates two
+pathways: a dominant antioxidant pathway (via FGF21/ketogenesis/Nrf2) and a
+minor AMPK component. SGLT2 inhibitor. Dual-action model: 88% of the effect runs
+through antioxidant/FGF21 signaling (sex-independent), 12% through AMPK (subject
+to female saturation). Female prediction: +8.8% (0.2 pp error). The baseline
+AMPK-only model underpredicts females by 4 pp; the dual-action hypothesis
+generates a falsifiable prediction: FGF21-knockout mice should lose most of the
+benefit. ITP male: +14%, female: +9%
 
 --- Equation ---
-$$\text{AMPK}_{\text{eff}} = f(\text{ampk}_{\text{direct}} + \text{other inputs})$$ $$\begin{aligned} \text{ampk}_{\text{direct}} &= 0.1619 &\quad \%\; &\text{AMPK activation} \end{aligned}$$
+$$\text{ROS}_{\text{eff}} = \text{ROS} \cdot (1 - k_{\text{aox}} \cdot \text{aox})$$ $$\begin{aligned} \text{aox} &= 0.5254 &\quad \%\; &\text{antioxidant (FGF21/Nrf2)} \\ \text{ampk}_{\text{direct}} &= 0.0716 &\quad \%\; &\text{AMPK activation} \end{aligned}$$ Dual-action model: 88% antioxidant + 12% AMPK (\alpha c =0.60). Baseline AMPK-only model (\alpha c =0.16) explored in paper \§3.1.
 
 [Additional figures: stage_06_cana_states.png, stage_06_cana_bar.png]
 
@@ -338,8 +341,8 @@ $$\text{ROS}_{\text{eff}} = \text{ROS} \cdot (1 - k_{\text{aox}} \cdot \text{aox
 
 --- Narrative ---
 Male Calibration Model calibrated to male ITP data: Compound ITP Model Rapamycin
-+23% +23.0% Acarbose +22% +22.0% Canagliflozin +14% +13.8% 17alphaE2 +19% +19.0%
-Aspirin +8% +7.8% Glycine +6% +6.0% BioAge -> death: t death = time when
++23% +23.0% Acarbose +22% +22.0% Canagliflozin +14% +14.0% 17alphaE2 +19% +19.0%
+Aspirin +8% +8.0% Glycine +6% +6.0% BioAge -> death: t death = time when
 BioAge(t) = 1.0. Logistic sigmoid (sigma = 0.12) models cohort variability.
 Overfit? 6 free parameters for 6 calibration targets (male), 7 predictions
 (Slide A1). The real test: an out-of-sample combination prediction.
@@ -349,12 +352,12 @@ $$S(t) = \frac{1}{1 + \exp\!\left(\frac{t - t_{\text{death}}}{\sigma}\right)}$$ 
 
 [Additional figures: stage_07_male_calibration.png, stage_08_survival_curves.png]
 
-## SLIDE 10: Prediction
+## SLIDE 10: Out-of-Sample Validation
 
 --- Narrative ---
 Rapamycin + Acarbose Independent validation. Model was NOT fit to combination
 data. Both converge on AMPK->Autophagy. Hill saturation -> sub-additive
-combination. Model: 33.5%. Naive sum: 45%. ITP observed: 34%. Both compounds
+combination. Model: +34%. Naive sum: 45%. ITP observed: +34%. Both compounds
 modeled from 9-month start, matching ITP combo protocol (Strong 2022). Not fit
 -- predicted.
 
@@ -394,8 +397,8 @@ Rapamycin Pharmacokinetics (PK) Rapamycin breaks the AMPK pattern: F (+26%) > M
 (+23%). Higher female AMPK baseline alone cannot explain greater female survival
 -- it actually favors males. Something else must more than offset this. The
 answer is absorption: females have 3.48x higher blood levels (cytochrome P450
-3A, CYP3A; PMID 24341993 ). Greater mTORC1 inhibition overcomes the AMPK
-saturation disadvantage. Demonstrates model extensibility .
+3A, CYP3A; Lamming 2014, PMID 24341993 ). Greater mTORC1 inhibition overcomes
+the AMPK saturation disadvantage.
 
 --- Equation ---
 $$\text{effective}_F = \text{dose} \times r_{\text{pk}}$$$$\text{mTORC1}_F = f(\text{effective}_F)$$ $$\begin{aligned} r_{\text{pk}} &= 3.48 &\quad \%\; &\text{female/male blood level ratio} \end{aligned}$$
@@ -430,34 +433,36 @@ cardioprotection (OR 0.66->1.50). ( Egan 2004, Science ; Grosser 2006, PLOS Med
 )
 
 --- Equation ---
-$$\text{effect}_F = 0 \quad (\text{COX inhibition blocks estrogen} \to \text{COX-2} \to \text{PGI}_2 \text{ pathway})$$ $$\begin{aligned} \text{aox} &= 0.20 &\quad \%\; &\text{male only} \\ \text{ampk}_{\text{direct}} &= 0.12 &\quad \%\; &\text{male only} \\ k_{\text{ai}} &= 0.09 &\quad \%\; &\text{male only} \end{aligned}$$
+$$\text{effect}_F = 0 \quad (\text{COX inhibition blocks estrogen} \to \text{COX-2} \to \text{PGI}_2 \text{ pathway})$$ $$\begin{aligned} \text{aox} &= 0.0985 &\quad \%\; &\text{male only} \\ \text{ampk}_{\text{direct}} &= 0.0591 &\quad \%\; &\text{male only} \\ k_{\text{ai}} &= 0.0394 &\quad \%\; &\text{male only} \end{aligned}$$
 
 [Additional figures: stage_11b_estrogen_intf.png, stage_11b_mf_cumulative.png]
 
 ## SLIDE 13.3: Four Sex Mechanisms
+
+[Figure: sex_diff_dual_action.png]
 
 --- Narrative ---
 Four Sex Mechanisms Every compound's sex difference is now explained by one of
 four mechanisms: * AMPK saturation limited (acarbose, cana, glycine) * PK
 difference dominant (rapamycin) * Testosterone-dependent (17alphaE2) * Estrogen
 interference (aspirin) Three are predicted from literature parameters , not fit
-to sex data. One (PK) uses measured blood levels.
-
-[Additional figures: stage_11_mf_complete.png]
+to sex data. One (PK) uses measured blood levels. Dual-action hypothesis:
+Canagliflozin is better explained by a dual-action model (88% antioxidant/FGF21
++ 12% AMPK), reducing female error from 4.0 pp to 0.2 pp. Falsifiable
+prediction: FGF21-KO mice should lose most of canagliflozin's benefit.
 
 ## SLIDE 14: The Full Picture
 
 --- Narrative ---
 The Full Picture BioAge = 0.25*Meth + 0.25*Damage + 0.25*H + 0.25*SenCells The
-model tracks 17 variables across 7 ODEs and 9 algebraic intermediates, governed
-by 196 parameters. Of these, 28 are calibrated to ITP lifespan data (13 compound
-intervention values, 4 BioAge weights, 5 sex-mechanism parameters, and 6 dose-
-response Hill fits). The remainder break down as follows: Source Count Examples
-* Literature 26 PARP1/SIRT1 NAD+ ratio, mtDNA N eff , rapa PK * Estimated 78
-Coupling strengths + 6 dose-response estimates * Structural 39 Hill
-coefficients, bounds, normalization, sigmoid * Inactive 25 Cancer module, human
-translation scaling Six compounds tested individually, 4 sex mechanisms, and 1
-out-of-sample combination prediction (rapa + acarbose: 33.5% predicted, 34%
+model tracks 5 state variables and 10 signaling intermediates, governed by 168
+parameters. Of these, 6 are free (compound scale factors calibrated to male ITP
+data). The 162 frozen priors break down as follows: Source Count Examples *
+Literature 115 PARP1/SIRT1 NAD+ ratio, mtDNA N eff , rapa PK * Set (plausible
+range) 18 Coupling strengths within biologically constrained ranges * Calibrated
+to control 6 k ROS , k BER , EZH2, time scale * Structural 23 Normalization,
+bounds, Hill defaults Six compounds tested individually, 4 sex mechanisms, and 1
+out-of-sample combination prediction (rapa + acarbose: +34% predicted, +34%
 observed). Click any node or compound for parameter details and references.
 
 --- Equation ---
@@ -629,7 +634,7 @@ variable, we zero its driving forces (= perfect prevention) and measure the
 lifespan extension. DNA Damage: +68% -- far exceeds its 25% BioAge weight. Why?
 Because damage feeds back through the PARP1/Repair->NAD vicious cycle from Slide
 A7 AND triggers senescence (another 15% of BioAge). Preventing damage has
-cascading protective effects. Methylation: +36% -- proportional to its 30%
+cascading protective effects. Methylation: +36% -- proportional to its 25%
 weight. Methylation is an autonomous clock with limited feedback coupling.
 Heteroplasmy: +15% -- close to its 25% weight. H drives NAD + depletion via
 OXPHOS failure, but the indirect effects are modest in isolation. Senescent

@@ -7,17 +7,18 @@
 ## What This Is
 
 A mechanistic ODE model of aging interventions, calibrated to the NIA
-Interventions Testing Program (ITP) data. The model tracks 8 state
-variables as interconnected ODE subsystems:
+Interventions Testing Program (ITP) data. The model tracks 5 state
+variables governed by ODEs:
 
-  1. Heteroplasmy (mitochondrial DNA damage fraction)
-  2. NAD+ (nicotinamide adenine dinucleotide level)
-  3. DNA damage (genomic lesion accumulation)
-  4. AMPK/mTORC1 signaling (nutrient-sensing axis)
-  5. Autophagy (cellular recycling flux)
-  6. Senescent cell burden
-  7. SASP (senescence-associated secretory phenotype)
-  8. Methylation drift (epigenetic age)
+  1. Heteroplasmy (H) -- mitochondrial DNA damage fraction
+  2. NAD+ (N) -- nicotinamide adenine dinucleotide level
+  3. DNA damage (D) -- genomic lesion accumulation
+  4. Senescent cell burden (S)
+  5. Methylation drift (M) -- epigenetic age
+
+Plus 10 signaling intermediates (AMPK, TSC2, mTORC1, SIRT1, FOXO3,
+Autophagy, SASP, ROS, EZH2, PGC-1alpha) computed at each time step
+without their own differential equations.
 
 These are NOT independent -- they form a coupled ODE system with
 cross-pathway feedback (e.g., NAD+ -> sirtuins -> FOXO3 -> heteroplasmy).
@@ -29,7 +30,7 @@ single-compound testing cannot reveal.
 The active model -- the part that makes predictions and should be
 evaluated -- consists of:
 
-  - 8 coupled ODE subsystems (listed above)
+  - 5 state variables + 10 signaling intermediates (listed above)
   - 6 ITP compound calibrations (12 sex-specific targets)
   - 4 sex-difference mechanisms (AMPK saturation, PK, testosterone, COX-2 interference)
   - Dose-response Hill curves (3 fitted, 3 estimated)
@@ -85,19 +86,21 @@ truth. The key properties of a starting point:
      and combination data can recalibrate and extend the model without
      starting over.
 
-The ~150 parameters are not all free. Literature values, structural
-constraints, and normalization constants fix the majority. One-at-a-time
-perturbation of 141 frozen parameters (+/-10%) shifts no prediction by
-more than 0.65 pp (Slide A9). Could alternative parameter sets in
-distant basins fit the same 12 targets and make different combination
+The 168 parameters are not all free. 6 compound scale factors are
+calibrated to male ITP data; the remaining 162 are frozen priors
+(115 literature, 18 set within plausible ranges, 6 calibrated to
+control biology, 23 structural). One-at-a-time perturbation of
+141 frozen parameters (+/-10%) shifts no prediction by more than
+0.65 pp (Slide A9). Could alternative parameter sets in distant
+basins fit the same 12 targets and make different combination
 predictions? In principle, yes. In practice, the Rapa + Acarbose
-out-of-sample prediction (33% vs 34% observed) provides evidence
+out-of-sample prediction (+34% vs +34% observed) provides evidence
 that the current basin is not arbitrary.
 
 ## Key Results
 
 - Calibration: 12 ITP targets, +/-0.08% mean error, 6 free parameters (one scale factor per compound)
-- Out-of-sample validation: Rapa+Acarb predicted +33%, observed +34% (not fit)
+- Out-of-sample validation: Rapa+Acarb predicted +34%, observed +34% (not fit)
 - Testable prediction: Rapa+NMN superadditive (+31.8% M / +36.0% F)
 - Serial reliability framework explains why single interventions yield +10-26%
 
@@ -110,7 +113,7 @@ identical animals at multiple sites. A Monte Carlo resampling
 percentile range of individual outcomes around the median:
 
   - Rapamycin male: median +23%, individual range 0-49%
-  - Rapa+Acarb male: median +33%, individual range 8-61%
+  - Rapa+Acarb male: median +34%, individual range 8-61%
   - Rapa+NMN male: median +32%, individual range 7-60%
 
 This is NOT uncertainty about whether the model is right -- it
@@ -132,11 +135,11 @@ charts (Slides A5, A5b). Reproducible: run_monte_carlo(seed=42).
 Total slides: 35
 
 ### Introduction
+  [0] Six drugs extend mouse lifespan
   [intro] Paper 1: ITP Sex Differences
-  [1] Six drugs extend mouse lifespan
 
 ### Architecture
-  [0] The Thesis
+  [0] Mitochondrial Dysfunction
   [1] Heteroplasmy Dynamics
   [2a] NAD+ Supply
   [2b] NAD+ Consumption
@@ -156,7 +159,7 @@ Total slides: 35
 
 ### Calibration & Prediction
   [9] Calibration
-  [10] Prediction
+  [10] Out-of-Sample Validation
 
 ### Sex Differences
   [11] Why Males?

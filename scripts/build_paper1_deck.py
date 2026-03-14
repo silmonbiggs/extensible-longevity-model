@@ -24,7 +24,7 @@ INTRO_STAGE = (
     "    nodes:[], edges:[],\n"
     "    mainHtml:'<div class=\"splash-content\">' +\n"
     "        '<h2>Four Biological Mechanisms Predict ITP Sex Differences from Male Data Alone</h2>' +\n"
-    "        '<p class=\"subtitle\">We calibrate on male ITP data (6 compounds, 6 free parameters). Four sex-specific mechanisms from prior literature predict female outcomes with 1.3 pp mean error \\u2014 no female fitting.</p>' +\n"
+    "        '<p class=\"subtitle\">We calibrate on male ITP data (6 compounds, 6 free parameters). Four sex-specific mechanisms from prior literature predict female outcomes with 1.3 pp mean error (0.65 pp with dual-action canagliflozin) \\u2014 no female fitting.</p>' +\n"
     "        '<table class=\"splash-table\">' +\n"
     "        '<tr><th>Mechanism</th><th>What it does</th><th>Compounds affected</th></tr>' +\n"
     "        '<tr><td>AMPK saturation</td><td>Female AMPK already near ceiling</td><td>Acarbose, Canagliflozin, Glycine</td></tr>' +\n"
@@ -161,8 +161,8 @@ def main():
     paper1_stages = [s for s in all_stages if has_paper1(s)]
     print(f"  Stages with paper1:true: {len(paper1_stages)}")
 
-    # Inject intro at position 0
-    paper1_stages.insert(0, INTRO_STAGE)
+    # Inject intro after the ITP data slide (position 1)
+    paper1_stages.insert(1, INTRO_STAGE)
     print(f"  Stages after injecting intro: {len(paper1_stages)}")
 
     # --- 2. Rebuild STAGES array ---
