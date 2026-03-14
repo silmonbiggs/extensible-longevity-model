@@ -59,7 +59,7 @@ print(f"Rapamycin male extension: {ext:.1f}%")  # -> 23.0%
 
 ## How It Works
 
-The model tracks five state variables across the mouse lifespan:
+Five aging hallmarks feed into biological age:
 
 | Variable | What it tracks |
 |----------|---------------|
