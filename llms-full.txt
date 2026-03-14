@@ -27,13 +27,8 @@ evaluated -- consists of:
     model predicts super- and sub-additive combinations from single-
     compound calibration alone.
 
-The codebase also contains two modules that are INACTIVE in all current
+The codebase also contains one module that is INACTIVE in all current
 predictions and should not factor into evaluation:
-
-  - Cancer module (elm/model.py: stochastic mutation accumulation).
-    Cancer_prob is computed but NOT fed to BioAge; death is determined
-    solely by BioAge >= death_threshold. The module is scaffolding for
-    future calibration when cancer-specific endpoint data become available.
 
   - Cross-species translation (elm/uncertainty.py: human scaling).
     All current predictions are in mouse units (normalized lifespan).

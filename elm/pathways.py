@@ -277,30 +277,6 @@ SASP_PARAMS: Dict[str, float] = {
 }
 
 # =============================================================================
-# CANCER
-# =============================================================================
-
-CANCER_PARAMS: Dict[str, float] = {
-    # Mutation accumulation
-    'k_mut_from_damage': 0.015,    # Damage-to-mutation rate
-    'k_mut_from_replication': 0.005,  # Replication errors
-    'k_mut_from_ros': 0.010,       # ROS-induced mutations
-    'k_mut_proliferation': 0.020,  # Proliferation-associated
-    'k_osk_proliferation': 0.30,   # OSK-induced proliferation risk
-
-    # Defense
-    'k_immune_surveillance': 0.10, # Immune surveillance rate
-    'k_immune_age_decline': 0.20,  # Age-related immune decline
-    'k_p53_apoptosis': 0.15,       # p53-mediated apoptosis
-    'k_senescence_tumor_suppression': 0.20,  # Senescence as tumor suppressor
-
-    # Cancer formation
-    'cancer_threshold': 50,        # Mutation threshold
-    'cancer_hits': 2.5,            # Multi-hit exponent
-    'k_cancer_rate': 0.001,        # Baseline cancer rate
-}
-
-# =============================================================================
 # TSC2 / AMPK-mTORC1 CANONICAL PATHWAY
 # =============================================================================
 
@@ -395,7 +371,6 @@ ALL_PATHWAY_PARAMS = {
     'uprmt': UPRMT_PARAMS,
     'senescence': SENESCENCE_PARAMS,
     'sasp': SASP_PARAMS,
-    'cancer': CANCER_PARAMS,
     'bioage': BIOAGE_PARAMS,
     'tsc2': TSC2_PARAMS,
 }

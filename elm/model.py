@@ -2,7 +2,7 @@
 ELM Core Simulation Model
 
 This module contains the core ODE-based simulation for the ELM longevity model.
-The model tracks 8 ODE state variables as interconnected subsystems:
+The model tracks 7 ODE state variables as interconnected subsystems:
 
 1. Heteroplasmy - Mitochondrial DNA damage fraction
 2. NAD+ - Nicotinamide adenine dinucleotide level
@@ -14,9 +14,7 @@ The model tracks 8 ODE state variables as interconnected subsystems:
 8. Methylation drift - Epigenetic age
 
 Additional algebraic variables (SIRT1, FOXO3, EZH2, UPRmt, immune
-function) are computed from the state at each time step. The cancer
-module (mutation accumulation) is present but INACTIVE in all current
-predictions -- it does not influence BioAge or lifespan.
+function) are computed from the state at each time step.
 
 Simulation outputs biological age trajectory and lifespan.
 
@@ -47,7 +45,6 @@ from .pathways import (
     UPRMT_PARAMS,
     SENESCENCE_PARAMS,
     SASP_PARAMS,
-    CANCER_PARAMS,
     BIOAGE_PARAMS,
     TSC2_PARAMS,
 )
@@ -83,16 +80,10 @@ class SimulationResult:
     Heteroplasmy: np.ndarray
     SenCells: np.ndarray
     SASP: np.ndarray
-    Mutations: np.ndarray
 
     # Algebraic intermediates
     TSC2: np.ndarray
     mTORC1_activity: np.ndarray
-
-    # Additional outputs
-    Cancer_prob: np.ndarray
-    cancer_occurred: bool
-    cancer_time: Optional[float]
 
     # Intervention tracking
     interventions: Dict[str, float]
@@ -694,56 +685,6 @@ def calculate_autophagy(
 
 
 # =============================================================================
-# CANCER
-# =============================================================================
-
-def calculate_mutation_rate(
-    unrepaired_damage: float,
-    proliferation: float,
-    ros: float,
-    params: Dict = None
-) -> float:
-    """Calculate mutation accumulation rate."""
-    if params is None:
-        params = CANCER_PARAMS
-
-    damage_mutations = params['k_mut_from_damage'] * unrepaired_damage
-    replication_mutations = params['k_mut_from_replication'] * (1 + params['k_mut_proliferation'] * proliferation)
-    ros_mutations = params['k_mut_from_ros'] * ros
-
-    return damage_mutations + replication_mutations + ros_mutations
-
-
-def calculate_mutation_clearance(
-    mutations: float,
-    immune_function: float,
-    p53_activity: float,
-    senescent_cells: float,
-    params: Dict = None
-) -> float:
-    """Calculate mutation/pre-cancer clearance rate."""
-    if params is None:
-        params = CANCER_PARAMS
-
-    immune_clear = params['k_immune_surveillance'] * immune_function * mutations
-    apoptosis = params['k_p53_apoptosis'] * p53_activity * mutations
-
-    return immune_clear + apoptosis
-
-
-def calculate_cancer_probability(mutations: float, params: Dict = None) -> float:
-    """Calculate instantaneous cancer probability."""
-    if params is None:
-        params = CANCER_PARAMS
-
-    if mutations <= 0:
-        return 0.0
-
-    ratio = mutations / params['cancer_threshold']
-    return 1 - np.exp(-params['k_cancer_rate'] * (ratio ** params['cancer_hits']))
-
-
-# =============================================================================
 # BIOLOGICAL AGE
 # =============================================================================
 
@@ -814,7 +755,7 @@ def simulate(
         t_max: Maximum simulation time (normalized; 1.0 = baseline lifespan)
         dt: Time step
         verbose: Print progress
-        seed: Random seed for cancer stochastic events (default 42)
+        seed: Unused (kept for API compatibility)
 
     Returns:
         SimulationResult with trajectories and lifespan extension
@@ -823,7 +764,6 @@ def simulate(
         >>> result = simulate(compound='rapamycin', sex='M')
         >>> print(f"Extension: {result.extension_percent:.1f}%")
     """
-    rng = np.random.default_rng(seed)
     # Build time array
     t_array = np.arange(0, t_max, dt)
     n = len(t_array)
@@ -857,11 +797,11 @@ def simulate(
     nad_target = interventions.get('nad_target', 0)
 
     # -----------------------------------------------------------------
-    # State vector: 8 ODE variables
+    # State vector: 7 ODE variables
     #   [0] NAD, [1] DNA_damage, [2] Methylation, [3] Heteroplasmy,
-    #   [4] SenCells, [5] SASP, [6] Mutations, [7] sen_duration
+    #   [4] SenCells, [5] SASP, [6] sen_duration
     # -----------------------------------------------------------------
-    I_NAD, I_DMG, I_METH, I_H, I_SEN, I_SASP, I_MUT, I_SENDUR = range(8)
+    I_NAD, I_DMG, I_METH, I_H, I_SEN, I_SASP, I_SENDUR = range(7)
 
     y0 = np.array([
         1.0,                                # NAD
@@ -870,7 +810,6 @@ def simulate(
         HETEROPLASMY_PARAMS['H_0'],         # Heteroplasmy
         0.01,                               # SenCells
         SASP_PARAMS['SASP_young'],          # SASP
-        5.0,                                # Mutations
         0.0,                                # sen_duration
     ])
 
@@ -897,14 +836,13 @@ def simulate(
     osk_duration = METHYLATION_PARAMS.get('osk_pulse_duration', 0.01)
 
     def rhs(t, y):
-        """ODE right-hand side for the 8-variable state vector."""
+        """ODE right-hand side for the 7-variable state vector."""
         nad     = max(y[I_NAD], 0.001)
         damage  = max(y[I_DMG], 0.0)
         meth    = max(y[I_METH], METHYLATION_PARAMS['meth_young'] * 0.5)
         hetero  = np.clip(y[I_H], HETEROPLASMY_PARAMS['H_floor'], 1.0)
         sen     = max(y[I_SEN], SENESCENCE_PARAMS['sen_min_residual'])
         sasp    = max(y[I_SASP], SASP_PARAMS['SASP_young'] * 0.5)
-        mut     = max(y[I_MUT], 0.0)
         sendur  = max(y[I_SENDUR], 0.0)
 
         age_factor = t
@@ -984,7 +922,7 @@ def simulate(
 
         # --- dDamage ---
         osk_pulse = _is_pulse_active(t, osk_interval, osk_duration) if (osk_reprogramming > 0 and active > 0) else False
-        proliferation = CANCER_PARAMS['k_osk_proliferation'] if osk_pulse else 0.0
+        proliferation = 0.30 if osk_pulse else 0.0  # OSK-induced proliferation risk
         damage_rate = calculate_damage_rate(
             ros_level=ros_level, proliferation=proliferation,
             antioxidant=antioxidant * active, ampk=ampk_eff * active,
@@ -1067,31 +1005,12 @@ def simulate(
         if sasp <= SASP_PARAMS['SASP_young'] * 0.5 and dSASP < 0:
             dSASP = 0.0
 
-        # --- dMut ---
-        unrepaired = max(0, damage_rate - repair_rate)
-        immune_fn = max(0.2, 1.0 - CANCER_PARAMS['k_immune_age_decline'] * age_factor
-                        - sasp_effects['immune_suppression'])
-        mut_rate = calculate_mutation_rate(
-            unrepaired_damage=unrepaired, proliferation=proliferation,
-            ros=ros_level + sasp_effects['ros_production'],
-            params=CANCER_PARAMS
-        )
-        p53_act = 0.5 + 0.5 * sirt1
-        mut_clear = calculate_mutation_clearance(
-            mutations=mut, immune_function=immune_fn,
-            p53_activity=p53_act, senescent_cells=sen,
-            params=CANCER_PARAMS
-        )
-        dMut = mut_rate - mut_clear
-        if mut <= 0 and dMut < 0:
-            dMut = 0.0
-
         # --- dSenDur (tracks how long SenCells has been rising) ---
         dSenDur = 1.0 if dSen > 0 else -0.5
         if sendur <= 0 and dSenDur < 0:
             dSenDur = 0.0
 
-        return [dNAD, dDamage, dMeth, dH, dSen, dSASP, dMut, dSenDur]
+        return [dNAD, dDamage, dMeth, dH, dSen, dSASP, dSenDur]
 
     # -----------------------------------------------------------------
     # Integrate with scipy RK45
@@ -1112,7 +1031,6 @@ def simulate(
     Heteroplasmy = sol.y[I_H]
     SenCells     = sol.y[I_SEN]
     SASP_arr     = sol.y[I_SASP]
-    Mutations    = sol.y[I_MUT]
 
     # -----------------------------------------------------------------
     # Post-process: compute algebraic quantities on output grid
@@ -1123,10 +1041,6 @@ def simulate(
     TSC2_arr       = np.zeros(n)
     mTORC1_act_arr = np.zeros(n)
     BioAge         = np.zeros(n)
-    Cancer_prob    = np.zeros(n)
-
-    cancer_occurred = False
-    cancer_time = None
 
     for i in range(n):
         t = t_array[i]
@@ -1162,13 +1076,6 @@ def simulate(
             H=Heteroplasmy[i], sen=SenCells[i], sasp=SASP_arr[i],
             params=BIOAGE_PARAMS
         )
-        Cancer_prob[i] = calculate_cancer_probability(Mutations[i], CANCER_PARAMS)
-
-        # Cancer module: INACTIVE. Tracks stochastic cancer onset for future
-        # use but does not affect BioAge, death time, or any model output.
-        if not cancer_occurred and rng.random() < Cancer_prob[i] * dt:
-            cancer_occurred = True
-            cancer_time = t
 
     # Find death time (with linear interpolation for sub-dt resolution)
     death_idx = np.argmax(BioAge >= BIOAGE_PARAMS['death_threshold'])
@@ -1212,10 +1119,6 @@ def simulate(
         SASP=SASP_arr,
         TSC2=TSC2_arr,
         mTORC1_activity=mTORC1_act_arr,
-        Mutations=Mutations,
-        Cancer_prob=Cancer_prob,
-        cancer_occurred=cancer_occurred,
-        cancer_time=cancer_time,
         interventions=interventions or {},
     )
 

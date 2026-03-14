@@ -27,7 +27,6 @@ from elm.model import (
     calculate_senescence_rate,
     calculate_senescence_clearance,
     calculate_bioage,
-    calculate_cancer_probability,
     simulate,
     run_control,
     calculate_lifespan_extension,
@@ -41,7 +40,6 @@ from elm.pathways import (
     METHYLATION_PARAMS,
     HETEROPLASMY_PARAMS,
     SENESCENCE_PARAMS,
-    CANCER_PARAMS,
     BIOAGE_PARAMS,
 )
 from elm.dose_response import (
@@ -135,18 +133,6 @@ def test_bioage_at_zero_state():
     assert ba >= 0
     assert ba < 0.1
 
-def test_cancer_probability_at_zero_mutations():
-    """Cancer probability should be near zero with no mutations."""
-    prob = calculate_cancer_probability(0, params=CANCER_PARAMS)
-    assert prob >= 0
-    assert prob < 1e-6
-
-def test_cancer_probability_monotonic():
-    """Cancer probability should increase with mutations."""
-    p1 = calculate_cancer_probability(0.1, params=CANCER_PARAMS)
-    p2 = calculate_cancer_probability(0.5, params=CANCER_PARAMS)
-    assert p2 > p1
-
 def test_senescence_rate_nonnegative():
     """Senescence entry rate should be non-negative."""
     rate = calculate_senescence_rate(
@@ -184,15 +170,11 @@ def test_simulate_reproducible():
     assert r1.t_death == r2.t_death
     assert np.array_equal(r1.BioAge, r2.BioAge)
 
-def test_simulate_different_seeds():
-    """Different seeds may produce different cancer events (stochastic)."""
-    # This tests that the seed is actually used -- the BioAge trajectories
-    # are deterministic (ODE), but cancer_occurred may differ.
-    r1 = simulate(compound='rapamycin', sex='M', seed=1)
-    r2 = simulate(compound='rapamycin', sex='M', seed=2)
-    # BioAge trajectory should be identical (ODE is deterministic)
+def test_simulate_deterministic():
+    """Two runs should produce identical results (ODE is deterministic)."""
+    r1 = simulate(compound='rapamycin', sex='M')
+    r2 = simulate(compound='rapamycin', sex='M')
     assert np.allclose(r1.BioAge, r2.BioAge)
-    # t_death should also match (driven by BioAge, not cancer in normal runs)
     assert abs(r1.t_death - r2.t_death) < 1e-10
 
 
