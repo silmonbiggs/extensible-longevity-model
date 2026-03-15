@@ -28,6 +28,20 @@ from prior literature with no additional fitting.
   (±10%) shifts no prediction by more than 0.65 pp. Results are
   dominated by model structure, not individual parameter values.
 
+### Observed vs predicted
+
+Male predictions are calibrated by root-finding (error < 0.2 pp).
+Female predictions are genuine out-of-sample.
+
+| Compound | Male observed | Male predicted | Female observed | Female predicted |
+|----------|:---:|:---:|:---:|:---:|
+| Rapamycin | 23.0% | 23.2% | 26.0% | 26.8% |
+| Acarbose | 22.0% | 22.2% | 5.0% | 7.8% |
+| 17-alpha-estradiol | 19.0% | 19.2% | 0.0% | 0.0% |
+| Canagliflozin | 14.0% | 14.0% | 9.0% | 8.8% |
+| Aspirin | 8.0% | 8.2% | 0.0% | 0.0% |
+| Glycine | 6.0% | 6.2% | 4.0% | 3.9% |
+
 ## Installation
 
 Requires Python 3.10 or later.
@@ -80,6 +94,66 @@ the ITP observation exactly. All other parameters (162 of 168) are
 frozen priors set before calibration from published measurements,
 biologically plausible ranges, or structural constants.
 
+## Degrees of Freedom
+
+The model has 168 parameters. Six are free: one scale factor per
+ITP compound, found by root-finding so that each male prediction
+matches the ITP observation exactly. The remaining 162 are frozen
+before calibration — set from published measurements, biologically
+plausible ranges, or structural constants. None are fitted to ITP
+intervention data.
+
+The female predictions add four sex-specific mechanisms drawn from
+independent experimental literature. These mechanisms introduce
+zero additional free parameters. The 1.3 pp female error is not a
+fit — it is a test.
+
+The rapamycin + acarbose combination prediction (+33.5% vs +34%
+observed) uses the same single-compound scale factors with no
+re-fitting. Sub-additivity emerges from shared pathway saturation
+in the ODE system.
+
+In short: 6 numbers are fitted (to male data). Everything else —
+female predictions, combination predictions, sensitivity rankings —
+is a consequence of the model structure.
+
+## Limitations and Failure Modes
+
+What would make this model wrong, and what does it not attempt:
+
+- **BioAge threshold death rule.** The mouse dies when a weighted
+  composite crosses a fixed threshold. Real mice die of specific
+  causes (cancer, organ failure). The model cannot distinguish
+  cause of death and would miss interventions that shift mortality
+  from one cause to another without changing overall biological age.
+- **Equal BioAge weights.** The four hallmark weights are set to
+  0.25 each (equal prior). Weight sweeps show predictions are
+  robust within the calibration-acceptable range, but the true
+  weights are unknown. This is the largest structural assumption.
+- **Six compounds, six parameters.** The system is exactly
+  determined for males — there are no residual degrees of freedom
+  to detect male model error. Male predictions pass by
+  construction. All falsifiability comes from female and
+  combination predictions.
+- **ITP compounds only.** The model has been tested against six
+  ITP compounds that act through AMPK, mTORC1, and related
+  pathways. It says nothing about compounds that act through
+  mechanisms not in the ODE system (for example, senolytics,
+  gene therapy, or direct epigenetic reprogramming).
+- **Mouse only.** All predictions are in mouse normalized lifespan
+  units. No mouse-to-human translation is applied or claimed.
+- **Frozen prior uncertainty.** The 162 frozen parameters are not
+  known exactly. OAT sensitivity shows none shift predictions by
+  more than 0.65 pp under ±10% perturbation, but correlated
+  errors across multiple parameters could have larger effects.
+- **No stochastic variation.** The ODE system is deterministic.
+  Real aging has stochastic components (for example, mutation
+  timing, immune stochasticity) that the model does not capture.
+- **Acarbose female prediction is the worst.** Predicted 7.8%,
+  observed 5.0% (2.8 pp error). This is within tolerance but is
+  the largest single error, likely reflecting incomplete modeling
+  of gut microbiome sex differences.
+
 ## Papers
 
 - **Paper 1:** Four Biological Mechanisms Predict ITP Sex Differences
@@ -106,7 +180,13 @@ should work. CI is tested with Python 3.10 and 3.12. The release
 was developed and tested against numpy 2.3, scipy 1.16, and
 matplotlib 3.10.
 
-**Reproduce the paper from scratch:**
+**Reproduce the paper from scratch** (one command):
+
+```bash
+python scripts/reproduce_all.py        # runs all three steps below (~23 min)
+```
+
+Or run each step individually:
 
 ```bash
 python tests/smoke_test.py              # verify 12 ITP targets (Table 1)
@@ -211,6 +291,7 @@ docs/
   ITPSexDiff.html     #   Paper 1 slide deck (reviewer-ready)
   working_slides.html #   Master slide pool (all 61 slides)
 scripts/
+  reproduce_all.py    #   One-command full replication
   generate_figures.py #   Regenerate all figures
   oat_sensitivity.py  #   One-at-a-time sensitivity analysis
   sweep_ampk_k.py     #   AMPK saturation parameter sweep
