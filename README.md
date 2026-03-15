@@ -113,9 +113,19 @@ observed) uses the same single-compound scale factors with no
 re-fitting. Sub-additivity emerges from shared pathway saturation
 in the ODE system.
 
-In short: 6 numbers are fitted (to male data). Everything else —
-female predictions, combination predictions, sensitivity rankings —
-is a consequence of the model structure.
+The base model assigns each compound a single scale factor that
+scales a fixed pathway profile. For five of six compounds this is
+sufficient. Canagliflozin's residual pattern suggested that its
+default pathway ratio (the balance between SGLT2-mediated and
+AMPK-mediated effects) was inadequate. The ratio was then optimized,
+adding a seventh fitted parameter. The hypothesis is data-suggested;
+the parameter is fitted. This makes it stronger than ad hoc but
+weaker than a pre-registered prediction.
+
+In short: 6 numbers are fitted (to male data), with a seventh
+(canagliflozin pathway split) motivated by the residual pattern.
+Everything else — female predictions, combination predictions,
+sensitivity rankings — is a consequence of the model structure.
 
 ## Limitations and Failure Modes
 
